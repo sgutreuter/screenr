@@ -311,6 +311,8 @@ binomialScreening <- function(formula, data = NULL, link = "logit", Nfolds = 10,
                                              sensitivity = z[1],
                                              specificity = z[2]))
     }
+    class(insamp) <-  c("ROC", "data.frame")
+    class(SensSpec.results) <-  c("ROC", "data.frame")
     result <- list(Call = call,
                    ModelFit = lrfit,
                    ParmEst = lrfit$coeff,
@@ -430,6 +432,63 @@ plot.binomscreenr <- function(obj, main = "Receiver Operating Characteristics",
                            xlab = "1 - Specificity (%)",
                            key = d.key)
     res
+}
+
+
+#' Expected Number of Tests Required per Positive Result
+#'
+#' \code{testCounts} Expected tests per positive
+#'
+#' Development of a simple testing screening tool based on the sum of ordinal
+#' numeric responses to questions which are predictive of the testing results.
+#' \code{logisticScreening} will generally outperform this approach, and
+#' \code{Bandason} is provided mainly for comparison.
+#'
+#' @param prev Proportion of the population expressing positive test results.
+#' @param SensSpec A data frame containing columns '"sensitivity"' and
+#' '"specificity"', or an object of class "Bandason" or class "binomscreenr".
+#'
+#' @return A data frame containing sensitivity, specificity, the expected
+#' number of tests required to observe a single positive test result and,
+#' among those, the expected number of false negatives per positive test
+#' result.
+#'
+#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
+#'
+#' @examples
+#' data(unicorns)
+#' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#'                              data = unicorns, Nfolds = 20,
+#'                              p.threshold = c(seq(0.01, 0.10, by = 0.015),
+#'                                              seq(.15, 0.95, by = 0.05)))
+#' testCounts(unitool)
+#'
+#' @export
+testCounts <- function(prev, SensSpec){
+    if(!(prev > 0 & prev < 1)) stop("prev must be in (0,1)")
+    if("binomscreenr" %in% class(SensSpec)){
+        ss <- SensSpec[["CrossValPerf"]]
+    } else {
+        if("Bandason" %in% class(SensSpec)){
+            ss <- SensSpec[["roc"]]
+        } else {
+            ss <- SensSpec
+            if(!("sensitivity" %in% names(ss))) stop("No column 'sensitivity")
+            if(!("specificity" %in% names(ss))) stop("No column 'specificity")
+            if(any(ss[["sensitivity"]] < 0 | ss[["sensitivity"]] > 1))
+                stop("sensitivity not in (0,1)")
+            if(any(ss[["specificity"]] < 0 | ss[["specificity"]] > 1))
+                stop("specificity not in (0,1)")
+        }
+    }
+    prev <- prev[1]
+    Etpp <- ((ss[["sensitivity"]] * prev) +
+            (1 - ss[["specificity"]]) * (1 - prev)) / (ss[["sensitivity"]] * prev)
+    Efn <- (1 - ss[["sensitivity"]]) * Etpp
+    result <- data.frame(cbind(ss, Etpp, Efn))
+    names(result)[ncol(ss) + c(1, 2)] <- c("Expected_Tests_per_Positive",
+                                           "Expected_False_Negatives_per_Positive")
+    result
 }
 
 ################################   END of FILE   ################################
