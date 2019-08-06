@@ -55,6 +55,7 @@ nSensSpec <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
     data.frame(n.pos = ceiling(n.pos), n.neg = ceiling(n.neg))
 }
 
+
 #' Sensitivity and Specificity from a 2 x 2 Table
 #'
 #' \code{SensSpec} Returns sensitivity and specificity of a test.
@@ -73,6 +74,7 @@ sens_spec <- function(x){
     result = list(sensitivity = sens, specificity = spec)
     result
 }
+
 
 #' A Simple Un-optimized HIV Testing Screener
 #'
@@ -103,7 +105,11 @@ sens_spec <- function(x){
 #' \url{http://dx.doi.org/10.1097/QAD.0000000000000959
 #'
 #' @examples
-#' TO DO...
+#' data(unicorns)
+#' simpletool <- Bandason(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
+#'                        data = unicorns)
+#' summary(simpletool)
+#' plot(simpletool)
 #'
 #' @export
 Bandason <- function(formula, data){
@@ -143,13 +149,11 @@ Bandason <- function(formula, data){
 #' function \code(Bandason()).
 #'
 #' @param x A Bandason class object.
-#'
-#' @examples
-#' TO DO
 print.Bandason <- function(x){
     if(!class(x) == "Bandason") stop("x not a Bandason object")
     x$roc
 }
+
 
 #' An S3 Plot Method
 #'
@@ -157,13 +161,12 @@ print.Bandason <- function(x){
 #' function \code(Bandason()).
 #'
 #' @param x A Bandason class object.
-#'
-#' @examples
-#' TO DO
+#' @export
 plot.Bandason <- function(x){
     if(!("Bandason" %in% class(x))) stop("x must be a Bandason object")
     plot.ROC(x$roc)
 }
+
 
 #' An S3 Summary Method
 #'
@@ -171,9 +174,7 @@ plot.Bandason <- function(x){
 #' function \code{Bandason()}.
 #'
 #' @param x A Bandason class object.
-#'
-#' @examples
-#' TO DO
+#' @export
 summary.Bandason <- function(x){
     if(!class(x) == "Bandason") stop("x not a Bandason object")
     cat("A list object with three components:\n")
@@ -184,15 +185,14 @@ summary.Bandason <- function(x){
     cat("\nscores (data frame including Bandason scores)\n")
 }
 
+
 #' #' An S3 Plot Method
 #'
 #' \code{plot.ROC} An S3 plotting method for Receiver Operating Characteristic
 #' objects created by function plot.Bandason().
 #'
 #' @param x A Bandason class object.
-#'
-#' @examples
-#' TO DO
+#' @export
 plot.ROC <- function(x){
     if(!("ROC" %in% class(x))) stop("x must be an ROC object")
     x$FPP <- 1 - x$specificity
@@ -204,9 +204,9 @@ plot.ROC <- function(x){
 }
 
 
-#' Development of a Testing Screening Tool Based on Logistic Regression
+#' Development of a Testing Screening Tool Based on Binomial Regression
 #'
-#' \code{logisticScreening} Development of a screeing tool based on logistic
+#' \code{binomialScreening} Development of a screeing tool based on binomial
 #' regression.
 #'
 #' Development of a screening tool based on predicted probabilities of positive
@@ -218,13 +218,15 @@ plot.ROC <- function(x){
 #'
 #' S3 \code{plot}, \code{print} and \code{summary} methods are available.
 #'
-#' @param formula A formula which is passed to \code{glm()}.
+#' @param formula A formula which is passed to \code{stats::glm()}.
 #' @param data  A data frame containing the testing outcome and predictive
 #' covariates to be used for testing screening.  The testing outcome must
 #' be binary (0,1) indicating negative and positive test results, respectively.
 #' The covariates are typically binary (0 = no, 1 = yes) responses to
 #' questions which may be predictive of the test result, but any covariates
 #' compatible with \code{glm} can be used.
+#' @parm link Link function for binomial regression.  Choices are "logit"
+#' (default), "cloglog" or "probit".
 #' @param Nfolds The number of folds used for \emph{k}-fold cross validation.
 #' Default = 10.
 #' @param p.threshold A vector of reference probabilities for estimation of
@@ -233,9 +235,8 @@ plot.ROC <- function(x){
 #' @return A list of class LRscreeing containing the elements:
 #' \describe{
 #' \item{Call} The function call.
-#' \item{ModelFit} An object produced by \code{glm()}.  Any methods for
-#' \code{glm} may be used for this element.
-#' \item{ParmEst} The logistic parameter estimates.
+#' \item{ModelFit} An object produced by \code{stats::glm()}.
+#' \item{ParmEst} The binomial regression  parameter estimates.
 #' \item{InSamplePerf} A data frame containing in-sample sensitivities and
 #' specificities.
 #' \item{CrossVal} A data frame containing cross-validation results.
@@ -245,17 +246,24 @@ plot.ROC <- function(x){
 #'
 #' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
-#' @seealso \code{\link{glm}}
+#' @seealso \code{\link{stats::glm}}
 #'
 #' @examples
-#' TO DO
+#' data(unicorns)
+#' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#'                              data = unicorns, Nfolds = 20,
+#'                              p.threshold = c(seq(0.01, 0.10, by = 0.015),
+#'                                              seq(.15, 0.95, by = 0.05)))
+#' summary(unitool)
+#' plot(wtf)
 #' @export
-logisticScreening <- function(formula, data = NULL, Nfolds = 10,
+binomialScreening <- function(formula, data = NULL, link = "logit", Nfolds = 10,
                               p.threshold = c(seq(0.01, 0.09, 0.01),
                                               seq(0.1, 0.6, 0.05),
                                               seq(0.65, 0.95, 0.10 ))){
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
+    if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
     call <- match.call()
     m <- match(c("formula", "data"), names(call), 0L)
     mf <- call[c(1L, m)]
@@ -266,9 +274,9 @@ logisticScreening <- function(formula, data = NULL, Nfolds = 10,
         stop("Nfolds must be < 20% of number of complete observations")
     y <- model.response(dat, "numeric")
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
-    lrfit <- glm(formula, data = dat, family = "binomial")
+    lrfit <- stats::glm(formula, data = dat, family = binomial(link = link))
     insamp <- data.frame(NULL)
-    pp <- locfit::expit(lrfit$linear.predictors)
+    pp <- inverseLink(link, lrfit$linear.predictors)
     for(j in seq_along(p.threshold)){
         I.test <-as.numeric(pp >= p.threshold[j])
         cmat <- table(factor(I.test, levels = c("0", "1")),
@@ -282,9 +290,9 @@ logisticScreening <- function(formula, data = NULL, Nfolds = 10,
     N <- nrow(dat)
     holdouts <- split(sample(1:N), 1:Nfolds)
     for(i in 1:Nfolds){
-        res <- glm(formula, data = dat[-holdouts[[i]], ], family = "binomial")
-        pred.prob <- locfit::expit(predict(res, newdata = dat[holdouts[[i]], ]))
-        ## y goes bad here; need y from holdouts
+        res <- stats::glm(formula, data = dat[-holdouts[[i]], ],
+                          family = binomial(link = link))
+        pred.prob <- inverseLink(link, predict(res, newdata = dat[holdouts[[i]], ]))
         y <- model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
@@ -309,28 +317,52 @@ logisticScreening <- function(formula, data = NULL, Nfolds = 10,
                    InSamplePerf = insamp,
                    CrossVal = cv.results,
                    CrossValPerf = SensSpec.results)
-    class(result) <- c("LRscreening", "list")
+    class(result) <- c("binomscreenr", "list")
     result
 }
-#################################################################################
-## S3 summary method for LRscreening objects produced by logisticScreening()
-#################################################################################
-#' Title in Title Case
+
+
+#' Inverse of the Link for a Linear Predictor
 #'
-#' \code{summary.LRscreening} Short description.
+#' \code{inverseLink}
 #'
-#' Longer description,
+#' Returns the inverse of logit, cloglog and probit link functions for a linear
+#' predictor
 #'
-#' @param Arguments.
+#' @param link Currently one of "logit", "cloglog" or "probit"
+#' @param lp The linear predictor
 #'
-#' @return Contents of "Value"
+#' @return The inverse of the link function for the linear predictor.
+#'
+#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
+inverseLink <- function(link, lp){
+    if(link == "logit"){
+        p <- locfit::expit(lp)
+    }else{
+        if(link == "cloglog"){
+            p <- 1 - exp(-exp(lp))
+        } else {
+            p <- pnorm(lp)
+        }
+    }
+    p
+}
+
+
+#' An S3 Summary Method
+#'
+#' \code{summary.binomscreenr} A \code{summary} method for \code{binomscreenr}
+#' objects.
+#'
+#' @param obj An object of class \code{binomscreenr} produced by function
+#' \code{binomialScreening}
 #'
 #' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
 #' @examples
-#'
-summary.LRscreening <- function(obj){
-    if(!("LRscreening" %in% class(obj))) stop("obj not LRscreening class")
+#' @export
+summary.binomscreenr <- function(obj){
+    if(!("binomscreenr" %in% class(obj))) stop("obj not binomscreenr class")
     cat("Call:\n")
     print(obj$Call)
     cat("\n\nLogistic regression model summary:")
@@ -338,46 +370,39 @@ summary.LRscreening <- function(obj){
     cat("\nOut-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
     print(obj$CrossValPerf)
 }
-#################################################################################
-## S3 print method for LRscreening objects produced by logisticScreening()
-#################################################################################
-#' Title in Title Case
+#' An S3 Print Method
 #'
-#' \code{print.LRScreening} Short description.
+#' \code{print.binomscreenr} A print method for \code{binomscreenr} objects.
 #'
-#' Longer description,
-#'
-#' @param Arguments.
-#'
-#' @return Contents of "Value"
+#' @param obj An object of class \code{binomscreenr} produced by function
+#' \code{binomialScreening}
 #'
 #' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
-print.LRscreening <- function(obj){
-    if(!("LRscreening" %in% class(obj))) stop("obj not LRscreening class")
+print.binomscreenr <- function(obj){
+    if(!("binomscreenr" %in% class(obj))) stop("obj not binomscreenr class")
     cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
     print(obj$CrossValPerf)
 }
-#################################################################################
-## S3 plot method for LRscreening objects produced by logisticScreening()
-#################################################################################
-#' Title in Title Case
+
+
+#' An S3 Plot Method
 #'
-#' \code(plot.LRscreening) Short description.
+#' \code(plot.binomscreenr) A \code{plot} method for \code{binomscreenr}
+#' objects.
 #'
 #' A wrapper function for \code{lattice::xyplot} customized to produce a plot
 #' of Receiver Operating Characteristic curves.
 #'
-#' @param Arguments.
+#' @param obj An object of class \code{binomscreenr} produced by function
+#' \code{binomialScreening}
 #'
 #' @return A \code{lattice} graphical object
 #'
 #' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
-#' @examples
-#'
 #' @export
-plot.LRscreening <- function(obj, main = "Receiver Operating Characteristics",
+plot.binomscreenr <- function(obj, main = "Receiver Operating Characteristics",
                              ...){
     nrows <- dim(obj$CrossValPerf)[1]
     d.lty <- c(2, 1)
