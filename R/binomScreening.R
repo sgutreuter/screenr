@@ -182,7 +182,6 @@ summary.Bandason <- function(x){
     print(x$Call)
     cat("\nroc (In-sample Receiver Operating Characteristic):\n")
     print(x$roc)
-    cat("\nscores (data frame including Bandason scores)\n")
 }
 
 
@@ -439,10 +438,9 @@ plot.binomscreenr <- function(obj, main = "Receiver Operating Characteristics",
 #'
 #' \code{testCounts} Expected tests per positive
 #'
-#' Development of a simple testing screening tool based on the sum of ordinal
-#' numeric responses to questions which are predictive of the testing results.
-#' \code{logisticScreening} will generally outperform this approach, and
-#' \code{Bandason} is provided mainly for comparison.
+#' Compute the expected number of tests which need to be performed in order
+#' to identify the first positive test result, and the expected number of
+#' false positives among that number of tests.
 #'
 #' @param prev Proportion of the population expressing positive test results.
 #' @param SensSpec A data frame containing columns '"sensitivity"' and
@@ -486,8 +484,8 @@ testCounts <- function(prev, SensSpec){
             (1 - ss[["specificity"]]) * (1 - prev)) / (ss[["sensitivity"]] * prev)
     Efn <- (1 - ss[["sensitivity"]]) * Etpp
     result <- data.frame(cbind(ss, Etpp, Efn))
-    names(result)[ncol(ss) + c(1, 2)] <- c("Expected_Tests_per_Positive",
-                                           "Expected_False_Negatives_per_Positive")
+    names(result)[ncol(ss) + c(1, 2)] <- c("E(Tests/Pos)",
+                                           "E(FalseNegs/Pos)")
     result
 }
 
