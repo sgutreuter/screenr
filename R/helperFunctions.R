@@ -17,7 +17,6 @@
 ##
 #################################################################################
 
-
 #' Sample Size for Joint Testing of Sensitivity and Specificity
 #'
 #' \code{nSensSpec} Returns required number of positives and negatives
@@ -55,11 +54,10 @@ nSensSpec <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
     data.frame(n.pos = ceiling(n.pos), n.neg = ceiling(n.neg))
 }
 
-
 #' Sensitivity and Specificity from a 2 x 2 Table
 #'
 #' \code{SensSpec} Returns sensitivity and specificity of a test.
-#' @parm x A 2 x 2 table, with negatives appearing first in rows and columns.
+#' @param x A 2 x 2 table, with negatives appearing first in rows and columns.
 #' @return A list containing components sensitivity and specificity.
 #' @examples
 #' TrueResults <- ordered(c(0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0))
@@ -83,15 +81,15 @@ sens_spec <- function(x){
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor
 #'
-#' @param link Currently one of "logit", "cloglog" or "probit"
-#' @param lp The linear predictor
+#' @param link Character link function (one of "logit", "cloglog" or "probit")
+#' @param lp Numeric linear predictor
 #'
 #' @return The inverse of the link function for the linear predictor.
-#'
-#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
+#' @export
 inverseLink <- function(link, lp){
+    if(!link %in% c("logit", "cloglog", "probit")) stop(Bad link specification)
     if(link == "logit"){
-        p <- locfit::expit(lp)
+        p <- exp(lp) / (1 + exp(lp))
     }else{
         if(link == "cloglog"){
             p <- 1 - exp(-exp(lp))
@@ -102,13 +100,12 @@ inverseLink <- function(link, lp){
     p
 }
 
-
 #' #' An S3 Plot Method
 #'
 #' \code{plot.ROC} An S3 plotting method for Receiver Operating Characteristic
-#' objects created by function plot.Bandason().
+#' objects created by function plot.simplescreenr().
 #'
-#' @param x A Bandason class object.
+#' @param x An object of class ROC.
 #' @export
 plot.ROC <- function(x){
     if(!("ROC" %in% class(x))) stop("x must be an ROC object")
@@ -120,7 +117,6 @@ plot.ROC <- function(x){
     text(x$sensitivity ~ x$FPP, labels = x$score, pos = 2)
 }
 
-
 #' Expected Number of Tests Required per Positive Result
 #'
 #' \code{testCounts} Expected tests per positive
@@ -129,16 +125,17 @@ plot.ROC <- function(x){
 #' to identify the first positive test result, and the expected number of
 #' false positives among that number of tests.
 #'
-#' @param prev Proportion of the population expressing positive test results.
 #' @param SensSpec A data frame containing columns '"sensitivity"' and
-#' '"specificity"', or an object of class "Bandason" or class "binomscreenr".
+#' '"specificity"', or an object of class "simplescreenr" or "binomscreenr".
+#' @param prev Numeric proportion of the population expressing positive test
+#' results.  \code{prev} is optional for class "simplescreenr" and
+#' "binomscreenr" objects, and defaults to prevalence in the training sample
+#' if not specified.
 #'
 #' @return A data frame containing sensitivity, specificity, the expected
 #' number of tests required to observe a single positive test result and,
 #' among those, the expected number of false negatives per positive test
 #' result.
-#'
-#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
 #' @examples
 #' data(unicorns)
@@ -149,13 +146,14 @@ plot.ROC <- function(x){
 #' testCounts(unitool)
 #'
 #' @export
-testCounts <- function(prev, SensSpec){
-    if(!(prev > 0 & prev < 1)) stop("prev must be in (0,1)")
+testCounts <- function(SensSpec = NULL, prev = NULL){
     if("binomscreenr" %in% class(SensSpec)){
         ss <- SensSpec[["CrossValPerf"]]
+        if(is.null(prev)) prev <- SensSpec$Prevalence
     } else {
-        if("Bandason" %in% class(SensSpec)){
-            ss <- SensSpec[["roc"]]
+        if("simplescreenr" %in% class(SensSpec)){
+            ss <- SensSpec[["InSamplePerf"]]
+            if(is.null(prev)) prev <- SensSpec$Prevalence
         } else {
             ss <- SensSpec
             if(!("sensitivity" %in% names(ss))) stop("No column 'sensitivity")
@@ -164,9 +162,10 @@ testCounts <- function(prev, SensSpec){
                 stop("sensitivity not in (0,1)")
             if(any(ss[["specificity"]] < 0 | ss[["specificity"]] > 1))
                 stop("specificity not in (0,1)")
+            if(is.null(prev)) stop("Argument prev missing")
+            if(!(prev > 0 & prev < 1)) stop("prev must be in (0,1)")
         }
     }
-    prev <- prev[1]
     Etpp <- ((ss[["sensitivity"]] * prev) +
             (1 - ss[["specificity"]]) * (1 - prev)) / (ss[["sensitivity"]] * prev)
     Efn <- (1 - ss[["sensitivity"]]) * Etpp

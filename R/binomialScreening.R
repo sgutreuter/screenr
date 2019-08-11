@@ -16,64 +16,89 @@
 ##                  connection therewith.
 ##
 #################################################################################
-
-#' Development of a Testing Screening Tool Based on Binomial Regression
+#' A Test-Screening Tool Based on Binomial Regression
 #'
-#' \code{binomialScreening} Development of a screeing tool based on binomial
-#' regression.
+#' \code{binomialScreening} Estimates parameters and cross-validated performance
+#' of test screening based on binomial regression.
 #'
-#' Development of a screening tool based on predicted probabilities of positive
-#' test results based on logistic regression.  The results provide information
-#' from which to choose a probability threshold above which individual
-#' out-of-sample predictive probabilies indicate the need to test that
-#' individual.  Out-of-sample performance is estimated using \emph{k}-fold
+#' The results provide information from which to choose a probability threshold
+#' above which individual out-of-sample probabilies indicate the need to perform
+#' a diagnostic test.  Out-of-sample performance is estimated using \emph{k}-fold
 #' cross validation.
 #'
 #' S3 \code{plot}, \code{print} and \code{summary} methods are available.
 #'
-#' @param formula A formula which is passed to \code{stats::glm()}.
-#' @param data  A data frame containing the testing outcome and predictive
-#' covariates to be used for testing screening.  The testing outcome must
-#' be binary (0,1) indicating negative and positive test results, respectively.
-#' The covariates are typically binary (0 = no, 1 = yes) responses to
-#' questions which may be predictive of the test result, but any covariates
-#' compatible with \code{glm} can be used.
-#' @parm link Link function for binomial regression.  Choices are "logit"
-#' (default), "cloglog" or "probit".
-#' @param Nfolds The number of folds used for \emph{k}-fold cross validation.
-#' Default = 10.
-#' @param p.threshold A vector of reference probabilities for estimation of
-#' Receiver Operating Characteristics.
+#' @param formula An object of class \code{\link{formula}}  defining the testing
+#' outcome and predictor covariates, which is passed to \code{stats::glm()}.
+#' @param data  The "training" sample; a data frame containing the testing
+#' outcome and predictive covariates to be used for testing screening.  The
+#' testing outcome must be binary (0,1) indicating negative and positive test
+#' results, respectively, or logical (TRUE/FALSE).  The covariates are typically
+#' binary (0 = no, 1 = yes) responses to questions which may be predictive of
+#' the test result, but any numeric or factor covariates can be used.
+#' @param link The character-valued name of the link function for binomial
+#' regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
+#' "\code{probit}".
+#' @param Nfolds An integer number of folds used for \emph{k}-fold cross
+#' validation (default = 20).
+#' @param p.threshold A numeric vector of reference probabilities for estimation
+#' of Receiver Operating Characteristics.
 #'
-#' @return A list of class LRscreeing containing the elements:
+#' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{Call} The function call.
-#' \item{ModelFit} An object produced by \code{stats::glm()}.
-#' \item{ParmEst} The binomial regression  parameter estimates.
-#' \item{InSamplePerf} A data frame containing in-sample sensitivities and
-#' specificities.
-#' \item{CrossVal} A data frame containing cross-validation results.
-#' \item{CrossValPerf} A data frame containing out-of-sample
+#' \item{ModelFit} An object of class \code{\link{glm}}.
+#' \item{Prevalence} Prevalence of the test condition in the training sample.
+#' \item{ParmEst} A vector containing the binomial regression parameter estimates.
+#' \item{InSamplePerf} A data frame containing in-sample (overly-optimistic)
 #' sensitivities and specificities.
+#' \item{CrossVal} A data frame containing \emph{k}-fold cross-validation results.
+#' \item{CrossValPerf} A data frame containing out-of-sample  sensitivities and
+#' specificities.
 #' }
 #'
-#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
-#'
-#' @seealso \code{\link{stats::glm}}
+#' @seealso \code{\link{glm}}
 #'
 #' @examples
+#' ## Evaluate the performance of screening thresholds based on a logisitc model
 #' data(unicorns)
+#' help(unicorns)
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, Nfolds = 20,
+#'                              data = unicorns, link = "logit",
 #'                              p.threshold = c(seq(0.01, 0.10, by = 0.015),
 #'                                              seq(.15, 0.95, by = 0.05)))
 #' summary(unitool)
-#' plot(wtf)
+#' plot(unitool)
+#' testCounts(SensSpec = unitool)
+#'
+#' ## Example implementation of screening based on those results
+#' ## Suppose there are new observations (excluding testing) from two previously
+#' ## untested unicorns:
+#' new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0),
+#'                    Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0))
+#' print(new)
+#' ## Compute point estimates of their predicted probabilities testing positive:
+#' inverseLink("logit",
+#'             as.matrix(cbind(c(1, 1), new[, 2:6])) %*%
+#'                             as.matrix(unitool$ParmEst, ncol = 1))
+#'
+#' ## If p.threshold = 0.025 is chosen as the screening threshold
+#' ## (sensitivity and specificity 77\% and 69\%, respectively) then "Bernie P."
+#' ## would be offered testing and "Alice D." would not.
+#'
+#' ## In practice, the computation of the probabilities of positive test results
+#' ## among newly observed individuals might be coded outside of R using, say, a
+#' ## spreadsheet.  Within R it is simpler to use \code{predict}:
+#' inverseLink("logit", predict(unitool$ModelFit, newdata = new))
 #' @export
-binomialScreening <- function(formula, data = NULL, link = "logit", Nfolds = 10,
+binomialScreening <- function(formula,
+                              data = NULL,
+                              link = "logit",
+                              Nfolds = 20L,
                               p.threshold = c(seq(0.01, 0.09, 0.01),
                                               seq(0.1, 0.6, 0.05),
-                                              seq(0.65, 0.95, 0.10 ))){
+                                              seq(0.65, 0.95, 0.10 )),
+                              ...){
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
@@ -85,8 +110,9 @@ binomialScreening <- function(formula, data = NULL, link = "logit", Nfolds = 10,
     dat <- dat[complete.cases(dat), ]
     if(Nfolds > 0.20*dim(dat)[1])
         stop("Nfolds must be < 20% of number of complete observations")
-    y <- model.response(dat, "numeric")
+    y <- stats::model.response(dat, "numeric")
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
+    prev <- mean(y, na.rm = TRUE)
     lrfit <- stats::glm(formula, data = dat, family = binomial(link = link))
     insamp <- data.frame(NULL)
     pp <- inverseLink(link, lrfit$linear.predictors)
@@ -128,6 +154,7 @@ binomialScreening <- function(formula, data = NULL, link = "logit", Nfolds = 10,
     class(SensSpec.results) <-  c("ROC", "data.frame")
     result <- list(Call = call,
                    ModelFit = lrfit,
+                   Prevalence = prev,
                    ParmEst = lrfit$coeff,
                    InSamplePerf = insamp,
                    CrossVal = cv.results,
@@ -146,8 +173,6 @@ binomialScreening <- function(formula, data = NULL, link = "logit", Nfolds = 10,
 #' @param obj An object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}
 #'
-#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
-#'
 #' @examples
 #' @export
 summary.binomscreenr <- function(obj){
@@ -165,8 +190,6 @@ summary.binomscreenr <- function(obj){
 #'
 #' @param obj An object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}
-#'
-#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
 print.binomscreenr <- function(obj){
     if(!("binomscreenr" %in% class(obj))) stop("obj not binomscreenr class")
@@ -187,8 +210,6 @@ print.binomscreenr <- function(obj){
 #' \code{binomialScreening}
 #'
 #' @return A \code{lattice} graphical object
-#'
-#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
 #' @export
 plot.binomscreenr <- function(obj, main = "Receiver Operating Characteristics",

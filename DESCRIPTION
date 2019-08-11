@@ -1,0 +1,21 @@
+Package: screenr
+Type: Package
+Title: Construction of Binary Test-Screening Rules
+Version: 0.1
+Date: 2019-08-11
+Author: Steve Gutreuter
+Maintainer: Steve Gutreuter <sgutreuter at gmail.com>
+Depends: lattice
+Description: The screenr package enables construction of binary test-screening
+tools.  Consider the situation where a diagnostic test for some condition is
+expensive, and the condition is rare.  In that case, universal testing
+would not be efficient in terms of the yield of postive results per test
+performed.  Now suppose that responses to a set of simple questions may be
+predictive of the condition.  screenr enables the estimation of thresholds
+for making decisions about when to test in order to screen in/out individuals
+based on Receiver Operating Characteristics (ROC) estimated from an initial
+sample.  The choice of a particular screening threshold is left to the user,
+and should be based on careful consideration of application-specific tradeoffs
+between sensitivity and specificit
+License: GPL (>= 2)
+Encoding: UTF-8

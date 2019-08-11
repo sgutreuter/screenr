@@ -14,30 +14,38 @@
 ##                  material nor shall the fact of distribution constitute any
 ##                  such warranty, and no responsibility is assumed by the CDC in
 ##                  connection therewith.
-##
 #################################################################################
 
-
-#' A Simple Un-optimized HIV Testing Screener
+#' A Simple Un-optimized Test Screening Tool
 #'
-#' \code{simpleScreening} Development of a simple screening tool.
+#' \code{simpleScreening} Computes the in-sample performances for development
+#' of a very simple test screening tool.
 #'
-#' Development of a simple testing screening tool based on the sum of ordinal
-#' numeric responses to questions which are predictive of the testing results.
-#' \code{binomialScreening} will generally outperform this approach, and
-#' \code{simpleScreening} is provided mainly for comparison.
+#' The results provide information from which to choose a counting-based
+#' threshold score above which a diagnostic test would be performed.
+#' \code{binomialScreening} will almost certainly outperform this approach, and
+#' \code{simpleScreening} is provided for use in those situations where post-
+#' estimation technical capacity is limited to counting responses to questions.
 #'
 #' S3 \code{plot}, \code{print} and \code{summary} methods are available.
 #'
-#' @param formula A formula for the screener.
-#' @param data A data frame containing the testing outcome and predictive
-#' covariates to be used for testing screening.  The testing outcome must
-#' be binary (0,1) indicating negative and positive test results, respectively.
-#' The covariates are typically binary (0 = no, 1 = yes) responses to
-#' questions which may be predictive of the test result.
+#' @param formula An object of class \code{\link{formula}} defining the testing
+#' outcome and predictor covariates.
+#' @param data The "training" sample; a data frame containing the testing outcome
+#' and predictive covariates to be used for testing screening.  The testing
+#' outcome must be binary (0,1) indicating negative and positive test results,
+#' respectively, or logical (TRUE/FALSE).  The covariates are typically binary
+#' (0 = no, 1 = yes) responses to questions, but the responses may also be
+#' ordinal numeric values.
 #'
-#' @return A list having S3 class "simplescreenr" containing the call, the
-#' Receiver Operating Characteristics and the scores.
+#' @return An object of class "simplescreenr" containing the elements:
+#' \describe{
+#' \item{Call} The function call.
+#' \item{Prevalence}  Prevalence of the test condition in the training sample.
+#' \item(InSamplePerf) A data frame containing in-sample (overly-optimistic)
+#' sensitivities and specificities.
+#' \item{Scores} The training sample, including the scores.
+#'}
 #'
 #' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
@@ -48,10 +56,11 @@
 #'
 #' @examples
 #' data(unicorns)
-#' simpletool <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
+#' simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
 #'                        data = unicorns)
-#' summary(simpletool)
-#' plot(simpletool)
+#' summary(simple)
+#' plot(simple)
+#' testCounts(simple)
 #'
 #' @export
 simpleScreening <- function(formula, data){
@@ -63,6 +72,8 @@ simpleScreening <- function(formula, data){
     mf <- eval(mf, parent.frame())
     dat <- data[complete.cases(data[, names(mf), ]), ]
     y <- model.response(mf, "numeric")
+    if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
+    prev <- mean(y, na.rm = TRUE)
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
@@ -78,8 +89,11 @@ simpleScreening <- function(formula, data){
                                      specificity = ss$specificity))
         class(roc) <- c("ROC", "data.frame")
     }
-    scores <- cbind(dat, Bandason.score = score)
-    result <- list(Call = call, roc = roc, scores = scores)
+    scores <- cbind(dat, score = score)
+    result <- list(Call = call,
+                   Prevalence = prev,
+                   InSamplePerf = roc,
+                   Scores = scores)
     class(result) <- "simplescreenr"
     invisible(result)
 }
@@ -93,7 +107,7 @@ simpleScreening <- function(formula, data){
 #' @param x A simplescreenr class object.
 print.simplescreenr <- function(x){
     if(!class(x) == "simplescreenr") stop("x not a simplescreenr object")
-    x$roc
+    x$SensSpec
 }
 
 
@@ -106,7 +120,7 @@ print.simplescreenr <- function(x){
 #' @export
 plot.simplescreenr <- function(x){
     if(!("simplescreenr" %in% class(x))) stop("x must be a simplescreenr object")
-    plot.ROC(x$roc)
+    plot.ROC(x$SensSpec)
 }
 
 
@@ -118,12 +132,12 @@ plot.simplescreenr <- function(x){
 #' @param x A simplescreenr class object.
 #' @export
 summary.simplescreenr <- function(x){
-    if(!class(x) == "simplescreenr") stop("x not a Bandason object")
+    if(!class(x) == "simplescreenr") stop("x not a simplescreenr object")
     cat("A list object with three components:\n")
     cat("\nCall:\n")
     print(x$Call)
     cat("\nroc (In-sample Receiver Operating Characteristic):\n")
-    print(x$roc)
+    print(x$SensSpec)
 }
 
 ################################   END of FILE   ################################
