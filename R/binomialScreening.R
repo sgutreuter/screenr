@@ -18,15 +18,11 @@
 #################################################################################
 #' A Test-Screening Tool Based on Binomial Regression
 #'
-#' \code{binomialScreening} Estimates parameters and cross-validated performance
-#' of test screening based on binomial regression.
-#'
-#' The results provide information from which to choose a probability threshold
-#' above which individual out-of-sample probabilies indicate the need to perform
-#' a diagnostic test.  Out-of-sample performance is estimated using \emph{k}-fold
-#' cross validation.
-#'
-#' S3 \code{plot}, \code{print} and \code{summary} methods are available.
+#' Estimate binomial model parameters and cross-validated performance of test
+#' screening based on binomial regression.  The results provide information from
+#' which to choose a probability threshold above which individual out-of-sample
+#' probabilies indicate the need to perform a diagnostic test.  Out-of-sample
+#' performance is estimated using \emph{k}-fold cross validation.
 #'
 #' @param formula An object of class \code{\link{formula}}  defining the testing
 #' outcome and predictor covariates, which is passed to \code{stats::glm()}.
@@ -46,21 +42,22 @@
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
-#' \item{Call} The function call.
-#' \item{ModelFit} An object of class \code{\link{glm}}.
-#' \item{Prevalence} Prevalence of the test condition in the training sample.
-#' \item{ParmEst} A vector containing the binomial regression parameter estimates.
-#' \item{InSamplePerf} A data frame containing in-sample (overly-optimistic)
-#' sensitivities and specificities.
-#' \item{CrossVal} A data frame containing \emph{k}-fold cross-validation results.
-#' \item{CrossValPerf} A data frame containing out-of-sample  sensitivities and
-#' specificities.
+#' \item{\code{Call}}{The function call.}
+#' \item{\code{ModelFit}}{An object of class \code{\link{glm}}.}
+#' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
+#' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
+#' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
+#' sensitivities and specificities.}
+#' \item{\code{CrossVal}}{A data frame containing \emph{k}-fold cross-validation results.}
+#' \item{\code{CrossValPerf}}{A data frame containing out-of-sample  sensitivities and
+#' specificities.}
 #' }
 #'
 #' @seealso \code{\link{glm}}
 #'
 #' @examples
 #' ## Evaluate the performance of screening thresholds based on a logisitc model
+#'
 #' data(unicorns)
 #' help(unicorns)
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
@@ -74,6 +71,7 @@
 #' ## Example implementation of screening based on those results
 #' ## Suppose there are new observations (excluding testing) from two previously
 #' ## untested unicorns:
+#'
 #' new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0),
 #'                    Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0))
 #' print(new)
@@ -89,6 +87,7 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.  Within R it is simpler to use \code{predict}:
+#'
 #' inverseLink("logit", predict(unitool$ModelFit, newdata = new))
 #' @export
 binomialScreening <- function(formula,
@@ -165,15 +164,11 @@ binomialScreening <- function(formula,
 
 
 
-#' An S3 Summary Method
-#'
-#' \code{summary.binomscreenr} A \code{summary} method for \code{binomscreenr}
-#' objects.
+#' An S3 Summary Method for \code{binomscreenr} Objects.
 #'
 #' @param obj An object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}
 #'
-#' @examples
 #' @export
 summary.binomscreenr <- function(obj){
     if(!("binomscreenr" %in% class(obj))) stop("obj not binomscreenr class")
@@ -184,13 +179,11 @@ summary.binomscreenr <- function(obj){
     cat("\nOut-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
     print(obj$CrossValPerf)
 }
-#' An S3 Print Method
-#'
-#' \code{print.binomscreenr} A print method for \code{binomscreenr} objects.
+#' An S3 Print Method for \code{binomscreenr} Objects.
 #'
 #' @param obj An object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}
-#'
+#' @export
 print.binomscreenr <- function(obj){
     if(!("binomscreenr" %in% class(obj))) stop("obj not binomscreenr class")
     cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
@@ -198,19 +191,15 @@ print.binomscreenr <- function(obj){
 }
 
 
-#' An S3 Plot Method
+#' An S3 Plot Method for \code{binomscreenr} Objects
 #'
-#' \code(plot.binomscreenr) A \code{plot} method for \code{binomscreenr}
-#' objects.
-#'
-#' A wrapper function for \code{lattice::xyplot} customized to produce a plot
-#' of Receiver Operating Characteristic curves.
+#' This is essentially a wrapper function for \code{lattice::xyplot} customized
+#' to produce a graph of Receiver Operating Characteristic curves.
 #'
 #' @param obj An object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}
 #'
 #' @return A \code{lattice} graphical object
-#'
 #' @export
 plot.binomscreenr <- function(obj, main = "Receiver Operating Characteristics",
                              ...){

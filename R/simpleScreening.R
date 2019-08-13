@@ -18,16 +18,13 @@
 
 #' A Simple Un-optimized Test Screening Tool
 #'
-#' \code{simpleScreening} Computes the in-sample performances for development
-#' of a very simple test screening tool.
-#'
-#' The results provide information from which to choose a counting-based
-#' threshold score above which a diagnostic test would be performed.
-#' \code{binomialScreening} will almost certainly outperform this approach, and
-#' \code{simpleScreening} is provided for use in those situations where post-
-#' estimation technical capacity is limited to counting responses to questions.
-#'
-#' S3 \code{plot}, \code{print} and \code{summary} methods are available.
+#' Compute the in-sample performances for development of a very simple test
+#' screening tool. The results provide information from which to choose a
+#' counting-based threshold score above which a diagnostic test would be
+#' performed. \code{binomialScreening} will almost certainly outperform this
+#' approach, and \code{simpleScreening} is provided for use in those situations
+#' where post-estimation technical capacity is limited to counting responses to
+#' questions.
 #'
 #' @param formula An object of class \code{\link{formula}} defining the testing
 #' outcome and predictor covariates.
@@ -40,19 +37,19 @@
 #'
 #' @return An object of class "simplescreenr" containing the elements:
 #' \describe{
-#' \item{Call} The function call.
-#' \item{Prevalence}  Prevalence of the test condition in the training sample.
-#' \item(InSamplePerf) A data frame containing in-sample (overly-optimistic)
-#' sensitivities and specificities.
-#' \item{Scores} The training sample, including the scores.
-#'}
+#' \item{\code{Call}}{The function call.}
+#' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
+#' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly optimistic)
+#' sensitivities and specificities.}
+#' \item{\code{Scores}}{The training sample, including the scores.}
+#' }
 #'
 #' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
 #' @references Bandason et al 2016. Validation of a screening tool to
 #' identify older children living with HIV in primary care facilities in high
 #' HIV prevalence settings. AIDS 30(5):779-785
-#' \url{http://dx.doi.org/10.1097/QAD.0000000000000959
+#' \url{http://dx.doi.org/10.1097/QAD.0000000000000959}
 #'
 #' @examples
 #' data(unicorns)
@@ -99,22 +96,17 @@ simpleScreening <- function(formula, data){
 }
 
 
-#' An S3 Print Method
+#' An S3 Print Method for \code{simplescreenr} Objects
 #'
-#' \code(print.simplescreenr) An S3 printing method for objects created by
-#' function \code(simpleScreening()).
-#'
-#' @param x A simplescreenr class object.
+#' @param x A \code{simplescreenr} class object.
+#' @export
 print.simplescreenr <- function(x){
     if(!class(x) == "simplescreenr") stop("x not a simplescreenr object")
     x$SensSpec
 }
 
 
-#' An S3 Plot Method
-#'
-#' \code(plot.simplescreenr) An S3 plotting method for objects created by
-#' function \code(simpleScreening()).
+#' An S3 Plot Method for \code{simplescreenr} Objects
 #'
 #' @param x A simplescreenr class object.
 #' @export
@@ -124,10 +116,7 @@ plot.simplescreenr <- function(x){
 }
 
 
-#' An S3 Summary Method
-#'
-#' \code{summary.simplescreenr} An S3 summary method for objects created by
-#' function \code{simpleScreening()}.
+#' An S3 Summary Method for \code{simplescreenr} Objects
 #'
 #' @param x A simplescreenr class object.
 #' @export

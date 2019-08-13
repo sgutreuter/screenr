@@ -19,15 +19,14 @@
 
 #' Sample Size for Joint Testing of Sensitivity and Specificity
 #'
-#' \code{nSensSpec} Returns required number of positives and negatives
+#' Estimate the required number of positive and negative test results for
+#' hypothesis testing against the joint null hypothesis H0: Sens = SnsCrit and
+#' Spec = SpcCrit.
 #'
-#' Sample size required for testing against the joint null hypothesis
-#' H0: Sens = SnsCrit and Spec = SpcCrit
-#'
-#' @param Sens A vector of snticipated sensitivities (0 < Sens < 1).
-#' @param Spec A vector of anticipated specificities (0 < Sens < 1).
+#' @param Sens A vector of anticipated sensitivities (0 < Sens < 1).
+#' @param Spec A vector of anticipated specificities (0 < Spec < 1).
 #' @param SnsCrit Critical value for sensitivity.
-#' @param SnsCrit Critical value for specificity.
+#' @param SpcCrit Critical value for specificity.
 #' @param alpha Probability of Type I error.
 #' @param power Desired power.
 #' @return A data frame containing the required number of positive and negative
@@ -38,7 +37,7 @@
 #' @examples
 #' sens <- c(rep(0.8, 4), rep(0.85, 4), rep(0.90, 4))
 #' spec <- rep(c(0.65, 0.70, 0.75, 0.8 ), 3)
-#' nSensSpec(sens, spec, SnsCrit = 0.70, SpcCrit = 0.60)
+#' nSensSpec(sens, spec, SnsCrit = 0.90, SpcCrit = 0.70)
 #' @export
 nSensSpec <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
                       alpha = 0.05, power =0.8){
@@ -56,11 +55,11 @@ nSensSpec <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
 
 #' Sensitivity and Specificity from a 2 x 2 Table
 #'
-#' \code{SensSpec} Returns sensitivity and specificity of a test.
-#' @param x A 2 x 2 table, with negatives appearing first in rows and columns.
+#' Computes sensitivity and specificity of a test.
+#' @param x A 2 x 2 table, with the numbers of negative test results appearing
+#' first in both rows and columns.
 #' @return A list containing components sensitivity and specificity.
 #' @examples
-#' TrueResults <- ordered(c(0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0))
 #' TestResults <- ordered(c(0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0))
 #' sens_spec(table(TestResults, TrueResults))
 #' @export
@@ -76,8 +75,6 @@ sens_spec <- function(x){
 
 #' Inverse of the Link for a Linear Predictor
 #'
-#' \code{inverseLink}
-#'
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor
 #'
@@ -87,7 +84,7 @@ sens_spec <- function(x){
 #' @return The inverse of the link function for the linear predictor.
 #' @export
 inverseLink <- function(link, lp){
-    if(!link %in% c("logit", "cloglog", "probit")) stop(Bad link specification)
+    if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
     if(link == "logit"){
         p <- exp(lp) / (1 + exp(lp))
     }else{
@@ -100,12 +97,11 @@ inverseLink <- function(link, lp){
     p
 }
 
-#' #' An S3 Plot Method
+#' An S3 Plot Method for \code{ROC} Objects
 #'
-#' \code{plot.ROC} An S3 plotting method for Receiver Operating Characteristic
-#' objects created by function plot.simplescreenr().
 #'
-#' @param x An object of class ROC.
+#' @param x An object of class ROC as produced by \code{simpleScreening()}
+#'
 #' @export
 plot.ROC <- function(x){
     if(!("ROC" %in% class(x))) stop("x must be an ROC object")
@@ -117,19 +113,17 @@ plot.ROC <- function(x){
     text(x$sensitivity ~ x$FPP, labels = x$score, pos = 2)
 }
 
-#' Expected Number of Tests Required per Positive Result
-#'
-#' \code{testCounts} Expected tests per positive
+#' Expected Number of Tests Required per Positive Test Result
 #'
 #' Compute the expected number of tests which need to be performed in order
 #' to identify the first positive test result, and the expected number of
 #' false positives among that number of tests.
 #'
-#' @param SensSpec A data frame containing columns '"sensitivity"' and
-#' '"specificity"', or an object of class "simplescreenr" or "binomscreenr".
+#' @param SensSpec A data frame containing columns "sensitivity" and
+#' '"specificity"', or an object of class 'simplescreenr' or 'binomscreenr'.
 #' @param prev Numeric proportion of the population expressing positive test
-#' results.  \code{prev} is optional for class "simplescreenr" and
-#' "binomscreenr" objects, and defaults to prevalence in the training sample
+#' results.  \code{prev} is optional for class 'simplescreenr' and
+#' 'binomscreenr' objects, and defaults to prevalence in the training sample
 #' if not specified.
 #'
 #' @return A data frame containing sensitivity, specificity, the expected
