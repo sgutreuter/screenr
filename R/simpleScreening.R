@@ -22,7 +22,7 @@
 #' screening tool. The results provide information from which to choose a
 #' counting-based threshold score above which a diagnostic test would be
 #' performed. \code{binomialScreening} will almost certainly outperform this
-#' approach, and \code{simpleScreening} is provided for use in those situations
+#' approach, and \code{simpleScreening} is intended for use in those situations
 #' where post-estimation technical capacity is limited to counting responses to
 #' questions.
 #'
@@ -43,8 +43,6 @@
 #' sensitivities and specificities.}
 #' \item{\code{Scores}}{The training sample, including the scores.}
 #' }
-#'
-#' @author Steve Gutreuter, \email{sgutreuter@@gmail.com}
 #'
 #' @references Bandason et al 2016. Validation of a screening tool to
 #' identify older children living with HIV in primary care facilities in high
@@ -101,32 +99,35 @@ simpleScreening <- function(formula, data){
 #' @param x A \code{simplescreenr} class object.
 #' @export
 print.simplescreenr <- function(x){
-    if(!class(x) == "simplescreenr") stop("x not a simplescreenr object")
+    if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     x$InSamplePerf
 }
 
 
 #' An S3 Plot Method for \code{simplescreenr} Objects
 #'
-#' @param x A simplescreenr class object.
+#' @param x A \code{simplescreenr} class object.
 #' @export
 plot.simplescreenr <- function(x){
-    if(!("simplescreenr" %in% class(x))) stop("x must be a simplescreenr object")
+    if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     plot.ROC(x$InSamplePerf)
 }
 
 
 #' An S3 Summary Method for \code{simplescreenr} Objects
 #'
-#' @param x A simplescreenr class object.
+#' @param x A \code{simplescreenr} class object.
 #' @export
 summary.simplescreenr <- function(x){
-    if(!class(x) == "simplescreenr") stop("x not a simplescreenr object")
-    cat("A list object with three components:\n")
+    if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
+    cat("A list object with four components:\n")
     cat("\nCall:\n")
     print(x$Call)
-    cat("\nroc (In-sample Receiver Operating Characteristic):\n")
+    cat("\nPrevalence (In-sample prevalence of condition)\n")
+    print(x$Prevalence)
+    cat("\nInSampPerf (In-sample Receiver Operating Characteristic):\n")
     print(x$InSamplePerf)
+    cat("\nScores (Data and testing scores)")
 }
 
 ################################   END of FILE   ################################
