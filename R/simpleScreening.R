@@ -102,7 +102,7 @@ simpleScreening <- function(formula, data){
 #' @export
 print.simplescreenr <- function(x){
     if(!class(x) == "simplescreenr") stop("x not a simplescreenr object")
-    x$SensSpec
+    x$InSamplePerf
 }
 
 
@@ -112,7 +112,7 @@ print.simplescreenr <- function(x){
 #' @export
 plot.simplescreenr <- function(x){
     if(!("simplescreenr" %in% class(x))) stop("x must be a simplescreenr object")
-    plot.ROC(x$SensSpec)
+    plot.ROC(x$InSamplePerf)
 }
 
 
@@ -126,7 +126,7 @@ summary.simplescreenr <- function(x){
     cat("\nCall:\n")
     print(x$Call)
     cat("\nroc (In-sample Receiver Operating Characteristic):\n")
-    print(x$SensSpec)
+    print(x$InSamplePerf)
 }
 
 ################################   END of FILE   ################################
