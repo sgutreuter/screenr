@@ -7,7 +7,7 @@
 \method{summary}{simplescreenr}(x)
 }
 \arguments{
-\item{x}{A simplescreenr class object.}
+\item{x}{A \code{simplescreenr} class object.}
 }
 \description{
 An S3 Summary Method for \code{simplescreenr} Objects

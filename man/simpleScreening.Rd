@@ -32,7 +32,7 @@ Compute the in-sample performances for development of a very simple test
 screening tool. The results provide information from which to choose a
 counting-based threshold score above which a diagnostic test would be
 performed. \code{binomialScreening} will almost certainly outperform this
-approach, and \code{simpleScreening} is provided for use in those situations
+approach, and \code{simpleScreening} is intended for use in those situations
 where post-estimation technical capacity is limited to counting responses to
 questions.
 }
@@ -50,7 +50,4 @@ Bandason et al 2016. Validation of a screening tool to
 identify older children living with HIV in primary care facilities in high
 HIV prevalence settings. AIDS 30(5):779-785
 \url{http://dx.doi.org/10.1097/QAD.0000000000000959}
-}
-\author{
-Steve Gutreuter, \email{sgutreuter@gmail.com}
 }
