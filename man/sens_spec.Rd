@@ -18,5 +18,6 @@ Computes sensitivity and specificity of a test.
 }
 \examples{
 TestResults <- ordered(c(0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0))
+TrueResults <- ordered(c(0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0))
 sens_spec(table(TestResults, TrueResults))
 }

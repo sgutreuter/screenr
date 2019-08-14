@@ -2,7 +2,7 @@
 % Please edit documentation in R/binomialScreening.R
 \name{binomialScreening}
 \alias{binomialScreening}
-\title{A Test-Screening Tool Based on Binomial Regression}
+\title{Test-Screening Tool Based on Binomial Regression}
 \usage{
 binomialScreening(formula, data = NULL, link = "logit", Nfolds = 20L,
   p.threshold = c(seq(0.01, 0.09, 0.01), seq(0.1, 0.6, 0.05), seq(0.65,

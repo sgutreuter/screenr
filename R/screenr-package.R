@@ -1,4 +1,4 @@
-#' screener
+#' screenr
 #'
 #' The \code{screenr} package enables construction of binary test-screening
 #' tools.  Consider the situation where a diagnostic test for some condition is
@@ -15,5 +15,18 @@
 #' @name screener
 #' @docType package
 #' @author Steve Gutreuter: \email{sgutreuter@@gmail.gov}
+#' @seealso
+#' The high-level functions in the \code{screenr} package are:
+#' \describe{
+#' \item{\code{binomialScreening}}{Test-Screening Tool Based on Binomial Regression}
+#' \item{\code{inverseLink}}{Inverse of Binomial Regression Link Functions}
+#' \item{\code{nSensSpec}}{Sample Size for Joint Testing of Sensitivity and Specificity}
+#' \item{\code{sens_spec}}{Sensitivity and Specificity from a 2 x 2 Table}
+#' \item{\code{simpleScreening}}{Simple Un-optimized Test-Screening Tool}
+#' \item{\code{testCounts}}{Expected Number of Tests Required per Positive Test Result}
+#'}
+#'
+#' In addition, there are \code{plot}, \code{print} and \code{summary} methods
+#' for the objects produced by \code{binomialScreening} and \code{simpleScreening}.
 #'
 NULL

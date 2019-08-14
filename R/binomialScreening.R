@@ -16,7 +16,7 @@
 ##                  connection therewith.
 ##
 #################################################################################
-#' A Test-Screening Tool Based on Binomial Regression
+#' Test-Screening Tool Based on Binomial Regression
 #'
 #' Estimate binomial model parameters and cross-validated performance of test
 #' screening based on binomial regression.  The results provide information from
@@ -24,21 +24,22 @@
 #' probabilies indicate the need to perform a diagnostic test.  Out-of-sample
 #' performance is estimated using \emph{k}-fold cross validation.
 #'
-#' @param formula An object of class \code{\link{formula}}  defining the testing
+#' @param formula an object of class \code{\link{formula}}  defining the testing
 #' outcome and predictor covariates, which is passed to \code{stats::glm()}.
-#' @param data  The "training" sample; a data frame containing the testing
+#' @param data  the "training" sample; a data frame containing the testing
 #' outcome and predictive covariates to be used for testing screening.  The
 #' testing outcome must be binary (0,1) indicating negative and positive test
 #' results, respectively, or logical (TRUE/FALSE).  The covariates are typically
 #' binary (0 = no, 1 = yes) responses to questions which may be predictive of
 #' the test result, but any numeric or factor covariates can be used.
-#' @param link The character-valued name of the link function for binomial
+#' @param link the character-valued name of the link function for binomial
 #' regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
 #' "\code{probit}".
-#' @param Nfolds An integer number of folds used for \emph{k}-fold cross
+#' @param Nfolds an integer number of folds used for \emph{k}-fold cross
 #' validation (default = 20).
-#' @param p.threshold A numeric vector of reference probabilities for estimation
+#' @param p.threshold a numeric vector of reference probabilities for estimation
 #' of Receiver Operating Characteristics.
+#' @param ... additional arguments passsed to or from other functions.
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
@@ -166,28 +167,31 @@ binomialScreening <- function(formula,
 
 #' An S3 Summary Method for \code{binomscreenr} Objects.
 #'
-#' @param obj An object of class \code{binomscreenr} produced by function
+#' @param object an object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @export
-summary.binomscreenr <- function(obj){
-    if(!("binomscreenr" %in% class(obj))) stop("obj not binomscreenr class")
+summary.binomscreenr <- function(object, ...){
+    if(!("binomscreenr" %in% class(object))) stop("object not binomscreenr class")
     cat("Call:\n")
-    print(obj$Call)
+    print(object$Call)
     cat("\n\nLogistic regression model summary:")
-    print(summary(obj$ModelFit))
+    print(summary(object$ModelFit))
     cat("\nOut-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
-    print(obj$CrossValPerf)
+    print(object$CrossValPerf)
 }
 #' An S3 Print Method for \code{binomscreenr} Objects.
 #'
-#' @param obj An object of class \code{binomscreenr} produced by function
-#' \code{binomialScreening}
+#' @param obj an object of class \code{binomscreenr} produced by function.
+#' @param ... further arguments passed to or from other methods.
+#' @param quote logical, indicating whether or not strings should be printed
+          with surrounding quotes.
 #' @export
-print.binomscreenr <- function(obj){
-    if(!("binomscreenr" %in% class(obj))) stop("obj not binomscreenr class")
+print.binomscreenr <- function(x, quote = FALSE, ...){
+    if(!("binomscreenr" %in% class(x))) stop("x not binomscreenr class")
     cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
-    print(obj$CrossValPerf)
+    print(x$CrossValPerf)
 }
 
 
@@ -197,7 +201,9 @@ print.binomscreenr <- function(obj){
 #' to produce a graph of Receiver Operating Characteristic curves.
 #'
 #' @param obj An object of class \code{binomscreenr} produced by function
-#' \code{binomialScreening}
+#' \code{binomialScreening}.
+#' @param main Plot title.
+#' @param ...[Optional] arguments passsed to \code{xyplot}}.
 #'
 #' @return A \code{lattice} graphical object
 #' @export

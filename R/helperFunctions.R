@@ -61,6 +61,7 @@ nSensSpec <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
 #' @return A list containing components sensitivity and specificity.
 #' @examples
 #' TestResults <- ordered(c(0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0))
+#' TrueResults <- ordered(c(0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0))
 #' sens_spec(table(TestResults, TrueResults))
 #' @export
 sens_spec <- function(x){
@@ -73,7 +74,7 @@ sens_spec <- function(x){
 }
 
 
-#' Inverse of the Link for a Linear Predictor
+#' Inverses of Binomial Regression Link Functions
 #'
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor

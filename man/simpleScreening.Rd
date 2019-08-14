@@ -2,7 +2,7 @@
 % Please edit documentation in R/simpleScreening.R
 \name{simpleScreening}
 \alias{simpleScreening}
-\title{A Simple Un-optimized Test Screening Tool}
+\title{Simple Un-optimized Test-Screening Tool}
 \usage{
 simpleScreening(formula, data)
 }

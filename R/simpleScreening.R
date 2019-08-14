@@ -16,7 +16,7 @@
 ##                  connection therewith.
 #################################################################################
 
-#' A Simple Un-optimized Test Screening Tool
+#' Simple Un-optimized Test-Screening Tool
 #'
 #' Compute the in-sample performances for development of a very simple test
 #' screening tool. The results provide information from which to choose a
@@ -26,9 +26,9 @@
 #' where post-estimation technical capacity is limited to counting responses to
 #' questions.
 #'
-#' @param formula An object of class \code{\link{formula}} defining the testing
+#' @param formula an object of class \code{\link{formula}} defining the testing
 #' outcome and predictor covariates.
-#' @param data The "training" sample; a data frame containing the testing outcome
+#' @param data the "training" sample; a data frame containing the testing outcome
 #' and predictive covariates to be used for testing screening.  The testing
 #' outcome must be binary (0,1) indicating negative and positive test results,
 #' respectively, or logical (TRUE/FALSE).  The covariates are typically binary
@@ -96,9 +96,12 @@ simpleScreening <- function(formula, data){
 
 #' An S3 Print Method for \code{simplescreenr} Objects
 #'
-#' @param x A \code{simplescreenr} class object.
+#' @param x a \code{simplescreenr} class object.
+#' @param ... further arguments passed to or from other methods.
+#' @param quote logical, indicating whether or not strings should be printed
+#' with surrounding quotes.
 #' @export
-print.simplescreenr <- function(x){
+print.simplescreenr <- function(x, quote = FALSE, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     x$InSamplePerf
 }
@@ -116,18 +119,17 @@ plot.simplescreenr <- function(x){
 
 #' An S3 Summary Method for \code{simplescreenr} Objects
 #'
-#' @param x A \code{simplescreenr} class object.
+#' @param object A \code{simplescreenr} class object.
+#' @param ... further arguments passed to or from other methods.
 #' @export
-summary.simplescreenr <- function(x){
-    if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
-    cat("A list object with four components:\n")
+summary.simplescreenr <- function(object, ...){
+    if(!("simplescreenr" %in% class(object))) stop("object not a simplescreenr object")
     cat("\nCall:\n")
-    print(x$Call)
+    print(object$Call)
     cat("\nPrevalence (In-sample prevalence of condition)\n")
-    print(x$Prevalence)
-    cat("\nInSampPerf (In-sample Receiver Operating Characteristic):\n")
-    print(x$InSamplePerf)
-    cat("\nScores (Data and testing scores)")
+    print(object$Prevalence)
+    cat("\nInSampPerf (In-sample Receiver Operating Characteristics):\n")
+    print(object$InSamplePerf)
 }
 
 ################################   END of FILE   ################################

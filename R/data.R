@@ -10,7 +10,11 @@
 #' @format A data frame with six columns:
 #' \describe{
 #' \item{\code{testresult}}{UIV status, where 0 and 1 denote negative and positive test results, repectively.}
-#' \item{\code{Q1--Q5}}{Responses (0 = "no", 1 = "yes") to screening questions 1--5.}
+#' \item{\code{Q1}}{Response to screening question 1 (0 = "no", 1 = "yes")}
+#' \item{\code{Q2}}{Response to screening question 2 (0 = "no", 1 = "yes")}
+#' \item{\code{Q3}}{Response to screening question 3 (0 = "no", 1 = "yes")}
+#' \item{\code{Q4}}{Response to screening question 4 (0 = "no", 1 = "yes")}
+#' \item{\code{Q5}}{Response to screening question 5 (0 = "no", 1 = "yes")}
 #' }
 #' @examples
 #' \dontrun{
