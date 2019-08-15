@@ -107,16 +107,6 @@ print.simplescreenr <- function(x, quote = FALSE, ...){
 }
 
 
-#' An S3 Plot Method for \code{simplescreenr} Objects
-#'
-#' @param x A \code{simplescreenr} class object.
-#' @export
-plot.simplescreenr <- function(x){
-    if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
-    plot.ROC(x$InSamplePerf)
-}
-
-
 #' An S3 Summary Method for \code{simplescreenr} Objects
 #'
 #' @param object A \code{simplescreenr} class object.

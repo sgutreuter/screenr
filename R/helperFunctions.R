@@ -98,21 +98,72 @@ inverseLink <- function(link, lp){
     p
 }
 
-#' An S3 Plot Method for \code{ROC} Objects
+
+#' Plot Receiver Operating Characteristics
 #'
-#'
-#' @param x An object of class ROC as produced by \code{simpleScreening()}
-#'
+#' @param x an object of class \code{binomscreener} \code{simplescreenr}.
+#' @param main plot title.
+#' @param ... arguments to be passed to or from \code{lattice::xyplot}.
+#' @return A \code{lattice} graphical object.
 #' @export
-plot.ROC <- function(x){
-    if(!("ROC" %in% class(x))) stop("x must be an ROC object")
-    x$FPP <- 1 - x$specificity
-    plot(x$FPP, x$sensitivity, type = "S", ylim = c(0,1),
-         xlim = c(0, 1), ylab = "Sensitivity", xlab = "1 - Specificity",
-         main = "Receiver Operating Characteristic")
-    abline(a = 0, b = 1, lty = 2)
-    text(x$sensitivity ~ x$FPP, labels = x$score, pos = 2)
+plotROC <- function(x, main = "Receiver Operating Characteristic", ...){
+    if(!((class(x) == "binomscreenr") | (class(x) == "simplescreenr")))
+        stop("x not a 'binomscreenr' or 'simplescreenr' object")
+    if(class(x) == "binomscreenr"){
+            nrows <- dim(x$CrossValPerf)[1]
+            d.lty <- c(2, 1)
+            dfrm <- data.frame(p.threshold =
+                                   rep(x$CrossValPerf$p.threshold, 2),
+                               grp = c(rep("In-sample", nrows),
+                                       rep("Out-of-sample", nrows)),
+                               sensitivity  = c(x$InSamplePerf$sensitivity,
+                                                x$CrossValPerf$sensitivity),
+                               FPP = 1 - c(x$InSamplePerf$specificity,
+                                           x$CrossValPerf$specificity))
+            d.key <- list(corner = c(1, 0), x = 0.98, y = 0.04,
+                          text = list(c("In-sample (overly-optimistic)",
+                                        "Out-of-sample")),
+                          lines = list(type = c("l", "l"), col = rep("black", 2),
+                                       lty = d.lty))
+            res <- lattice::xyplot(sensitivity ~ FPP,
+                                   group = grp,
+                                   data = dfrm,
+                                   panel = function(x, y, ...){
+                                       panel.xyplot(x, y, ...)
+                                       panel.abline(a = 0, b = 1)
+                                   },
+                                   main = main,
+                                   type = rep("S", 2),
+                                   col = rep("black", 2),
+                                   lty = d.lty,
+                                   ylab = "Sensitivity (%)",
+                                   xlab = "1 - Specificity (%)",
+                                   xlim = c(-0.02, 1),
+                                   ylim = c(0, 1),
+                                   key = d.key)
+    } else {
+        dfrm <- x$InSamplePerf
+        dfrm$FPP <- 1 - dfrm$specificity
+        res <- lattice::xyplot(sensitivity ~ FPP,
+                               data = dfrm,
+                               panel = function(x, y, ...){
+                                   panel.xyplot(x, y, ...)
+                                   panel.abline(a = 0, b = 1)
+                                   panel.text(x, y,
+                                              labels = as.character(data$score),
+                                              pos = 2)
+                               },
+                               type = "S",
+                               col = "black",
+                               ylim = c(0, 1),
+                               xlim = c(-0.02, 1),
+                               ylab = "Sensitivity",
+                               xlab = "1 - Specificity",
+                               main = main)
+    }
+    res
 }
+
 
 #' Expected Number of Tests Required per Positive Test Result
 #'

@@ -159,7 +159,7 @@ binomialScreening <- function(formula,
                    InSamplePerf = insamp,
                    CrossVal = cv.results,
                    CrossValPerf = SensSpec.results)
-    class(result) <- c("binomscreenr", "list")
+    class(result) <- "binomscreenr"
     result
 }
 
@@ -194,47 +194,5 @@ print.binomscreenr <- function(x, quote = FALSE, ...){
     print(x$CrossValPerf)
 }
 
-
-#' An S3 Plot Method for \code{binomscreenr} Objects
-#'
-#' This is essentially a wrapper function for \code{lattice::xyplot} customized
-#' to produce a graph of Receiver Operating Characteristic curves.
-#'
-#' @param obj An object of class \code{binomscreenr} produced by function
-#' \code{binomialScreening}.
-#' @param main Plot title.
-#' @param ...[Optional] arguments passsed to \code{xyplot}}.
-#'
-#' @return A \code{lattice} graphical object
-#' @export
-plot.binomscreenr <- function(obj, main = "Receiver Operating Characteristics",
-                             ...){
-    nrows <- dim(obj$CrossValPerf)[1]
-    d.lty <- c(2, 1)
-    dfrm <- data.frame(p.threshold =
-                           rep(obj$CrossValPerf$p.threshold, 2),
-                       grp = c(rep("In-sample", nrows),
-                                   rep("Out-of-sample", nrows)),
-                       sensitivity  = c(obj$InSamplePerf$sensitivity,
-                                    obj$CrossValPerf$sensitivity),
-                       FPP = 1 - c(obj$InSamplePerf$specificity,
-                                        obj$CrossValPerf$specificity))
-    d.key <- list(corner = c(1, 0), x = 0.98, y = 0.04,
-                  text = list(c("In-sample (overly-optimistic)",
-                                "Out-of-sample")),
-                  lines = list(type = c("l", "l"), col = rep("black", 2),
-                               lty = d.lty))
-    res <- lattice::xyplot(sensitivity ~ FPP,
-                           group = grp,
-                           data = dfrm,
-                           main = main,
-                           type = rep("S", 2),
-                           col = rep("black", 2),
-                           lty = d.lty,
-                           ylab = "Sensitivity (%)",
-                           xlab = "1 - Specificity (%)",
-                           key = d.key)
-    res
-}
 
 ################################   END of FILE   ################################
