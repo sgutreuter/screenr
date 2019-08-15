@@ -30,8 +30,8 @@ false positives among that number of tests.
 data(unicorns)
 unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
                              data = unicorns, Nfolds = 20,
-                             p.threshold = c(seq(0.01, 0.10, by = 0.015),
-                                             seq(.15, 0.95, by = 0.05)))
+                             p = c(seq(0.01, 0.10, by = 0.015),
+                                   seq(.15, 0.95, by = 0.05)))
 testCounts(unitool)
 
 }

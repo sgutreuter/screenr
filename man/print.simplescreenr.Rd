@@ -4,10 +4,15 @@
 \alias{print.simplescreenr}
 \title{An S3 Print Method for \code{simplescreenr} Objects}
 \usage{
-\method{print}{simplescreenr}(x)
+\method{print}{simplescreenr}(x, quote = FALSE, ...)
 }
 \arguments{
-\item{x}{A \code{simplescreenr} class object.}
+\item{x}{a \code{simplescreenr} class object.}
+
+\item{quote}{logical, indicating whether or not strings should be printed
+with surrounding quotes.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 An S3 Print Method for \code{simplescreenr} Objects

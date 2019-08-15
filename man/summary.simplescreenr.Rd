@@ -4,10 +4,12 @@
 \alias{summary.simplescreenr}
 \title{An S3 Summary Method for \code{simplescreenr} Objects}
 \usage{
-\method{summary}{simplescreenr}(x)
+\method{summary}{simplescreenr}(object, ...)
 }
 \arguments{
-\item{x}{A \code{simplescreenr} class object.}
+\item{object}{A \code{simplescreenr} class object.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 An S3 Summary Method for \code{simplescreenr} Objects

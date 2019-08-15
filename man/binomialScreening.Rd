@@ -5,29 +5,31 @@
 \title{Test-Screening Tool Based on Binomial Regression}
 \usage{
 binomialScreening(formula, data = NULL, link = "logit", Nfolds = 20L,
-  p.threshold = c(seq(0.01, 0.09, 0.01), seq(0.1, 0.6, 0.05), seq(0.65,
-  0.95, 0.1)), ...)
+  p = c(seq(0.01, 0.09, 0.01), seq(0.1, 0.6, 0.05), seq(0.65, 0.95,
+  0.1)), ...)
 }
 \arguments{
-\item{formula}{An object of class \code{\link{formula}}  defining the testing
+\item{formula}{an object of class \code{\link{formula}}  defining the testing
 outcome and predictor covariates, which is passed to \code{stats::glm()}.}
 
-\item{data}{The "training" sample; a data frame containing the testing
+\item{data}{the "training" sample; a data frame containing the testing
 outcome and predictive covariates to be used for testing screening.  The
 testing outcome must be binary (0,1) indicating negative and positive test
 results, respectively, or logical (TRUE/FALSE).  The covariates are typically
 binary (0 = no, 1 = yes) responses to questions which may be predictive of
 the test result, but any numeric or factor covariates can be used.}
 
-\item{link}{The character-valued name of the link function for binomial
+\item{link}{the character-valued name of the link function for binomial
 regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
 "\code{probit}".}
 
-\item{Nfolds}{An integer number of folds used for \emph{k}-fold cross
+\item{Nfolds}{an integer number of folds used for \emph{k}-fold cross
 validation (default = 20).}
 
-\item{p.threshold}{A numeric vector of reference probabilities for estimation
-of Receiver Operating Characteristics.}
+\item{p}{a numeric vector of reference probabilities for estimation of
+Receiver Operating Characteristics.}
+
+\item{...}{additional arguments passsed to or from other functions.}
 }
 \value{
 An object of class binomscreenr containing the elements:
@@ -57,10 +59,10 @@ data(unicorns)
 help(unicorns)
 unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
                              data = unicorns, link = "logit",
-                             p.threshold = c(seq(0.01, 0.10, by = 0.015),
-                                             seq(.15, 0.95, by = 0.05)))
+                             p = c(seq(0.01, 0.10, by = 0.015),
+                                   seq(.15, 0.95, by = 0.05)))
 summary(unitool)
-plot(unitool)
+plotROC(unitool)
 testCounts(SensSpec = unitool)
 
 ## Example implementation of screening based on those results

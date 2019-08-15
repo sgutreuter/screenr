@@ -4,11 +4,15 @@
 \alias{print.binomscreenr}
 \title{An S3 Print Method for \code{binomscreenr} Objects.}
 \usage{
-\method{print}{binomscreenr}(obj)
+\method{print}{binomscreenr}(x, quote = FALSE, ...)
 }
 \arguments{
-\item{obj}{An object of class \code{binomscreenr} produced by function
-\code{binomialScreening}}
+\item{x}{an object of class \code{binomscreenr} produced by function.}
+
+\item{quote}{logical, indicating whether or not strings should be printed
+with surrounding quotes.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 An S3 Print Method for \code{binomscreenr} Objects.

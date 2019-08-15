@@ -110,53 +110,81 @@ plotROC <- function(x, main = "Receiver Operating Characteristic", ...){
     if(!((class(x) == "binomscreenr") | (class(x) == "simplescreenr")))
         stop("x not a 'binomscreenr' or 'simplescreenr' object")
     if(class(x) == "binomscreenr"){
-            nrows <- dim(x$CrossValPerf)[1]
+        cvdat <- keepfirst("p", colnames = c("sensitivity", "specificity"),
+                           data = x$CrossValPerf)
+        isdat <- x$InSamplePerf[x$InsamplePerf$p == cvdat$p, ]
+        nr <- nrow(cvdat)
             d.lty <- c(2, 1)
-            dfrm <- data.frame(p.threshold =
-                                   rep(x$CrossValPerf$p.threshold, 2),
-                               grp = c(rep("In-sample", nrows),
-                                       rep("Out-of-sample", nrows)),
-                               sensitivity  = c(x$InSamplePerf$sensitivity,
-                                                x$CrossValPerf$sensitivity),
-                               FPP = 1 - c(x$InSamplePerf$specificity,
-                                           x$CrossValPerf$specificity))
+            dfrm <- data.frame(p = rep(cvdat$p, 2),
+                               grp = c(rep("In-sample", nr),
+                                       rep("Out-of-sample", nr)),
+                               sensitivity  = c(isdat$sensitivity,
+                                                cvdat$sensitivity),
+                               FPP = 1 - c(isdat$specificity,
+                                           cvdat$specificity))
+            dfrm <- rbind(data.frame(p = 0,
+                                     grp = "In-sample",
+                                     sensitivity = 1,
+                                     FPP = 1
+                                     ),
+                          data.frame(p = 0,
+                                     grp = "Out-of-sample",
+                                     sensitivity = 1,
+                                     FPP = 1
+                                     ),
+                          dfrm)
+            idx <- dfrm$grp == "Out-of-sample" & dfrm$sensitivity > 0.5 &
+                dfrm$FPP < 0.5
+            lbl <- paste("p = ", as.character(dfrm$p),
+                         sep = "")
             d.key <- list(corner = c(1, 0), x = 0.98, y = 0.04,
                           text = list(c("In-sample (overly-optimistic)",
                                         "Out-of-sample")),
                           lines = list(type = c("l", "l"), col = rep("black", 2),
-                                       lty = d.lty))
+                                       lty = d.lty), lwd = c(1.5, 1.5))
             res <- lattice::xyplot(sensitivity ~ FPP,
                                    group = grp,
                                    data = dfrm,
                                    panel = function(x, y, ...){
                                        panel.xyplot(x, y, ...)
-                                       panel.abline(a = 0, b = 1)
+                                       panel.abline(a = 0, b = 1, col = "gray40")
+                                       panel.text(x[idx], y[idx],
+                                                  labels = lbl[idx], pos = 2)
                                    },
                                    main = main,
-                                   type = rep("S", 2),
+                                   type = rep("s", 2),
                                    col = rep("black", 2),
                                    lty = d.lty,
+                                   lwd = c(1.5, 1,5),
                                    ylab = "Sensitivity (%)",
                                    xlab = "1 - Specificity (%)",
-                                   xlim = c(-0.02, 1),
-                                   ylim = c(0, 1),
+                                   xlim = c(-0.02, 1.02),
+                                   ylim = c(-0.02, 1.02),
                                    key = d.key)
     } else {
         dfrm <- x$InSamplePerf
         dfrm$FPP <- 1 - dfrm$specificity
+        dfrm <- rbind(data.frame(score = 0,
+                                 sensitivity = 1,
+                                 specificity = 0,
+                                 FPP = 1),
+                      dfrm)
+        cscore <- paste("score = ", as.character(dfrm$score), sep = "")
+        idx <- dfrm$sensitivity > 0.5 & dfrm$specificity > 0.5
         res <- lattice::xyplot(sensitivity ~ FPP,
                                data = dfrm,
                                panel = function(x, y, ...){
                                    panel.xyplot(x, y, ...)
-                                   panel.abline(a = 0, b = 1)
-                                   panel.text(x, y,
-                                              labels = as.character(data$score),
+                                   panel.abline(a = 0, b = 1, col = "gray40")
+                                   panel.text(x[idx], y[idx],
+                                              labels = cscore[idx],
                                               pos = 2)
                                },
-                               type = "S",
+                               type = "s",
+                               lwd = 1.5,
                                col = "black",
-                               ylim = c(0, 1),
-                               xlim = c(-0.02, 1),
+                               ylim = c(-0.02, 1.02),
+                               xlim = c(-0.02, 1.02),
                                ylab = "Sensitivity",
                                xlab = "1 - Specificity",
                                main = main)
@@ -187,8 +215,8 @@ plotROC <- function(x, main = "Receiver Operating Characteristic", ...){
 #' data(unicorns)
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                              data = unicorns, Nfolds = 20,
-#'                              p.threshold = c(seq(0.01, 0.10, by = 0.015),
-#'                                              seq(.15, 0.95, by = 0.05)))
+#'                              p = c(seq(0.01, 0.10, by = 0.015),
+#'                                    seq(.15, 0.95, by = 0.05)))
 #' testCounts(unitool)
 #'
 #' @export
@@ -220,5 +248,30 @@ testCounts <- function(SensSpec = NULL, prev = NULL){
                                            "E(FalseNegs/Pos)")
     result
 }
+
+#' Return Data Frame Rows Having Unique Values in Selected Columns
+#'
+#' Sort a dataframe and then retain those rows which are unique with respect
+#' to the values of selected columns.
+#' @param x character-valued column name along which the dataframe is sorted.
+#' @param colnames a character vector of column names  to identify uniqueness.
+#' @param data a data frame.
+#'
+#' @return A data frame consisting of the rows of \code{data} which are
+#' unique with respect to \code{colnames}
+keepfirst <- function(x, colnames, data = NULL){
+    data <- data[order(data[[x]]), ]
+    res <- data[1 ,]
+    for(i in 2:(nrow(data) - 1)){
+        if(all(data[i, colnames] ==
+               data[i + 1, colnames])){
+            next
+        } else {
+            res <- rbind(res, data[i + 1, ])
+        }
+    }
+    res
+}
+
 
 ################################   END of FILE   ################################

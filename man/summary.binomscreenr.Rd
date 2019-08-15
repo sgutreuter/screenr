@@ -4,11 +4,13 @@
 \alias{summary.binomscreenr}
 \title{An S3 Summary Method for \code{binomscreenr} Objects.}
 \usage{
-\method{summary}{binomscreenr}(obj)
+\method{summary}{binomscreenr}(object, ...)
 }
 \arguments{
-\item{obj}{An object of class \code{binomscreenr} produced by function
+\item{object}{an object of class \code{binomscreenr} produced by function
 \code{binomialScreening}}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 An S3 Summary Method for \code{binomscreenr} Objects.

@@ -7,10 +7,10 @@
 simpleScreening(formula, data)
 }
 \arguments{
-\item{formula}{An object of class \code{\link{formula}} defining the testing
+\item{formula}{an object of class \code{\link{formula}} defining the testing
 outcome and predictor covariates.}
 
-\item{data}{The "training" sample; a data frame containing the testing outcome
+\item{data}{the "training" sample; a data frame containing the testing outcome
 and predictive covariates to be used for testing screening.  The testing
 outcome must be binary (0,1) indicating negative and positive test results,
 respectively, or logical (TRUE/FALSE).  The covariates are typically binary
@@ -41,7 +41,7 @@ data(unicorns)
 simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
                        data = unicorns)
 summary(simple)
-plot(simple)
+plotROC(simple)
 testCounts(simple)
 
 }

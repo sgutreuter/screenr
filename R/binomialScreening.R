@@ -37,8 +37,8 @@
 #' "\code{probit}".
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
 #' validation (default = 20).
-#' @param p.threshold a numeric vector of reference probabilities for estimation
-#' of Receiver Operating Characteristics.
+#' @param p a numeric vector of reference probabilities for estimation of
+#' Receiver Operating Characteristics.
 #' @param ... additional arguments passsed to or from other functions.
 #'
 #' @return An object of class binomscreenr containing the elements:
@@ -63,10 +63,10 @@
 #' help(unicorns)
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                              data = unicorns, link = "logit",
-#'                              p.threshold = c(seq(0.01, 0.10, by = 0.015),
-#'                                              seq(.15, 0.95, by = 0.05)))
+#'                              p = c(seq(0.01, 0.10, by = 0.015),
+#'                                    seq(.15, 0.95, by = 0.05)))
 #' summary(unitool)
-#' plot(unitool)
+#' plotROC(unitool)
 #' testCounts(SensSpec = unitool)
 #'
 #' ## Example implementation of screening based on those results
@@ -95,9 +95,9 @@ binomialScreening <- function(formula,
                               data = NULL,
                               link = "logit",
                               Nfolds = 20L,
-                              p.threshold = c(seq(0.01, 0.09, 0.01),
-                                              seq(0.1, 0.6, 0.05),
-                                              seq(0.65, 0.95, 0.10 )),
+                              p = c(seq(0.01, 0.09, 0.01),
+                                    seq(0.1, 0.6, 0.05),
+                                    seq(0.65, 0.95, 0.10 )),
                               ...){
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
@@ -116,14 +116,14 @@ binomialScreening <- function(formula,
     lrfit <- stats::glm(formula, data = dat, family = binomial(link = link))
     insamp <- data.frame(NULL)
     pp <- inverseLink(link, lrfit$linear.predictors)
-    for(j in seq_along(p.threshold)){
-        I.test <-as.numeric(pp >= p.threshold[j])
+    for(j in seq_along(p)){
+        I.test <-as.numeric(pp >= p[j])
         cmat <- table(factor(I.test, levels = c("0", "1")),
                       factor(y, levels = c("0", "1")))
         z <- sens_spec(cmat)
-        insamp <- rbind(insamp, data.frame(p.threshold = p.threshold[j],
-                                               sensitivity = z[1],
-                                               specificity = z[2]))
+        insamp <- rbind(insamp, data.frame(p = p[j],
+                                           sensitivity = z[1],
+                                           specificity = z[2]))
     }
     cv.results <- data.frame(NULL)
     N <- nrow(dat)
@@ -140,13 +140,13 @@ binomialScreening <- function(formula,
                                              cv.pred.prob = pred.prob)))
     }
     SensSpec.results <- data.frame(NULL)
-    for(j in seq_along(p.threshold)){
-        I.test <-as.numeric(cv.results$cv.pred.prob >= p.threshold[j])
+    for(j in seq_along(p)){
+        I.test <-as.numeric(cv.results$cv.pred.prob >= p[j])
         cmat <- table(factor(I.test, levels = c("0", "1")),
                       factor(cv.results$y, levels = c("0", "1")))
         z <- sens_spec(cmat)
         SensSpec.results <- rbind(SensSpec.results,
-                                  data.frame(p.threshold = p.threshold[j],
+                                  data.frame(p = p[j],
                                              sensitivity = z[1],
                                              specificity = z[2]))
     }
@@ -178,19 +178,19 @@ summary.binomscreenr <- function(object, ...){
     print(object$Call)
     cat("\n\nLogistic regression model summary:")
     print(summary(object$ModelFit))
-    cat("\nOut-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
+    cat("\nOut-of-sample sensitivity and specificity\nscreening at p.hat >= p:\n\n")
     print(object$CrossValPerf)
 }
 #' An S3 Print Method for \code{binomscreenr} Objects.
 #'
-#' @param obj an object of class \code{binomscreenr} produced by function.
+#' @param x an object of class \code{binomscreenr} produced by function.
 #' @param ... further arguments passed to or from other methods.
 #' @param quote logical, indicating whether or not strings should be printed
-          with surrounding quotes.
+#' with surrounding quotes.
 #' @export
 print.binomscreenr <- function(x, quote = FALSE, ...){
     if(!("binomscreenr" %in% class(x))) stop("x not binomscreenr class")
-    cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p.threshold:\n\n")
+    cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p:\n\n")
     print(x$CrossValPerf)
 }
 
