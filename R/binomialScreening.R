@@ -38,13 +38,15 @@
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
 #' validation (default = 20).
 #' @param p a numeric vector of reference probabilities for estimation of
-#' Receiver Operating Characteristics.
-#' @param ... additional arguments passsed to or from other functions.
+#' Receiver Operating Characteristics (ROC).  The utility of the ROC will
+#' depend on choices for these reference probabilities.
+#' @param ... additional arguments passsed to or from other functions, and
+#' especially to \code{stats::glm}.
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class \code{\link{glm}}.}
+#' \item{\code{ModelFit}}{An object of class \code{\link{stats::glm}}.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 #' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
@@ -77,19 +79,20 @@
 #'                    Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0))
 #' print(new)
 #' ## Compute point estimates of their predicted probabilities testing positive:
+#' ## Compute point estimates of their predicted probabilities testing positive:
 #' inverseLink("logit",
-#'             as.matrix(cbind(c(1, 1), new[, 2:6])) %*%
+#'             as.matrix(cbind(c(nrow(new), nrow(new)), new[, 2:6])) %*%
 #'                             as.matrix(unitool$ParmEst, ncol = 1))
-#'
+#' ## or, more simply,
+#' predict(unitool$ModelFit, newdata = new, type = "response")
 #' ## If p.threshold = 0.025 is chosen as the screening threshold
 #' ## (sensitivity and specificity 77\% and 69\%, respectively) then "Bernie P."
 #' ## would be offered testing and "Alice D." would not.
 #'
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
-#' ## spreadsheet.  Within R it is simpler to use \code{predict}:
+#' ## spreadsheet.
 #'
-#' inverseLink("logit", predict(unitool$ModelFit, newdata = new))
 #' @export
 binomialScreening <- function(formula,
                               data = NULL,
@@ -117,7 +120,7 @@ binomialScreening <- function(formula,
     insamp <- data.frame(NULL)
     pp <- inverseLink(link, lrfit$linear.predictors)
     for(j in seq_along(p)){
-        I.test <-as.numeric(pp >= p[j])
+        I.test <- as.numeric(pp >= p[j])
         cmat <- table(factor(I.test, levels = c("0", "1")),
                       factor(y, levels = c("0", "1")))
         z <- sens_spec(cmat)

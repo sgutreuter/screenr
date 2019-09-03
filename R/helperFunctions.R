@@ -21,14 +21,15 @@
 #'
 #' Estimate the required number of positive and negative test results for
 #' hypothesis testing against the joint null hypothesis H0: Sens = SnsCrit and
-#' Spec = SpcCrit.
+#' Spec = SpcCrit.  For rare conditions, the number of positive test results
+#' will be limiting, and sample size should be based on that alone.
 #'
-#' @param Sens A vector of anticipated sensitivities (0 < Sens < 1).
-#' @param Spec A vector of anticipated specificities (0 < Spec < 1).
-#' @param SnsCrit Critical value for sensitivity.
-#' @param SpcCrit Critical value for specificity.
-#' @param alpha Probability of Type I error.
-#' @param power Desired power.
+#' @param Sens A numeric vector of anticipated sensitivities (0 < Sens < 1).
+#' @param Spec A numeric vector of anticipated specificities (0 < Spec < 1).
+#' @param SnsCrit Critical value (numeric) for sensitivity.
+#' @param SpcCrit Critical value (numeric) for specificity.
+#' @param alpha Probability of Type I error (0 < alpha < 1).
+#' @param power Desired power (0 < power < 1).
 #' @return A data frame containing the required number of positive and negative
 #' test results.
 #' @references Sullivan, M.P., The Statistical Evaluation of Medical Tests
@@ -101,7 +102,7 @@ inverseLink <- function(link, lp){
 
 #' Plot Receiver Operating Characteristics
 #'
-#' @param x an object of class \code{binomscreener} \code{simplescreenr}.
+#' @param x an object of class \code{binomscreener} or \code{simplescreenr}.
 #' @param main plot title.
 #' @param ... arguments to be passed to or from \code{lattice::xyplot}.
 #' @return A \code{lattice} graphical object.
