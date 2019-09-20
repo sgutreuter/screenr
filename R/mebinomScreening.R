@@ -154,7 +154,7 @@ mebinomScreening <- function(formula,
         res <- lme4::glmer(meform, data = dati, family = binomial(link = link))
         pred.prob <- predict(res, newdata = dat[holdouts[[i]], ], re.form = NULL,
                              type = "response")
-    y <- model.response(dat[holdouts[[i]], ])
+        y <- model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
                                              y = y,

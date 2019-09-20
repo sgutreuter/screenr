@@ -104,43 +104,45 @@ inverseLink <- function(link, lp){
 #'
 #' @param x an object of class \code{binomscreener} or \code{simplescreenr}.
 #' @param main plot title.
+#' @param sens.spec.label.threshold minimum sensitivity and specificity above which to label points.
 #' @param ... arguments to be passed to or from \code{lattice::xyplot}.
 #' @return A \code{lattice} graphical object.
 #' @export
-plotROC <- function(x, main = "Receiver Operating Characteristic", ...){
+plotROC <- function(x, main = "Receiver Operating Characteristic",
+                    sens.spec.label.threshold = c(0.7, 0.3), ...){
     if(!((class(x) == "binomscreenr") | (class(x) == "simplescreenr")))
         stop("x not a 'binomscreenr' or 'simplescreenr' object")
     if(class(x) == "binomscreenr"){
         cvdat <- keepfirst("p", colnames = c("sensitivity", "specificity"),
                            data = x$CrossValPerf)
-        isdat <- x$InSamplePerf[x$InsamplePerf$p == cvdat$p, ]
-        nr <- nrow(cvdat)
-            d.lty <- c(2, 1)
-            dfrm <- data.frame(p = rep(cvdat$p, 2),
-                               grp = c(rep("In-sample", nr),
-                                       rep("Out-of-sample", nr)),
-                               sensitivity  = c(isdat$sensitivity,
-                                                cvdat$sensitivity),
-                               FPP = 1 - c(isdat$specificity,
-                                           cvdat$specificity))
-            dfrm <- rbind(data.frame(p = 0,
-                                     grp = "In-sample",
-                                     sensitivity = 1,
-                                     FPP = 1
-                                     ),
-                          data.frame(p = 0,
-                                     grp = "Out-of-sample",
-                                     sensitivity = 1,
-                                     FPP = 1
-                                     ),
-                          dfrm)
-            idx <- dfrm$grp == "Out-of-sample" & dfrm$sensitivity > 0.5 &
-                dfrm$FPP < 0.5
+        isdat <- x$InSamplePerf
+        d.lty <- c(1, 2)
+        dfrm <- rbind(data.frame(p = rep(cvdat$p),
+                           grp = rep("Out-of-sample", nrow(cvdat)),
+                           sensitivity  = cvdat$sensitivity,
+                           FPP = 1 - cvdat$specificity),
+                      data.frame(p = isdat$p,
+                                 grp = rep("In-sample", nrow(isdat)),
+                                 sensitivity = isdat$sensitivity,
+                                 FPP = 1 - isdat$specificity),
+                      data.frame(p = 0,
+                                 grp = "In-sample",
+                                 sensitivity = 1,
+                                 FPP = 1
+                                 ),
+                      data.frame(p = 0,
+                                 grp = "Out-of-sample",
+                                 sensitivity = 1,
+                                 FPP = 1
+                                 ))
+        idx <- dfrm$grp == "Out-of-sample" &
+            (dfrm$sensitivity > sens.spec.label.threshold[1] &
+                dfrm$FPP < (1 - sens.spec.label.threshold[2]))
             lbl <- paste("p = ", as.character(dfrm$p),
                          sep = "")
             d.key <- list(corner = c(1, 0), x = 0.98, y = 0.04,
-                          text = list(c("In-sample (overly-optimistic)",
-                                        "Out-of-sample")),
+                          text = list(c("Out-of-sample",
+                                        "In-sample")),
                           lines = list(type = c("l", "l"), col = rep("black", 2),
                                        lty = d.lty), lwd = c(1.5, 1.5))
             res <- lattice::xyplot(sensitivity ~ FPP,
@@ -171,7 +173,8 @@ plotROC <- function(x, main = "Receiver Operating Characteristic", ...){
                                  FPP = 1),
                       dfrm)
         cscore <- paste("score = ", as.character(dfrm$score), sep = "")
-        idx <- dfrm$sensitivity > 0.5 & dfrm$specificity > 0.5
+        idx <- ((dfrm$sensitivity > sens.spec.label.threshold[1]) &
+                (dfrm$specificity > sens.spec.label.threshold[2]))
         res <- lattice::xyplot(sensitivity ~ FPP,
                                data = dfrm,
                                panel = function(x, y, ...){
