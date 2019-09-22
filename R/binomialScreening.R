@@ -37,23 +37,21 @@
 #' "\code{probit}".
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
 #' validation (default = 20).
-#' @param p a numeric vector of reference probabilities for estimation of
-#' Receiver Operating Characteristics (ROC).  The utility of the ROC will
-#' depend on choices for these reference probabilities.
-#' @param ... additional arguments passsed to or from other functions, and
-#' especially to \code{stats::glm}.
+#' @param ... additional arguments passsed to or from other \code{stats::glm}
+#' or \code{pROC::roc}
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class \code{\link{stats::glm}}.}
+#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{stats::glm}})
+#' containing the results of the model fit.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
-#' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
-#' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
-#' sensitivities and specificities.}
-#' \item{\code{CrossVal}}{A data frame containing \emph{k}-fold cross-validation results.}
-#' \item{\code{CrossValPerf}}{A data frame containing out-of-sample  sensitivities and
-#' specificities.}
+#' \item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
+#' \item{\code{ISroc}}{A list of class "roc" (see \code{\link{pROC::roc}})
+#' containing in-sample (overly optimistic) results.}
+#' \item{\code{CVpreds}}{A data frame containing \emph{k}-fold cross-validation results.}
+#' \item{\code{CVroc}}{A list of class "roc" (See \code{\link{pROC::roc}})
+#' containing cross-validated results.}
 #' }
 #'
 #' @seealso \code{\link{glm}}
@@ -98,9 +96,6 @@ binomialScreening <- function(formula,
                               data = NULL,
                               link = "logit",
                               Nfolds = 20L,
-                              p = c(seq(0.01, 0.09, 0.01),
-                                    seq(0.1, 0.6, 0.05),
-                                    seq(0.65, 0.95, 0.10 )),
                               ...){
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
@@ -117,20 +112,10 @@ binomialScreening <- function(formula,
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
     prev <- mean(y, na.rm = TRUE)
     lrfit <- stats::glm(formula, data = dat, family = binomial(link = link))
-    insamp <- data.frame(NULL)
-    pp <- inverseLink(link, lrfit$linear.predictors)
-    for(j in seq_along(p)){
-        I.test <- as.numeric(pp >= p[j])
-        cmat <- table(factor(I.test, levels = c("0", "1")),
-                      factor(y, levels = c("0", "1")))
-        z <- sens_spec(cmat)
-        insamp <- rbind(insamp, data.frame(p = p[j],
-                                           sensitivity = z[1],
-                                           specificity = z[2]))
-    }
-    cv.results <- data.frame(NULL)
+    is.roc <- pROC::roc(lrfit$y, lrfit$fitted.values)
     N <- nrow(dat)
     holdouts <- split(sample(1:N), 1:Nfolds)
+    cv.results <- data.frame(NULL)
     for(i in 1:Nfolds){
         res <- stats::glm(formula, data = dat[-holdouts[[i]], ],
                           family = binomial(link = link))
@@ -142,26 +127,17 @@ binomialScreening <- function(formula,
                                              data = dat[holdouts[[i]],],
                                              cv.pred.prob = pred.prob)))
     }
-    SensSpec.results <- data.frame(NULL)
-    for(j in seq_along(p)){
-        I.test <-as.numeric(cv.results$cv.pred.prob >= p[j])
-        cmat <- table(factor(I.test, levels = c("0", "1")),
-                      factor(cv.results$y, levels = c("0", "1")))
-        z <- sens_spec(cmat)
-        SensSpec.results <- rbind(SensSpec.results,
-                                  data.frame(p = p[j],
-                                             sensitivity = z[1],
-                                             specificity = z[2]))
-    }
-    class(insamp) <-  c("ROC", "data.frame")
-    class(SensSpec.results) <-  c("ROC", "data.frame")
+    cv.roc <- pROC::roc(cv.results$y, cv.results$cv.pred.prob,
+                                  auc = TRUE, ci = TRUE, of = "sp",
+                                  se = seq(0, 1, 0.05), ci.type = "shape")
+    class(cv.results) <-  c("cv.predictions", "data.frame")
     result <- list(Call = call,
                    ModelFit = lrfit,
                    Prevalence = prev,
-                   ParmEst = lrfit$coeff,
-                   InSamplePerf = insamp,
-                   CrossVal = cv.results,
-                   CrossValPerf = SensSpec.results)
+                   ParamEst = lrfit$coeff,
+                   ISroc = is.roc,
+                   CVpreds = cv.results,
+                   CVroc = cv.roc)
     class(result) <- "binomscreenr"
     result
 }
@@ -181,8 +157,9 @@ summary.binomscreenr <- function(object, ...){
     print(object$Call)
     cat("\n\nLogistic regression model summary:")
     print(summary(object$ModelFit))
-    cat("\nOut-of-sample sensitivity and specificity\nscreening at p.hat >= p:\n\n")
-    print(object$CrossValPerf)
+    cat("\nOut-of-sample sensitivity and specificity at outcome probabilities\n")
+##  TODO: Modify to print unique values of CVroc
+    print(object$CVpreds)
 }
 #' An S3 Print Method for \code{binomscreenr} Objects.
 #'
@@ -194,7 +171,8 @@ summary.binomscreenr <- function(object, ...){
 print.binomscreenr <- function(x, quote = FALSE, ...){
     if(!("binomscreenr" %in% class(x))) stop("x not binomscreenr class")
     cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p:\n\n")
-    print(x$CrossValPerf)
+##  TODO: Modify to print unique values of CVroc
+    print(x$CVpreds)
 }
 
 

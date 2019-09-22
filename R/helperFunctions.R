@@ -40,10 +40,44 @@
 #' spec <- rep(c(0.65, 0.70, 0.75, 0.8 ), 3)
 #' nSensSpec(sens, spec, SnsCrit = 0.90, SpcCrit = 0.70)
 #' @export
-nSensSpec <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
+nSensSpec_tst <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
                       alpha = 0.05, power =0.8){
-    if(any(Sens <0 | Sens > 1)) stop("Sensitivity not in [0,1]")
-    if(any(Spec <0 | Spec > 1)) stop("Specificity not in [0,1]")
+    if(any(Sens <=0 | Sens >= 1)) stop("Sensitivity not in (0,1)")
+    if(any(Spec <=0 | Spec >= 1)) stop("Specificity not in (0,1)")
+    alpha.star <- 1 - sqrt(1 - alpha)
+    beta.star <- 1 - sqrt(power)
+    Z <- qnorm(c((1 - alpha.star), (1 - beta.star)))
+    n.pos <- (Z[1]*sqrt(SnsCrit*(1 - SnsCrit)) + Z[2]*sqrt(Sens*(1 - Sens)))^2 /
+        (Sens - SnsCrit)^2
+    n.neg <- (Z[1]*sqrt(SpcCrit*(1 - SpcCrit)) + Z[2]*sqrt(Spec*(1 - Spec)))^2 /
+        (Spec - SpcCrit)^2
+    data.frame(n.pos = ceiling(n.pos), n.neg = ceiling(n.neg))
+}
+
+#' Sample Size for Joint Estimation of Sensitivity and Specificity
+#'
+#' Estimate the required number of positive and negative test results for
+#' estimation of joint rectangular confidence intervals for sensitivity and
+#' specificity.  For rare conditions, the number of positive test results
+#' will be limiting, and sample size should be based on that alone.
+#'
+#' @param Sens A numeric vector of anticipated sensitivities (0 < Sens < 1).
+#' @param Spec A numeric vector of anticipated specificities (0 < Spec < 1).
+#' @param w confidence interval margin of error (half width)
+#' @param CL Confidence level for joint rectangular confidence intervals.
+#' @return A data frame containing the required number of positive and negative
+#' test results.
+#' @references Pepe, M.S. The Statistical Evaluation of Medical Tests for
+#' Classification and Prediction.  Oxford University Press, 2003. Oxford UK.
+#' @examples
+#' sens <- c(rep(0.8, 4), rep(0.85, 4), rep(0.90, 4))
+#' spec <- rep(c(0.65, 0.70, 0.75, 0.8 ), 3)
+#' nSensSpec(sens, spec, SnsCrit = 0.90, SpcCrit = 0.70)
+#' @export
+nSensSpec_tst <- function(Sens, Spec, w = 0.1, SpcCrit = 0.9,
+                          CL = 0.95){
+    if(any(Sens <=0 | Sens >= 1)) stop("Sensitivity not in (0,1)")
+    if(any(Spec <=0 | Spec >= 1)) stop("Specificity not in (0,1)")
     alpha.star <- 1 - sqrt(1 - alpha)
     beta.star <- 1 - sqrt(power)
     Z <- qnorm(c((1 - alpha.star), (1 - beta.star)))
@@ -79,6 +113,7 @@ sens_spec <- function(x){
 #'
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor
+#'
 #'
 #' @param link Character link function (one of "logit", "cloglog" or "probit")
 #' @param lp Numeric linear predictor
