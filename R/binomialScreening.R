@@ -54,7 +54,7 @@
 #' containing cross-validated results.}
 #' }
 #'
-#' @seealso \code{\link{glm}}
+#' @seealso \code{\link{lme4::glm}}
 #'
 #' @examples
 #' ## Evaluate the performance of screening thresholds based on a logisitc model
@@ -139,40 +139,106 @@ binomialScreening <- function(formula,
                    CVpreds = cv.results,
                    CVroc = cv.roc)
     class(result) <- "binomscreenr"
-    result
+    invisible(result)
 }
 
 
 
-#' An S3 Summary Method for \code{binomscreenr} Objects.
+#' Print Summaries of \code{binomscreenr} Objects
 #'
 #' @param object an object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}
-#' @param ... further arguments passed to or from other methods.
+#' @param diagnostics a logical value; plot model diagnostics if \code{TRUE}
+#' @param ... further arguments passed to or from other methods
 #'
+#' @return Nothing.  Summaries are printed as a side effect.
 #' @export
-summary.binomscreenr <- function(object, ...){
+summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
     if(!("binomscreenr" %in% class(object))) stop("object not binomscreenr class")
     cat("Call:\n")
     print(object$Call)
-    cat("\n\nLogistic regression model summary:")
+    cat("\n\nLogistic regression model summary:\n")
     print(summary(object$ModelFit))
-    cat("\nOut-of-sample sensitivity and specificity at outcome probabilities\n")
-##  TODO: Modify to print unique values of CVroc
-    print(object$CVpreds)
+    if(diagnostics) plot(object$ModelFit)
+    cat("\nPrevalence (In-sample prevalence of condition):\n")
+    print(object$Prevalence)
+    cat("\nReceiver Operating Characteristics:\n")
+    is.auc <- round(as.numeric(object$ISroc$auc), digits = 4)
+    cat("\nIn-sample (overly optimistic) area under the curve: ",
+        is.auc, "\n", sep = "")
+    cv.auc <- round(as.numeric(object$CVroc$auc), digits = 4)
+    cat("Out-of-sample area under the curve: ",
+        cv.auc, "\n", sep = "")
 }
-#' An S3 Print Method for \code{binomscreenr} Objects.
+
+#' Plot ROC Curves of \code{binomscreenr} Objects
+#'
+#' Plot cross-validated (out-of-sample) ROC curve with pointwise 95% confidence
+#' intevals on specificity (gray shaded region), along with the overly optimistic
+#' in-sample ROC curve.
+#'
+#' @param x A object of class "binomscreenr"
+#'
+#' @return Nothing.  This function produces a plot as a side effect.
+#'
+#' @references
+#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
+#' 27(8):861-874.
+#' \url{https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub}
+#'
+#' Linden A. Measuring diagnostic and predictive accuracy in disease
+#' management: an introduction to receiver operating characteristic (ROC) analysis.
+#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
+#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
+#'
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
+#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
+#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#'
+#' @export
+plot.binomscreenr <- function(x){
+    if(!class(x) == "binomscreenr") stop("x is not a binomscreenr object")
+    rocobj1 <- plot(x$CVroc, print.auc = TRUE, ci = TRUE, of = "sp",
+                    se = seq(0, 1, 0.01), ci.type = "shape")
+    rocobj2 <- lines.roc(x$ISroc, lty = 3)
+    legend("bottomright", legend = c("cross-validated", "in-sample"), lty = c(1, 3),
+       lwd = c(2, 2))
+}
+
+
+#' Print Receiver Operating Characteristics for \code{binomscreenr} Objects
 #'
 #' @param x an object of class \code{binomscreenr} produced by function.
 #' @param ... further arguments passed to or from other methods.
 #' @param quote logical, indicating whether or not strings should be printed
 #' with surrounding quotes.
+#'
+#' @return Nothing. Thresholds, specificities and sensitivities are printed as a
+#' side effect.
+#'
+#' @references
+#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
+#' 27(8):861-874.
+#' \url{https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub}
+#'
+#' Linden A. Measuring diagnostic and predictive accuracy in disease
+#' management: an introduction to receiver operating characteristic (ROC) analysis.
+#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
+#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
+#'
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
+#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
+#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#'
+#' @seealso \code{\link{getROC}}
 #' @export
 print.binomscreenr <- function(x, quote = FALSE, ...){
     if(!("binomscreenr" %in% class(x))) stop("x not binomscreenr class")
-    cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p:\n\n")
-##  TODO: Modify to print unique values of CVroc
-    print(x$CVpreds)
+    cat("Out-of-sample sensitivity and specificity at outcome thresholds:\n")
+    df_ <- data.frame(threshold = x$CVroc$thresholds,
+                      specificity = x$CVroc$specificities,
+                      sensitivity = x$CVroc$sensitivities)
+    df_
 }
 
 

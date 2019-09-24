@@ -22,6 +22,8 @@
 #' \item{\code{inverseLink}}{Inverse of Binomial Regression Link Functions}
 #' \item{\code{mebinomScreening}}{Test-Screening Tool Based on Mixed-Effects Binomial Regression}
 #' \item{\code{nSensSpec}}{Sample Size for Joint Testing of Sensitivity and Specificity}
+#' #' \item{\code{getROC}}{Extract Receiver Operating Characteristics from Objects
+#' produced by \code{binomialScreening}, \code{mebinomScreening} and \code{simpleScreening}}
 #' \item{\code{plotROC}}{Plot Receiver Operating Characteristics from Objects
 #' produced by \code{binomialScreening}, \code{mebinomScreening} and \code{simpleScreening}}
 #' \item{\code{sens_spec}}{Sensitivity and Specificity from a 2 x 2 Table}

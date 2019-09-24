@@ -18,13 +18,13 @@
 
 #' Simple Un-optimized Test-Screening Tool
 #'
-#' Compute the in-sample performances for development of a very simple test
-#' screening tool. The results provide information from which to choose a
-#' counting-based threshold score above which a diagnostic test would be
-#' performed. \code{binomialScreening} will almost certainly outperform this
-#' approach, and \code{simpleScreening} is intended for use in those situations
-#' where post-estimation technical capacity is limited to counting responses to
-#' questions.
+#' Compute the in-sample (overly optimistic) performances for development of a
+#' very simple test screening tool. The results provide information from which to
+#' choose a counting-based threshold score above which a diagnostic test would be
+#' performed. However, it is highly unlikely that the target sensitivity and
+#' specificity will be acheived from new data.  \code{simpleScreening} is intended
+#' for use only in those situations where post-estimation technical capacity is
+#' limited to counting responses to questions.
 #'
 #' @param formula an object of class \code{\link{formula}} defining the testing
 #' outcome and predictor covariates.
@@ -72,54 +72,103 @@ simpleScreening <- function(formula, data){
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
-    critvals <- 1L:npreds
-    tst <- outer(score, critvals, `>=`)
-    roc <- data.frame(score = NULL, sensitivity = NULL, specificity = NULL)
-    for(i in seq_along(critvals)){
-        tabl <- table(factor(tst[, i] * 1 , levels = c("0", "1")),
-                      factor(y, levels = c("0", "1")))
-        ss <- sens_spec(tabl)
-        roc <- rbind(roc, data.frame(score = i,
-                                     sensitivity = ss$sensitivity,
-                                     specificity = ss$specificity))
-        class(roc) <- c("ROC", "data.frame")
-    }
+    is.roc <- pROC::roc(y, score, auc = TRUE, ci = TRUE, of = "sp",
+                        se = seq(0, 1, 0.025), ci.type = "shape")
     scores <- cbind(dat, score = score)
     result <- list(Call = call,
                    Prevalence = prev,
-                   InSamplePerf = roc,
+                   ISroc = is.roc,
                    Scores = scores)
     class(result) <- "simplescreenr"
     invisible(result)
 }
 
 
-#' An S3 Print Method for \code{simplescreenr} Objects
+#' Print Summaries of \code{simplescreenr} Objects
+#'
+#' @param object A \code{simplescreenr} class object.
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @return Nothing.  Thresholds, specificities and sensitivities are printed as
+#' a side effect.
+#'
+#' @seealso \code{\link{getROC}}
+#' @export
+summary.simplescreenr <- function(object, ...){
+    if(!("simplescreenr" %in% class(object)))
+        stop("object not a simplescreenr object")
+    cat("Call:\n")
+    print(object$Call)
+    cat("\nPrevalence (In-sample prevalence of condition):\n")
+    print(object$Prevalence)
+    cat("\nReceiver Operating Characteristics:\n")
+    auc <- round(as.numeric(object$ISroc$auc), digits = 4)
+    cat(paste("\nIn-sample (overly optimistic) area under the curve: ",
+              auc, "\n", sep = ""))
+}
+
+#' Plot ROC Curves of \code{simplescreenr} Objects
+#'
+#' Plot cross-validated (out-of-sample) ROC curve with pointwise 95% confidence
+#' intevals on specificity (gray shaded region), along with the overly optimistic
+#' in-sample ROC curve.
+#'
+#' @param x A object of class "simplescreenr"
+#'
+#' @return Nothing.  This function produces a plot as a side effect
+#'
+#' @references
+#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
+#' 27(8):861-874.
+#' \url{https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub}
+#'
+#' Linden A. Measuring diagnostic and predictive accuracy in disease
+#' management: an introduction to receiver operating characteristic (ROC) analysis.
+#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
+#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
+#'
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
+#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
+#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#' @export
+plot.simplescreenr <- function(x){
+    if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
+    rocobj1 <- plot(x$ISroc, print.auc = TRUE, ci = TRUE, of = "sp",
+                    se = seq(0, 1, 0.025), ci.type = "shape")
+}
+
+
+#' Print Receiver Operating Characteristics for \code{simplescreenr} Objects
 #'
 #' @param x a \code{simplescreenr} class object.
 #' @param ... further arguments passed to or from other methods.
 #' @param quote logical, indicating whether or not strings should be printed
 #' with surrounding quotes.
+#'
+#' @return Nothing. Thresholds, specificities and sensitivities are printed as a
+#' side effect.
+#'
+#' @references
+#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
+#' 27(8):861-874.
+#' \url{https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub}
+#'
+#' Linden A. Measuring diagnostic and predictive accuracy in disease
+#' management: an introduction to receiver operating characteristic (ROC) analysis.
+#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
+#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
+#'
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
+#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
+#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #' @export
 print.simplescreenr <- function(x, quote = FALSE, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
-    x$InSamplePerf
-}
-
-
-#' An S3 Summary Method for \code{simplescreenr} Objects
-#'
-#' @param object A \code{simplescreenr} class object.
-#' @param ... further arguments passed to or from other methods.
-#' @export
-summary.simplescreenr <- function(object, ...){
-    if(!("simplescreenr" %in% class(object))) stop("object not a simplescreenr object")
-    cat("\nCall:\n")
-    print(object$Call)
-    cat("\nPrevalence (In-sample prevalence of condition)\n")
-    print(object$Prevalence)
-    cat("\nInSampPerf (In-sample Receiver Operating Characteristics):\n")
-    print(object$InSamplePerf)
+    cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
+    df_ <- data.frame(score = x$ISroc$thresholds,
+                      sensitivity = x$ISroc$sensitivities,
+                      specificity = x$ISroc$specificities)
+    print(df_)
 }
 
 ################################   END of FILE   ################################
