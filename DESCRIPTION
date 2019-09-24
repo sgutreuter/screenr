@@ -2,7 +2,7 @@ Package: screenr
 Type: Package
 Title: Construction of Binary Test-Screening Rules
 Version: 0.2
-Date: 2019-09-22
+Date: 2019-09-24
 Author: Steve Gutreuter
 Maintainer: Steve Gutreuter <sgutreuter@gmail.com>
 Depends: R(>= 3.5.0), lattice, plyr, lme4, pROC

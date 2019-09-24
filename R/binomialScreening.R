@@ -38,12 +38,12 @@
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
 #' validation (default = 20).
 #' @param ... additional arguments passsed to or from other \code{stats::glm}
-#' or \code{pROC::roc}
+#' or \code{pROC::roc}.
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{stats::glm}})
+#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{stats::glm}})}
 #' containing the results of the model fit.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
@@ -62,11 +62,9 @@
 #' data(unicorns)
 #' help(unicorns)
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, link = "logit",
-#'                              p = c(seq(0.01, 0.10, by = 0.015),
-#'                                    seq(.15, 0.95, by = 0.05)))
+#'                              data = unicorns, link = "logit")
 #' summary(unitool)
-#' plotROC(unitool)
+#' plot(unitool)
 #' testCounts(SensSpec = unitool)
 #'
 #' ## Example implementation of screening based on those results
@@ -147,9 +145,9 @@ binomialScreening <- function(formula,
 #' Print Summaries of \code{binomscreenr} Objects
 #'
 #' @param object an object of class \code{binomscreenr} produced by function
-#' \code{binomialScreening}
-#' @param diagnostics a logical value; plot model diagnostics if \code{TRUE}
-#' @param ... further arguments passed to or from other methods
+#' \code{binomialScreening}.
+#' @param diagnostics a logical value; plot model diagnostics if \code{TRUE}.
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @return Nothing.  Summaries are printed as a side effect.
 #' @export
@@ -157,7 +155,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
     if(!("binomscreenr" %in% class(object))) stop("object not binomscreenr class")
     cat("Call:\n")
     print(object$Call)
-    cat("\n\nLogistic regression model summary:\n")
+    cat("\n\nBinomial regression model summary:\n")
     print(summary(object$ModelFit))
     if(diagnostics) plot(object$ModelFit)
     cat("\nPrevalence (In-sample prevalence of condition):\n")
@@ -177,7 +175,8 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' intevals on specificity (gray shaded region), along with the overly optimistic
 #' in-sample ROC curve.
 #'
-#' @param x A object of class "binomscreenr"
+#' @param x an object of class "binomscreenr".
+#' @param ... additional arguments passed to \code{\link{pROC::plot.roc}} and friends.
 #'
 #' @return Nothing.  This function produces a plot as a side effect.
 #'
@@ -196,7 +195,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #'
 #' @export
-plot.binomscreenr <- function(x){
+plot.binomscreenr <- function(x, ...){
     if(!class(x) == "binomscreenr") stop("x is not a binomscreenr object")
     rocobj1 <- plot(x$CVroc, print.auc = TRUE, ci = TRUE, of = "sp",
                     se = seq(0, 1, 0.01), ci.type = "shape")
@@ -236,8 +235,8 @@ print.binomscreenr <- function(x, quote = FALSE, ...){
     if(!("binomscreenr" %in% class(x))) stop("x not binomscreenr class")
     cat("Out-of-sample sensitivity and specificity at outcome thresholds:\n")
     df_ <- data.frame(threshold = x$CVroc$thresholds,
-                      specificity = x$CVroc$specificities,
-                      sensitivity = x$CVroc$sensitivities)
+                      sensitivity = x$CVroc$sensitivities,
+                      specificity = x$CVroc$specificities)
     df_
 }
 

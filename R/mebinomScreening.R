@@ -48,7 +48,7 @@
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class \code{\link{glmerMod}}
+#' \item{\code{ModelFit}}{An object of class \code{\link{glmerMod}}}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 #' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)

@@ -54,7 +54,7 @@
 #' simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
 #'                        data = unicorns)
 #' summary(simple)
-#' plotROC(simple)
+#' plot(simple)
 #' testCounts(simple)
 #'
 #' @export
@@ -113,7 +113,8 @@ summary.simplescreenr <- function(object, ...){
 #' intevals on specificity (gray shaded region), along with the overly optimistic
 #' in-sample ROC curve.
 #'
-#' @param x A object of class "simplescreenr"
+#' @param x A object of class "simplescreenr".
+#' @param ... Additional arguments passed to \code{\link{pROC:plot.roc}} and friends.
 #'
 #' @return Nothing.  This function produces a plot as a side effect
 #'
@@ -131,10 +132,11 @@ summary.simplescreenr <- function(object, ...){
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #' @export
-plot.simplescreenr <- function(x){
+plot.simplescreenr <- function(x, ...){
     if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
     rocobj1 <- plot(x$ISroc, print.auc = TRUE, ci = TRUE, of = "sp",
-                    se = seq(0, 1, 0.025), ci.type = "shape")
+                    se = seq(0, 1, 0.025), ci.type = "shape",
+                    thresholds = unique(score), ...)
 }
 
 
@@ -165,7 +167,7 @@ plot.simplescreenr <- function(x){
 print.simplescreenr <- function(x, quote = FALSE, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
-    df_ <- data.frame(score = x$ISroc$thresholds,
+    df_ <- data.frame(score = ceiling(x$ISroc$thresholds),
                       sensitivity = x$ISroc$sensitivities,
                       specificity = x$ISroc$specificities)
     print(df_)

@@ -136,8 +136,6 @@ inverseLink <- function(link, lp){
 }
 
 
-
-
 #' Extract ROCs from "binomscreenr" or "simplescreenr" Objects
 #'
 #' Extract the receiver operating characteristics from an object of class
@@ -173,14 +171,16 @@ inverseLink <- function(link, lp){
 getROC <- function(x){
     if(!class(x) %in% c("binomscreenr", "simplescreenr"))
         stop("x not a binomscreenr or simplescreenr object.")
-    if(class(x) == "binomscreener"){
+    if(class(x) == "binomscreenr"){
         obj <- x$CVroc
+        th <- obj$thresholds
     } else {
         obj <- x$ISroc
+        th <- ceiling(obj$thresholds)
     }
-    res <- data.frame(threshold = obj$thresholds,
-                      specificity = obj$specificities,
-                      sensitivity = obj$sensitivities)
+    res <- data.frame(threshold = th,
+                      sensitivity = obj$sensitivities,
+                      specificity = obj$specificities)
     res
 }
 
@@ -206,19 +206,19 @@ getROC <- function(x){
 #' @examples
 #' data(unicorns)
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, Nfolds = 20))
+#'                              data = unicorns, Nfolds = 20)
 #' testCounts(unitool)
 #'
 #' @export
 testCounts <- function(x = NULL, prev = NULL){
     if("binomscreenr" %in% class(x)){
-        ss <- data.frame(specificity = x$CVroc$specificities,
-                         sensitivity = x$CVroc$sensitivities)
+        ss <- data.frame(sensitivity = x$CVroc$sensitivities,
+                         specificity = x$CVroc$specificities)
         if(is.null(prev)) prev <- x$Prevalence
     } else {
         if("simplescreenr" %in% class(x)){
-            ss <- data.frame(specificity = x$ISroc$specificities,
-                             sensitivity = x$ISroc$sensitivities)
+            ss <- data.frame(sensitivity = x$ISroc$sensitivities,
+                             specificity = x$ISroc$specificities)
             if(is.null(prev)) prev <- x$Prevalence
         } else {
             ss <- x
@@ -240,6 +240,7 @@ testCounts <- function(x = NULL, prev = NULL){
                                            "E(FalseNegs/Pos)")
     result
 }
+
 
 #' Return Data Frame Rows Having Unique Values in Selected Columns
 #'
