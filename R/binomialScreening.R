@@ -43,15 +43,15 @@
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{stats::glm}}) containing the results of the model fit.}
+#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{glm}}) containing the results of the model fit.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
-#' \item{\code{ISroc}}{A list of class "roc" (see \code{\link{pROC::roc}}) containing in-sample (overly optimistic) results.}
+#' \item{\code{ISroc}}{A list of class "roc" (see \code{\link{roc}}) containing in-sample (overly optimistic) results.}
 #' \item{\code{CVpreds}}{A data frame containing \emph{k}-fold cross-validation results.}
-#' \item{\code{CVroc}}{A list of class "roc" (See \code{\link{pROC::roc}}) containing cross-validated results.}
+#' \item{\code{CVroc}}{A list of class "roc" (See \code{\link{roc}}) containing cross-validated results.}
 #' }
 #'
-#' @seealso \code{\link{lme4::glm}}
+#' @seealso \code{\link{glm}}
 #'
 #' @examples
 #' ## Evaluate the performance of screening thresholds based on a logisitc model
@@ -62,7 +62,7 @@
 #'                              data = unicorns, link = "logit")
 #' summary(unitool)
 #' plot(unitool)
-#' testCounts(SensSpec = unitool)
+#' testCounts(unitool)
 #'
 #' ## Example implementation of screening based on those results
 #' ## Suppose there are new observations (excluding testing) from two previously
@@ -71,13 +71,14 @@
 #' new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0),
 #'                    Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0))
 #' print(new)
-#' ## Compute point estimates of their predicted probabilities testing positive:
+#'
 #' ## Compute point estimates of their predicted probabilities testing positive:
 #' inverseLink("logit",
-#'             as.matrix(cbind(c(nrow(new), nrow(new)), new[, 2:6])) %*%
-#'                             as.matrix(unitool$ParmEst, ncol = 1))
+#'             as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
+#'                            as.matrix(unitool$ParamEst, ncol = 1))
 #' ## or, more simply,
 #' predict(unitool$ModelFit, newdata = new, type = "response")
+#'
 #' ## If p.threshold = 0.025 is chosen as the screening threshold
 #' ## (sensitivity and specificity 77\% and 69\%, respectively) then "Bernie P."
 #' ## would be offered testing and "Alice D." would not.
@@ -173,7 +174,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' in-sample ROC curve.
 #'
 #' @param x an object of class "binomscreenr".
-#' @param ... additional arguments passed to \code{\link{pROC::plot.roc}} and friends.
+#' @param ... additional arguments passed to \code{\link{plot.roc}} and friends.
 #'
 #' @return Nothing.  This function produces a plot as a side effect.
 #'

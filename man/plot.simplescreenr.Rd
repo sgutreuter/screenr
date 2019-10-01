@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A object of class "simplescreenr".}
 
-\item{...}{Additional arguments passed to \code{\link{pROC:plot.roc}} and friends.}
+\item{...}{Additional arguments passed to \code{\link{plot.roc}} and friends.}
 }
 \value{
 Nothing.  This function produces a plot as a side effect

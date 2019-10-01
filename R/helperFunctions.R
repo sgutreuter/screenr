@@ -72,10 +72,9 @@ nSensSpec_tst <- function(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9,
 #' @examples
 #' sens <- c(rep(0.8, 4), rep(0.85, 4), rep(0.90, 4))
 #' spec <- rep(c(0.65, 0.70, 0.75, 0.8 ), 3)
-#' nSensSpec(sens, spec, SnsCrit = 0.90, SpcCrit = 0.70)
+#' nSensSpec_est(sens, spec, w = 0.1)
 #' @export
-nSensSpec_tst <- function(Sens, Spec, w = 0.1, SpcCrit = 0.9,
-                          CL = 0.95){
+nSensSpec_est <- function(Sens, Spec, w = 0.1, CL = 0.95){
     if(any(Sens <=0 | Sens >= 1)) stop("Sensitivity not in (0,1)")
     if(any(Spec <=0 | Spec >= 1)) stop("Specificity not in (0,1)")
     alpha.star <- 1 - sqrt(1 - alpha)
@@ -193,7 +192,7 @@ getROC <- function(x){
 #' false positives among that number of tests.
 #'
 #' @param x A data frame containing columns "sensitivity" and
-#' '"specificity"', or an object of class 'simplescreenr' or 'binomscreenr'.
+#' "specificity", or an object of class 'simplescreenr' or 'binomscreenr'.
 #' @param prev Numeric proportion of the population expressing positive test
 #' results.  \code{prev} is optional for class 'simplescreenr' and
 #' 'binomscreenr' objects, and defaults to prevalence in the training sample

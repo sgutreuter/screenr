@@ -8,7 +8,7 @@ testCounts(x = NULL, prev = NULL)
 }
 \arguments{
 \item{x}{A data frame containing columns "sensitivity" and
-'"specificity"', or an object of class 'simplescreenr' or 'binomscreenr'.}
+"specificity", or an object of class 'simplescreenr' or 'binomscreenr'.}
 
 \item{prev}{Numeric proportion of the population expressing positive test
 results.  \code{prev} is optional for class 'simplescreenr' and

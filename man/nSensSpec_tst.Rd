@@ -4,35 +4,23 @@
 \alias{nSensSpec_tst}
 \title{Sample Size for Joint Testing of Sensitivity and Specificity}
 \usage{
-nSensSpec_tst(Sens, Spec, w = 0.1, SpcCrit = 0.9, CL = 0.95)
-
-nSensSpec_tst(Sens, Spec, w = 0.1, SpcCrit = 0.9, CL = 0.95)
+nSensSpec_tst(Sens, Spec, SnsCrit = 0.9, SpcCrit = 0.9, alpha = 0.05,
+  power = 0.8)
 }
 \arguments{
 \item{Sens}{A numeric vector of anticipated sensitivities (0 < Sens < 1).}
 
 \item{Spec}{A numeric vector of anticipated specificities (0 < Spec < 1).}
 
-\item{w}{confidence interval margin of error (half width)}
+\item{SnsCrit}{Critical value (numeric) for sensitivity.}
 
 \item{SpcCrit}{Critical value (numeric) for specificity.}
-
-\item{CL}{Confidence level for joint rectangular confidence intervals.}
-
-\item{SnsCrit}{Critical value (numeric) for sensitivity.}
 
 \item{alpha}{Probability of Type I error (0 < alpha < 1).}
 
 \item{power}{Desired power (0 < power < 1).}
-
-\item{Sens}{A numeric vector of anticipated sensitivities (0 < Sens < 1).}
-
-\item{Spec}{A numeric vector of anticipated specificities (0 < Spec < 1).}
 }
 \value{
-A data frame containing the required number of positive and negative
-test results.
-
 A data frame containing the required number of positive and negative
 test results.
 }
@@ -41,16 +29,8 @@ Estimate the required number of positive and negative test results for
 hypothesis testing against the joint null hypothesis H0: Sens = SnsCrit and
 Spec = SpcCrit.  For rare conditions, the number of positive test results
 will be limiting, and sample size should be based on that alone.
-
-Estimate the required number of positive and negative test results for
-estimation of joint rectangular confidence intervals for sensitivity and
-specificity.  For rare conditions, the number of positive test results
-will be limiting, and sample size should be based on that alone.
 }
 \examples{
-sens <- c(rep(0.8, 4), rep(0.85, 4), rep(0.90, 4))
-spec <- rep(c(0.65, 0.70, 0.75, 0.8 ), 3)
-nSensSpec(sens, spec, SnsCrit = 0.90, SpcCrit = 0.70)
 sens <- c(rep(0.8, 4), rep(0.85, 4), rep(0.90, 4))
 spec <- rep(c(0.65, 0.70, 0.75, 0.8 ), 3)
 nSensSpec(sens, spec, SnsCrit = 0.90, SpcCrit = 0.70)
@@ -59,7 +39,4 @@ nSensSpec(sens, spec, SnsCrit = 0.90, SpcCrit = 0.70)
 Sullivan, M.P., The Statistical Evaluation of Medical Tests
 for Classification and Prediction.  Oxford Statistical Science Series 28.
 Oxford University Press, Oxford UK.
-
-Pepe, M.S. The Statistical Evaluation of Medical Tests for
-Classification and Prediction.  Oxford University Press, 2003. Oxford UK.
 }

@@ -6,8 +6,7 @@
 Models}
 \usage{
 mebinomScreening(formula, id = NULL, data = NULL, link = "logit",
-  Nfolds = 20L, p = c(seq(0.01, 0.09, 0.01), seq(0.1, 0.6, 0.05),
-  seq(0.65, 0.95, 0.1)), ...)
+  Nfolds = 20L, ...)
 }
 \arguments{
 \item{formula}{an object of class \code{\link{formula}}  defining the testing
@@ -29,16 +28,13 @@ regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
 \item{Nfolds}{an integer number of folds used for \emph{k}-fold cross
 validation (default = 20).}
 
-\item{p}{a numeric vector of reference probabilities for estimation of
-Receiver Operating Characteristics.}
-
 \item{...}{additional arguments passsed to \code{lme4::glmer}.}
 }
 \value{
 An object of class binomscreenr containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
-\item{\code{ModelFit}}{An object of class \code{\link{glmerMod}}}
+\item{\code{ModelFit}}{An object of class \code{\link{merMod}}}
 \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
@@ -58,17 +54,16 @@ test.  Out-of-sample performance is estimated using \emph{k}-fold cross
 validation.
 }
 \examples{
-## Evaluate the performance of screening thresholds based on a logisitc model
+## Evaluate the performance of screening thresholds based on a mixed-effect
+## logisitc model
 
 data(unicorns)
 help(unicorns)
-unitool <- mebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-                             data = unicorns, link = "logit",
-                             p = c(seq(0.01, 0.10, by = 0.015),
-                                   seq(.15, 0.95, by = 0.05)))
+unitool <- mebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5, id = "clinic",
+                             data = unicorns, link = "logit")
 summary(unitool)
-plotROC(unitool)
-testCounts(SensSpec = unitool)
+plot(unitool)
+testCounts(unitool)
 
 ## Example implementation of screening based on those results
 ## Suppose there are new observations (excluding testing) from two previously
@@ -84,8 +79,8 @@ new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0
 print(new)
 ## Compute point estimates of their predicted probabilities testing positive:
 inverseLink("logit",
-            as.matrix(cbind(c(nrow(new), nrow(new)), new[, 2:6])) \%*\%
-                            as.matrix(unitool$ParmEst, ncol = 1))
+            as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) \%*\%
+                            as.matrix(unitool$ParamEst, ncol = 1))
 ## or, more simply,
 predict(unitool$ModelFit, newdata = new, type = "response")
 ## If, for example, \\code{p} = 0.025 is chosen as the screening threshold
@@ -97,9 +92,6 @@ predict(unitool$ModelFit, newdata = new, type = "response")
 ## spreadsheet.
 
 }
-\references{
-
-}
 \seealso{
-\code{\link{lme4::glmer}}
+\code{\link{glmer}}
 }

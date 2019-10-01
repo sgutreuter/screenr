@@ -114,7 +114,7 @@ summary.simplescreenr <- function(object, ...){
 #' in-sample ROC curve.
 #'
 #' @param x A object of class "simplescreenr".
-#' @param ... Additional arguments passed to \code{\link{pROC:plot.roc}} and friends.
+#' @param ... Additional arguments passed to \code{\link{plot.roc}} and friends.
 #'
 #' @return Nothing.  This function produces a plot as a side effect
 #'
