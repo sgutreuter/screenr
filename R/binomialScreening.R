@@ -43,8 +43,7 @@
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{stats::glm}})}
-#' containing the results of the model fit.}
+#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{stats::glm}}) containing the results of the model fit.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
 #' \item{\code{ISroc}}{A list of class "roc" (see \code{\link{pROC::roc}}) containing in-sample (overly optimistic) results.}
@@ -181,7 +180,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
 #' 27(8):861-874.
-#' \url{https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub}
+#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
 #'
 #' Linden A. Measuring diagnostic and predictive accuracy in disease
 #' management: an introduction to receiver operating characteristic (ROC) analysis.
@@ -216,7 +215,7 @@ plot.binomscreenr <- function(x, ...){
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
 #' 27(8):861-874.
-#' \url{https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub}
+#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
 #'
 #' Linden A. Measuring diagnostic and predictive accuracy in disease
 #' management: an introduction to receiver operating characteristic (ROC) analysis.

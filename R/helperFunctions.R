@@ -150,7 +150,8 @@ inverseLink <- function(link, lp){
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
 #' 27(8):861-874.
-#' \url{https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub}
+#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
+#'
 #'
 #' Linden A. Measuring diagnostic and predictive accuracy in disease
 #' management: an introduction to receiver operating characteristic (ROC) analysis.
