@@ -47,11 +47,9 @@
 #' containing the results of the model fit.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
-#' \item{\code{ISroc}}{A list of class "roc" (see \code{\link{pROC::roc}})
-#' containing in-sample (overly optimistic) results.}
+#' \item{\code{ISroc}}{A list of class "roc" (see \code{\link{pROC::roc}}) containing in-sample (overly optimistic) results.}
 #' \item{\code{CVpreds}}{A data frame containing \emph{k}-fold cross-validation results.}
-#' \item{\code{CVroc}}{A list of class "roc" (See \code{\link{pROC::roc}})
-#' containing cross-validated results.}
+#' \item{\code{CVroc}}{A list of class "roc" (See \code{\link{pROC::roc}}) containing cross-validated results.}
 #' }
 #'
 #' @seealso \code{\link{lme4::glm}}
