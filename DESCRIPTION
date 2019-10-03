@@ -1,11 +1,11 @@
 Package: screenr
 Type: Package
 Title: Construction of Binary Test-Screening Rules
-Version: 0.1
-Date: 2019-08-13
-Author: Steve Gutreuter
-Maintainer: Steve Gutreuter <sgutreuter@gmail.com>
-Depends: R(>= 3.5.0), lattice, plyr, lme4
+Version: 0.2
+Date: 2019-09-24
+Authors@R: person("Steve", "Gutreuter", email = "sgutreuter@gmail.com",
+	  role = c("aut", "cre"))
+Depends: R(>= 3.5.0), lattice, plyr, lme4, pROC
 Description: Consider the situation where a definitive test for some condition
     is expensive, and the condition is rare.  In that case, universal testing
     would not be efficient in terms of the yield of postive results per test
@@ -19,5 +19,6 @@ Description: Consider the situation where a definitive test for some condition
     between sensitivity (true positive fraction) and specificity (true negative
     fraction).
 License: GPL (>= 2)
+URL: https://github.com/sgutreuter/screenr.git
 Encoding: UTF-8
 RoxygenNote: 6.1.1

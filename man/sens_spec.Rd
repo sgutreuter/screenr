@@ -2,7 +2,7 @@
 % Please edit documentation in R/helperFunctions.R
 \name{sens_spec}
 \alias{sens_spec}
-\title{Sensitivity and Specificity from a 2 x 2 Table}
+\title{Compute Sensitivity and Specificity from a 2 x 2 Table}
 \usage{
 sens_spec(x)
 }

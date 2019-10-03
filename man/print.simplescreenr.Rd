@@ -2,7 +2,7 @@
 % Please edit documentation in R/simpleScreening.R
 \name{print.simplescreenr}
 \alias{print.simplescreenr}
-\title{An S3 Print Method for \code{simplescreenr} Objects}
+\title{Print Receiver Operating Characteristics for \code{simplescreenr} Objects}
 \usage{
 \method{print}{simplescreenr}(x, quote = FALSE, ...)
 }
@@ -14,6 +14,24 @@ with surrounding quotes.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+Nothing. Thresholds, specificities and sensitivities are printed as a
+side effect.
+}
 \description{
-An S3 Print Method for \code{simplescreenr} Objects
+Print Receiver Operating Characteristics for \code{simplescreenr} Objects
+}
+\references{
+Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
+27(8):861-874.
+\url{https://doi.org/10.1016/j.patrec.2005.10.010}
+
+Linden A. Measuring diagnostic and predictive accuracy in disease
+management: an introduction to receiver operating characteristic (ROC) analysis.
+Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
+\url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
+
+Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
+pROC: an open-source package for R and S+ to analyze and compare ROC curves.
+BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 }

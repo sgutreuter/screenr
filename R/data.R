@@ -10,7 +10,7 @@
 #'
 #' @format A data frame with six columns:
 #' \describe{
-#' \item(\code{clinic}){Clinic code}
+#' \item{\code{clinic}}{Clinic code}
 #' \item{\code{Q1}}{Response to screening question 1 (0 = "no", 1 = "yes")}
 #' \item{\code{Q2}}{Response to screening question 2 (0 = "no", 1 = "yes")}
 #' \item{\code{Q3}}{Response to screening question 3 (0 = "no", 1 = "yes")}

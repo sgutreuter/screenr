@@ -5,8 +5,7 @@
 \title{Test-Screening Tool Based on Binomial Regression}
 \usage{
 binomialScreening(formula, data = NULL, link = "logit", Nfolds = 20L,
-  p = c(seq(0.01, 0.09, 0.01), seq(0.1, 0.6, 0.05), seq(0.65, 0.95,
-  0.1)), ...)
+  ...)
 }
 \arguments{
 \item{formula}{an object of class \code{\link{formula}}  defining the testing
@@ -26,23 +25,19 @@ regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
 \item{Nfolds}{an integer number of folds used for \emph{k}-fold cross
 validation (default = 20).}
 
-\item{p}{a numeric vector of reference probabilities for estimation of
-Receiver Operating Characteristics.}
-
-\item{...}{additional arguments passsed to or from other functions.}
+\item{...}{additional arguments passsed to or from other \code{stats::glm}
+or \code{pROC::roc}.}
 }
 \value{
 An object of class binomscreenr containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
-\item{\code{ModelFit}}{An object of class \code{\link{glm}}.}
+\item{\code{ModelFit}}{An object of class "glm" (See \code{\link{glm}}) containing the results of the model fit.}
 \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
-\item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
-\item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
-sensitivities and specificities.}
-\item{\code{CrossVal}}{A data frame containing \emph{k}-fold cross-validation results.}
-\item{\code{CrossValPerf}}{A data frame containing out-of-sample  sensitivities and
-specificities.}
+\item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
+\item{\code{ISroc}}{A list of class "roc" (see \code{\link{roc}}) containing in-sample (overly optimistic) results.}
+\item{\code{CVpreds}}{A data frame containing \emph{k}-fold cross-validation results.}
+\item{\code{CVroc}}{A list of class "roc" (See \code{\link{roc}}) containing cross-validated results.}
 }
 }
 \description{
@@ -58,12 +53,10 @@ performance is estimated using \emph{k}-fold cross validation.
 data(unicorns)
 help(unicorns)
 unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-                             data = unicorns, link = "logit",
-                             p = c(seq(0.01, 0.10, by = 0.015),
-                                   seq(.15, 0.95, by = 0.05)))
+                             data = unicorns, link = "logit")
 summary(unitool)
-plotROC(unitool)
-testCounts(SensSpec = unitool)
+plot(unitool)
+testCounts(unitool)
 
 ## Example implementation of screening based on those results
 ## Suppose there are new observations (excluding testing) from two previously
@@ -72,10 +65,13 @@ testCounts(SensSpec = unitool)
 new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0),
                    Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0))
 print(new)
+
 ## Compute point estimates of their predicted probabilities testing positive:
 inverseLink("logit",
-            as.matrix(cbind(c(1, 1), new[, 2:6])) \%*\%
-                            as.matrix(unitool$ParmEst, ncol = 1))
+            as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) \%*\%
+                           as.matrix(unitool$ParamEst, ncol = 1))
+## or, more simply,
+predict(unitool$ModelFit, newdata = new, type = "response")
 
 ## If p.threshold = 0.025 is chosen as the screening threshold
 ## (sensitivity and specificity 77\\\% and 69\\\%, respectively) then "Bernie P."
@@ -83,9 +79,8 @@ inverseLink("logit",
 
 ## In practice, the computation of the probabilities of positive test results
 ## among newly observed individuals might be coded outside of R using, say, a
-## spreadsheet.  Within R it is simpler to use \\code{predict}:
+## spreadsheet.
 
-inverseLink("logit", predict(unitool$ModelFit, newdata = new))
 }
 \seealso{
 \code{\link{glm}}

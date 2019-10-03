@@ -4,11 +4,11 @@
 \alias{testCounts}
 \title{Expected Number of Tests Required per Positive Test Result}
 \usage{
-testCounts(SensSpec = NULL, prev = NULL)
+testCounts(x = NULL, prev = NULL)
 }
 \arguments{
-\item{SensSpec}{A data frame containing columns "sensitivity" and
-'"specificity"', or an object of class 'simplescreenr' or 'binomscreenr'.}
+\item{x}{A data frame containing columns "sensitivity" and
+"specificity", or an object of class 'simplescreenr' or 'binomscreenr'.}
 
 \item{prev}{Numeric proportion of the population expressing positive test
 results.  \code{prev} is optional for class 'simplescreenr' and
@@ -29,9 +29,7 @@ false positives among that number of tests.
 \examples{
 data(unicorns)
 unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-                             data = unicorns, Nfolds = 20,
-                             p = c(seq(0.01, 0.10, by = 0.015),
-                                   seq(.15, 0.95, by = 0.05)))
+                             data = unicorns, Nfolds = 20)
 testCounts(unitool)
 
 }

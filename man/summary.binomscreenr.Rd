@@ -2,16 +2,21 @@
 % Please edit documentation in R/binomialScreening.R
 \name{summary.binomscreenr}
 \alias{summary.binomscreenr}
-\title{An S3 Summary Method for \code{binomscreenr} Objects.}
+\title{Print Summaries of \code{binomscreenr} Objects}
 \usage{
-\method{summary}{binomscreenr}(object, ...)
+\method{summary}{binomscreenr}(object, diagnostics = FALSE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{binomscreenr} produced by function
-\code{binomialScreening}}
+\code{binomialScreening}.}
+
+\item{diagnostics}{a logical value; plot model diagnostics if \code{TRUE}.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+Nothing.  Summaries are printed as a side effect.
+}
 \description{
-An S3 Summary Method for \code{binomscreenr} Objects.
+Print Summaries of \code{binomscreenr} Objects
 }

@@ -41,14 +41,12 @@
 #' "\code{probit}".
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
 #' validation (default = 20).
-#' @param p a numeric vector of reference probabilities for estimation of
-#' Receiver Operating Characteristics.
 #' @param ... additional arguments passsed to \code{lme4::glmer}.
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class \code{\link{glmerMod}}
+#' \item{\code{ModelFit}}{An object of class \code{\link{merMod}}}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 #' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
@@ -58,23 +56,19 @@
 #' specificities.}
 #' }
 #'
-#' @seealso \code{\link{lme4::glmer}}
-#'
-#' @references
-#'
+#' @seealso \code{\link{glmer}}
 #'
 #' @examples
-#' ## Evaluate the performance of screening thresholds based on a logisitc model
+#' ## Evaluate the performance of screening thresholds based on a mixed-effect
+#' ## logisitc model
 #'
 #' data(unicorns)
 #' help(unicorns)
-#' unitool <- mebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, link = "logit",
-#'                              p = c(seq(0.01, 0.10, by = 0.015),
-#'                                    seq(.15, 0.95, by = 0.05)))
+#' unitool <- mebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5, id = "clinic",
+#'                              data = unicorns, link = "logit")
 #' summary(unitool)
-#' plotROC(unitool)
-#' testCounts(SensSpec = unitool)
+#' plot(unitool)
+#' testCounts(unitool)
 #'
 #' ## Example implementation of screening based on those results
 #' ## Suppose there are new observations (excluding testing) from two previously
@@ -90,8 +84,8 @@
 #' print(new)
 #' ## Compute point estimates of their predicted probabilities testing positive:
 #' inverseLink("logit",
-#'             as.matrix(cbind(c(nrow(new), nrow(new)), new[, 2:6])) %*%
-#'                             as.matrix(unitool$ParmEst, ncol = 1))
+#'             as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
+#'                             as.matrix(unitool$ParamEst, ncol = 1))
 #' ## or, more simply,
 #' predict(unitool$ModelFit, newdata = new, type = "response")
 #' ## If, for example, \code{p} = 0.025 is chosen as the screening threshold
@@ -104,15 +98,11 @@
 #'
 #' @export
 mebinomScreening <- function(formula,
-                         id = NULL,
-                         data = NULL,
-                         link = "logit",
-                         Nfolds = 20L,
-                         p = c(seq(0.01, 0.09, 0.01),
-                               seq(0.1, 0.6, 0.05),
-                               seq(0.65, 0.95, 0.10 )),
-                         ...){
-    ##stop("This function is temporarily out of order.")   ###############################
+                             id = NULL,
+                             data = NULL,
+                             link = "logit",
+                             Nfolds = 20L,
+                              ...){
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
@@ -120,40 +110,23 @@ mebinomScreening <- function(formula,
     meform <- update(formula, paste("~ . + (1|", id, ")"))
     formx <- update(formula, paste("~ . +", id))
     mf <- model.frame(formx, data)
-    ## m <- match(c("formula", "data"), names(call), 0L)
-    ## mf <- call[c(1L, m)]
-    ## mf[[1L]] <- quote(stats::model.frame)
     dat <- eval(mf, parent.frame())
-    cc <- complete.cases(dat)
-    dat <- dat[cc, ]
+    dat <- dat[complete.cases(dat), ]
     if(Nfolds > 0.20*dim(dat)[1])
         stop("Nfolds must be < 20% of number of complete observations")
-    y <- stats::model.response(mf, "numeric")
+    y <- stats::model.response(dat, "numeric")
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
     prev <- mean(y, na.rm = TRUE)
-    modfit <- lme4::glmer(meform, data = dat, family = binomial(link = link))
-    insamp <- data.frame(NULL)
-    browser()                          #########################################################
-    pp <- fitted(modfit)               ############   Check this   #############################
-    pp2 <- predict(modfit, type = "response")   ######### remove ###############################
-    View(cbind(pp, pp2))  ####### remove ##############################
-    for(j in seq_along(p)){
-        I.test <-as.numeric(pp >= p[j])
-        cmat <- table(factor(I.test, levels = c("0", "1")),
-                      factor(y, levels = c("0", "1")))
-        z <- sens_spec(cmat)
-        insamp <- rbind(insamp, data.frame(p = p[j],
-                                           sensitivity = z[1],
-                                           specificity = z[2]))
-    }
-    cv.results <- data.frame(NULL)
+    lrfit <- lme4::glmer(meform, data = dat, family = binomial(link = link))
+    is.roc <- pROC::roc(lrfit@resp$y, fitted(lrfit))
     N <- nrow(dat)
     holdouts <- split(sample(1:N), 1:Nfolds)
+    cv.results <- data.frame(NULL)
     for(i in 1:Nfolds){
-        dati <- dat[-holdouts[[i]], ]
-        res <- lme4::glmer(meform, data = dati, family = binomial(link = link))
-        pred.prob <- predict(res, newdata = dat[holdouts[[i]], ], re.form = NULL,
-                             type = "response")
+        res <- lme4::glmer(meform, data = dat[-holdouts[[i]], ],
+                           family = binomial(link = link))
+        pred.prob <- inverseLink(link, predict(res, newdata = dat[holdouts[[i]], ]))
+        fixROC
         y <- model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
@@ -161,59 +134,19 @@ mebinomScreening <- function(formula,
                                              data = dat[holdouts[[i]],],
                                              cv.pred.prob = pred.prob)))
     }
-    SensSpec.results <- data.frame(NULL)
-    for(j in seq_along(p)){
-        I.test <-as.numeric(cv.results$cv.pred.prob >= p[j])
-        cmat <- table(factor(I.test, levels = c("0", "1")),
-                      factor(cv.results$y, levels = c("0", "1")))
-        z <- sens_spec(cmat)
-        SensSpec.results <- rbind(SensSpec.results,
-                                  data.frame(p = p[j],
-                                             sensitivity = z[1],
-                                             specificity = z[2]))
-    }
-    class(insamp) <-  c("ROC", "data.frame")
-    class(SensSpec.results) <-  c("ROC", "data.frame")
+    cv.roc <- pROC::roc(cv.results$y, cv.results$cv.pred.prob,
+                                  auc = TRUE, ci = TRUE, of = "sp",
+                                  se = seq(0, 1, 0.05), ci.type = "shape")
+    class(cv.results) <-  c("cv.predictions", "data.frame")
     result <- list(Call = call,
-                   ModelFit = modfit,
+                   ModelFit = lrfit,
                    Prevalence = prev,
-                   ParmEst = modfit@beta,
-                   InSamplePerf = insamp,
-                   CrossVal = cv.results,
-                   CrossValPerf = SensSpec.results)
+                   ParamEst = lrfit@beta,
+                   ISroc = is.roc,
+                   CVpreds = cv.results,
+                   CVroc = cv.roc)
     class(result) <- "binomscreenr"
-    result
-}
-
-
-
-#' An S3 Summary Method for \code{binomscreenr} Objects.
-#'
-#' @param object an object of class \code{binomscreenr} produced by function
-#' \code{binomialScreening}
-#' @param ... further arguments passed to or from other methods.
-#'
-#' @export
-summary.binomscreenr <- function(object, ...){
-    if(!("binomscreenr" %in% class(object))) stop("object not binomscreenr class")
-    cat("Call:\n")
-    print(object$Call)
-    cat("\n\nLogistic regression model summary:")
-    print(summary(object$ModelFit))
-    cat("\nOut-of-sample sensitivity and specificity\nscreening at p.hat >= p:\n\n")
-    print(object$CrossValPerf)
-}
-#' An S3 Print Method for \code{binomscreenr} Objects.
-#'
-#' @param x an object of class \code{binomscreenr} produced by function.
-#' @param ... further arguments passed to or from other methods.
-#' @param quote logical, indicating whether or not strings should be printed
-#' with surrounding quotes.
-#' @export
-print.binomscreenr <- function(x, quote = FALSE, ...){
-    if(!("binomscreenr" %in% class(x))) stop("x not binomscreenr class")
-    cat("Out-of-sample sensitivity and specificity\nscreening at p.hat >= p:\n\n")
-    print(x$CrossValPerf)
+    invisible(result)
 }
 
 

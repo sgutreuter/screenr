@@ -28,20 +28,20 @@ sensitivities and specificities.}
 }
 }
 \description{
-Compute the in-sample performances for development of a very simple test
-screening tool. The results provide information from which to choose a
-counting-based threshold score above which a diagnostic test would be
-performed. \code{binomialScreening} will almost certainly outperform this
-approach, and \code{simpleScreening} is intended for use in those situations
-where post-estimation technical capacity is limited to counting responses to
-questions.
+Compute the in-sample (overly optimistic) performances for development of a
+very simple test screening tool. The results provide information from which to
+choose a counting-based threshold score above which a diagnostic test would be
+performed. However, it is highly unlikely that the target sensitivity and
+specificity will be acheived from new data.  \code{simpleScreening} is intended
+for use only in those situations where post-estimation technical capacity is
+limited to counting responses to questions.
 }
 \examples{
 data(unicorns)
 simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
                        data = unicorns)
 summary(simple)
-plotROC(simple)
+plot(simple)
 testCounts(simple)
 
 }

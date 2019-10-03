@@ -2,7 +2,7 @@
 % Please edit documentation in R/simpleScreening.R
 \name{summary.simplescreenr}
 \alias{summary.simplescreenr}
-\title{An S3 Summary Method for \code{simplescreenr} Objects}
+\title{Print Summaries of \code{simplescreenr} Objects}
 \usage{
 \method{summary}{simplescreenr}(object, ...)
 }
@@ -11,6 +11,13 @@
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+Nothing.  Thresholds, specificities and sensitivities are printed as
+a side effect.
+}
 \description{
-An S3 Summary Method for \code{simplescreenr} Objects
+Print Summaries of \code{simplescreenr} Objects
+}
+\seealso{
+\code{\link{getROC}}
 }
