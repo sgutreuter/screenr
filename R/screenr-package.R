@@ -12,7 +12,7 @@
 #' threshold is left to the user, and should be based on careful consideration
 #' of application-specific tradeoffs between sensitivity and specificity.
 #'
-#' @name screener
+#' @name screenr
 #' @docType package
 #' @author Steve Gutreuter: \email{sgutreuter@@gmail.gov}
 #' @seealso
