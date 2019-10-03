@@ -135,8 +135,7 @@ summary.simplescreenr <- function(object, ...){
 plot.simplescreenr <- function(x, ...){
     if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
     rocobj1 <- plot(x$ISroc, print.auc = TRUE, ci = TRUE, of = "sp",
-                    se = seq(0, 1, 0.025), ci.type = "shape",
-                    thresholds = unique(score), ...)
+                    se = seq(0, 1, 0.025), ci.type = "shape", ...)
 }
 
 

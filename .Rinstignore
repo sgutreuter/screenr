@@ -1,3 +1,5 @@
 test*.R
 TODO
 issues
+.git
+.gitignore
