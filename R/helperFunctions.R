@@ -108,7 +108,6 @@ getROC <- function(x){
     } else {
         obj <- x$ISroc
         th <- ceiling(obj$thresholds)
->>>>>>> fixROC
     }
     res <- data.frame(threshold = th,
                       sensitivity = obj$sensitivities,
