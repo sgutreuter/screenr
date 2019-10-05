@@ -1,8 +1,7 @@
 #################################################################################
 ##       R PROGRAM: mebinomScreening.R
 ##
-##         PROJECT: R fuctions for HIV screening tool development
-##
+##         PROJECT: R fuctions for HIV screening
 ##      WRITTEN BY: Steve Gutreuter, CDC/CGH/DGHT/Statistics, Estimation and
 ##                               Modeling Team
 ##                  E-mail:  sgutreuter@cdc.gov
@@ -68,7 +67,7 @@
 #'                              data = unicorns, link = "logit")
 #' summary(unitool)
 #' plot(unitool)
-#' testCounts(unitool)
+#' \dontrun{testCounts(unitool)}
 #'
 #' ## Example implementation of screening based on those results
 #' ## Suppose there are new observations (excluding testing) from two previously
@@ -95,7 +94,7 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
-#'
+#' @import lme4 pROC
 #' @export
 mebinomScreening <- function(formula,
                              id = NULL,
@@ -126,7 +125,6 @@ mebinomScreening <- function(formula,
         res <- lme4::glmer(meform, data = dat[-holdouts[[i]], ],
                            family = binomial(link = link))
         pred.prob <- inverseLink(link, predict(res, newdata = dat[holdouts[[i]], ]))
-        fixROC
         y <- model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),

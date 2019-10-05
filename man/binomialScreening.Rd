@@ -56,7 +56,7 @@ unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
                              data = unicorns, link = "logit")
 summary(unitool)
 plot(unitool)
-testCounts(unitool)
+\dontrun{testCounts(unitool)}
 
 ## Example implementation of screening based on those results
 ## Suppose there are new observations (excluding testing) from two previously
@@ -80,7 +80,6 @@ predict(unitool$ModelFit, newdata = new, type = "response")
 ## In practice, the computation of the probabilities of positive test results
 ## among newly observed individuals might be coded outside of R using, say, a
 ## spreadsheet.
-
 }
 \seealso{
 \code{\link{glm}}

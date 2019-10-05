@@ -55,8 +55,8 @@
 #'                        data = unicorns)
 #' summary(simple)
 #' plot(simple)
-#' testCounts(simple)
-#'
+#' \dontrun{testCounts(simple)}
+#' @import pROC
 #' @export
 simpleScreening <- function(formula, data){
     mf <- match.call(expand.dots = FALSE)

@@ -42,8 +42,7 @@ simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
                        data = unicorns)
 summary(simple)
 plot(simple)
-testCounts(simple)
-
+\dontrun{testCounts(simple)}
 }
 \references{
 Bandason et al 2016. Validation of a screening tool to
