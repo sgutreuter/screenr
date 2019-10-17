@@ -6,10 +6,10 @@
 Models}
 \usage{
 mebinomScreening(formula, id = NULL, data = NULL, link = "logit",
-  Nfolds = 20L, ...)
+  Nfolds = 40L, ...)
 }
 \arguments{
-\item{formula}{an object of class \code{\link{formula}}  defining the testing
+\item{formula}{an object of class \code{\link[stats]{formula}}  defining the testing
 outcome and predictor covariates, which is passed to \code{lme4::glmer()}.}
 
 \item{id}{a vector (variable) which identifies the sampling clusters.}
@@ -17,16 +17,16 @@ outcome and predictor covariates, which is passed to \code{lme4::glmer()}.}
 \item{data}{the "training" sample; a data frame containing the testing
 outcome and predictive covariates to be used for testing screening.  The
 testing outcome must be binary (0,1) indicating negative and positive test
-results, respectively, or logical (TRUE/FALSE).  The covariates are typically
+results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates are typically
 binary (0 = no, 1 = yes) responses to questions which may be predictive of
 the test result, but any numeric or factor covariates can be used.}
 
 \item{link}{the character-valued name of the link function for binomial
-regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
-"\code{probit}".}
+regression.  Choices are \code{"logit"} (default), \code{"cloglog"} or
+\code{"probit"}.}
 
 \item{Nfolds}{an integer number of folds used for \emph{k}-fold cross
-validation (default = 20).}
+validation (default = 40).}
 
 \item{...}{additional arguments passsed to \code{lme4::glmer}.}
 }
@@ -34,7 +34,7 @@ validation (default = 20).}
 An object of class binomscreenr containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
-\item{\code{ModelFit}}{An object of class \code{\link{merMod}}}
+\item{\code{ModelFit}}{An object of class \code{\link[lme4]{merMod}}}
 \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
@@ -92,5 +92,5 @@ predict(unitool$ModelFit, newdata = new, type = "response")
 ## spreadsheet.
 }
 \seealso{
-\code{\link{glmer}}
+\code{\link[lme4]{glmer}}
 }

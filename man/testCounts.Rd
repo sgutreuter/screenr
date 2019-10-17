@@ -11,20 +11,26 @@ testCounts(x = NULL, prev = NULL)
 "specificity", or an object of class 'simplescreenr' or 'binomscreenr'.}
 
 \item{prev}{Numeric proportion of the population expressing positive test
-results.  \code{prev} is optional for class 'simplescreenr' and
-'binomscreenr' objects, and defaults to prevalence in the training sample
-if not specified.}
+results.  \code{prev} is \emph{optional} for class 'simplescreenr' and
+'binomscreenr' objects, for which the default is the prevalence of the test
+condition in the training sample.}
 }
 \value{
-A data frame containing sensitivity, specificity, the expected
-number of tests required to observe a single positive test result and,
-among those, the expected number of false negatives per positive test
-result.
+A data frame containing the following columns:
+\describe{
+\item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+\item{\verb{specificity}}{The specificity (proportion) of the screener.}
+\item{\verb{E(Tests/Pos)}}{The expected number of tests required to discover
+a single positive test result.}
+\item{\verb{E(prev|untested)}}{The expected prevalence proportion of the test
+condition among those who are screened out of testing.}
+}
 }
 \description{
 Compute the expected number of tests which need to be performed in order
-to identify the first positive test result, and the expected number of
-false positives among that number of tests.
+to identify the first positive test result and the expected prevalence
+among the untested given implementation of test screening options having
+the specified values of sensitivity and specificity.
 }
 \examples{
 data(unicorns)

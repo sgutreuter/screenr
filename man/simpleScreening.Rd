@@ -7,7 +7,7 @@
 simpleScreening(formula, data)
 }
 \arguments{
-\item{formula}{an object of class \code{\link{formula}} defining the testing
+\item{formula}{an object of class \code{\link[stats]{formula}} defining the testing
 outcome and predictor covariates.}
 
 \item{data}{the "training" sample; a data frame containing the testing outcome
@@ -28,13 +28,15 @@ sensitivities and specificities.}
 }
 }
 \description{
-Compute the in-sample (overly optimistic) performances for development of a
+Compute the in-sample (\emph{overly optimistic}) performances for development of a
 very simple test screening tool. The results provide information from which to
 choose a counting-based threshold score above which a diagnostic test would be
-performed. However, it is highly unlikely that the target sensitivity and
-specificity will be acheived from new data.  \code{simpleScreening} is intended
-for use only in those situations where post-estimation technical capacity is
-limited to counting responses to questions.
+performed. However, it is unlikely that the target sensitivity and specificity
+would be acheived from new data.  \code{simpleScreening} is intended for use
+\emph{only} in those situations where the technical capacity for implementation
+of screening is limited to counting responses to questions.  The methods
+implemented by \code{binomialScreening} and \code{mebinomScreening} will almost
+certaily out-perform \code{simpleScreening}.
 }
 \examples{
 data(unicorns)
@@ -43,10 +45,14 @@ simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
 summary(simple)
 plot(simple)
 \dontrun{testCounts(simple)}
+
 }
 \references{
 Bandason et al 2016. Validation of a screening tool to
 identify older children living with HIV in primary care facilities in high
 HIV prevalence settings. AIDS 30(5):779-785
 \url{http://dx.doi.org/10.1097/QAD.0000000000000959}
+}
+\seealso{
+\code{\link{binomialScreening}}, \code{\link{mebinomScreening}}
 }

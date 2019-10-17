@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{an object of class "binomscreenr".}
 
-\item{...}{additional arguments passed to \code{\link{plot.roc}} and friends.}
+\item{...}{additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.}
 }
 \value{
 Nothing.  This function produces a plot as a side effect.

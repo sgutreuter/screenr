@@ -10,7 +10,7 @@
 \item{object}{an object of class \code{binomscreenr} produced by function
 \code{binomialScreening}.}
 
-\item{diagnostics}{a logical value; plot model diagnostics if \code{TRUE}.}
+\item{diagnostics}{a logical value; plot model diagnostics if \verb{TRUE}.}
 
 \item{...}{further arguments passed to or from other methods.}
 }

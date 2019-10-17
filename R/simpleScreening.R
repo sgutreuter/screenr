@@ -18,15 +18,17 @@
 
 #' Simple Un-optimized Test-Screening Tool
 #'
-#' Compute the in-sample (overly optimistic) performances for development of a
+#' Compute the in-sample (\emph{overly optimistic}) performances for development of a
 #' very simple test screening tool. The results provide information from which to
 #' choose a counting-based threshold score above which a diagnostic test would be
-#' performed. However, it is highly unlikely that the target sensitivity and
-#' specificity will be acheived from new data.  \code{simpleScreening} is intended
-#' for use only in those situations where post-estimation technical capacity is
-#' limited to counting responses to questions.
+#' performed. However, it is unlikely that the target sensitivity and specificity
+#' would be acheived from new data.  \code{simpleScreening} is intended for use
+#' \emph{only} in those situations where the technical capacity for implementation
+#' of screening is limited to counting responses to questions.  The methods
+#' implemented by \code{binomialScreening} and \code{mebinomScreening} will almost
+#' certaily out-perform \code{simpleScreening}.
 #'
-#' @param formula an object of class \code{\link{formula}} defining the testing
+#' @param formula an object of class \code{\link[stats]{formula}} defining the testing
 #' outcome and predictor covariates.
 #' @param data the "training" sample; a data frame containing the testing outcome
 #' and predictive covariates to be used for testing screening.  The testing
@@ -56,7 +58,10 @@
 #' summary(simple)
 #' plot(simple)
 #' \dontrun{testCounts(simple)}
+#'
+#' @seealso \code{\link{binomialScreening}}, \code{\link{mebinomScreening}}
 #' @import pROC
+#' @importFrom stats model.response complete.cases
 #' @export
 simpleScreening <- function(formula, data){
     mf <- match.call(expand.dots = FALSE)
@@ -131,6 +136,7 @@ summary.simplescreenr <- function(object, ...){
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#' @importFrom graphics plot
 #' @export
 plot.simplescreenr <- function(x, ...){
     if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
@@ -162,6 +168,8 @@ plot.simplescreenr <- function(x, ...){
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#'
+#' @seealso \code{\link{getROC}}
 #' @export
 print.simplescreenr <- function(x, quote = FALSE, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")

@@ -7,12 +7,14 @@
 inverseLink(link, lp)
 }
 \arguments{
-\item{link}{Character link function (one of "logit", "cloglog" or "probit")}
+\item{link}{Character link function (one of \verb{"logit"}, \verb{"cloglog"}
+or \verb{"probit"})}
 
-\item{lp}{Numeric linear predictor}
+\item{lp}{Numeric vector containin the linear predictor}
 }
 \value{
-The inverse of the link function for the linear predictor.
+A numeric vector containing the inverse of the link function for the
+linear predictor.
 }
 \description{
 Returns the inverse of logit, cloglog and probit link functions for a linear

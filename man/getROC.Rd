@@ -10,8 +10,9 @@ getROC(x)
 \item{x}{An object of class "binomscreenr" or "simplescreenr".}
 }
 \value{
-A data frame containing the threshold scores, sensitivity and
-specificity.
+A data frame containing threshold scores, sensitivities and
+specificities. Sensitivities and specificities are displayed as proportions
+rather than percentages.
 }
 \description{
 Extract the receiver operating characteristics from an object of class
@@ -29,7 +30,6 @@ unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
 27(8):861-874.
 \url{https://doi.org/10.1016/j.patrec.2005.10.010}
-
 
 Linden A. Measuring diagnostic and predictive accuracy in disease
 management: an introduction to receiver operating characteristic (ROC) analysis.

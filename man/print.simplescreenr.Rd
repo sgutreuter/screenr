@@ -35,3 +35,6 @@ Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
 pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 }
+\seealso{
+\code{\link{getROC}}
+}

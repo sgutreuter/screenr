@@ -25,6 +25,8 @@
 #' @param x A 2 x 2 table, with the numbers of negative test results appearing
 #' first in both rows and columns.
 #' @return A list containing components sensitivity and specificity.
+#' Sensitivities and specificities are displayed as proportions rather than
+#' percentages.
 #' @examples
 #' TestResults <- ordered(c(0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0))
 #' TrueResults <- ordered(c(0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0))
@@ -46,10 +48,13 @@ sens_spec <- function(x){
 #' predictor
 #'
 #'
-#' @param link Character link function (one of "logit", "cloglog" or "probit")
-#' @param lp Numeric linear predictor
+#' @param link Character link function (one of \verb{"logit"}, \verb{"cloglog"}
+#' or \verb{"probit"})
+#' @param lp Numeric vector containin the linear predictor
 #'
-#' @return The inverse of the link function for the linear predictor.
+#' @return A numeric vector containing the inverse of the link function for the
+#' linear predictor.
+#' @importFrom stats pnorm
 #' @export
 inverseLink <- function(link, lp){
     if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
@@ -74,14 +79,14 @@ inverseLink <- function(link, lp){
 #'
 #' @param x An object of class "binomscreenr" or "simplescreenr".
 #'
-#' @return A data frame containing the threshold scores, sensitivity and
-#' specificity.
+#' @return A data frame containing threshold scores, sensitivities and
+#' specificities. Sensitivities and specificities are displayed as proportions
+#' rather than percentages.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
 #' 27(8):861-874.
 #' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
-#'
 #'
 #' Linden A. Measuring diagnostic and predictive accuracy in disease
 #' management: an introduction to receiver operating characteristic (ROC) analysis.
@@ -119,20 +124,26 @@ getROC <- function(x){
 #' Expected Number of Tests Required per Positive Test Result
 #'
 #' Compute the expected number of tests which need to be performed in order
-#' to identify the first positive test result, and the expected number of
-#' false positives among that number of tests.
+#' to identify the first positive test result and the expected prevalence
+#' among the untested given implementation of test screening options having
+#' the specified values of sensitivity and specificity.
 #'
 #' @param x A data frame containing columns "sensitivity" and
 #' "specificity", or an object of class 'simplescreenr' or 'binomscreenr'.
 #' @param prev Numeric proportion of the population expressing positive test
-#' results.  \code{prev} is optional for class 'simplescreenr' and
-#' 'binomscreenr' objects, and defaults to prevalence in the training sample
-#' if not specified.
+#' results.  \code{prev} is \emph{optional} for class 'simplescreenr' and
+#' 'binomscreenr' objects, for which the default is the prevalence of the test
+#' condition in the training sample.
 #'
-#' @return A data frame containing sensitivity, specificity, the expected
-#' number of tests required to observe a single positive test result and,
-#' among those, the expected number of false negatives per positive test
-#' result.
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{E(Tests/Pos)}}{The expected number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{E(prev|untested)}}{The expected prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
 #'
 #' @examples
 #' data(unicorns)
@@ -164,11 +175,11 @@ testCounts <- function(x = NULL, prev = NULL){
         }
     }
     Etpp <- ((ss[["sensitivity"]] * prev) +
-            (1 - ss[["specificity"]]) * (1 - prev)) / (ss[["sensitivity"]] * prev)
-    Efn <- (1 - ss[["sensitivity"]]) * Etpp
-    result <- data.frame(cbind(ss, Etpp, Efn))
-    names(result)[ncol(ss) + c(1, 2)] <- c("E(Tests/Pos)",
-                                           "E(FalseNegs/Pos)")
+             (1 - ss[["specificity"]]) * (1 - prev)) / (ss[["sensitivity"]] * prev)
+    Epu <- ((1 - ss[["sensitivity"]]) * prev) / ((1 - ss[["sensitivity"]]) * prev
+        + ss[["specificity"]] * (1 - prev))
+    result <- data.frame(cbind(ss, Etpp, Epu))
+    names(result)[ncol(ss) + c(1, 2)] <- c("E(Tests/Pos)", "E(prev|untested)")
     result
 }
 

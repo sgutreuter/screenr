@@ -24,19 +24,19 @@
 #' probabilies indicate the need to perform a diagnostic test.  Out-of-sample
 #' performance is estimated using \emph{k}-fold cross validation.
 #'
-#' @param formula an object of class \code{\link{formula}}  defining the testing
+#' @param formula an object of class \code{\link[stats]{formula}}  defining the testing
 #' outcome and predictor covariates, which is passed to \code{stats::glm()}.
 #' @param data  the "training" sample; a data frame containing the testing
 #' outcome and predictive covariates to be used for testing screening.  The
 #' testing outcome must be binary (0,1) indicating negative and positive test
-#' results, respectively, or logical (TRUE/FALSE).  The covariates are typically
+#' results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates are typically
 #' binary (0 = no, 1 = yes) responses to questions which may be predictive of
 #' the test result, but any numeric or factor covariates can be used.
 #' @param link the character-valued name of the link function for binomial
-#' regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
-#' "\code{probit}".
+#' regression.  Choices are \verb{"logit"} (default), \verb{"cloglog"} or
+#' \verb{"probit"}.
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
-#' validation (default = 20).
+#' validation (default = 40).
 #' @param ... additional arguments passsed to or from other \code{stats::glm}
 #' or \code{pROC::roc}.
 #'
@@ -44,14 +44,14 @@
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{glm}}) containing the results of the model fit.}
-#' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
+#' \item{\code{Prevalence}}{Prevalence (proportion) of the test condition in the training sample.}
 #' \item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
-#' \item{\code{ISroc}}{A list of class "roc" (see \code{\link{roc}}) containing in-sample (overly optimistic) results.}
+#' \item{\code{ISroc}}{A list of class "roc" (see \code{\link[pROC]{roc}}) containing in-sample (overly optimistic) results.}
 #' \item{\code{CVpreds}}{A data frame containing \emph{k}-fold cross-validation results.}
-#' \item{\code{CVroc}}{A list of class "roc" (See \code{\link{roc}}) containing cross-validated results.}
+#' \item{\code{CVroc}}{A list of class "roc" (See \code{\link[pROC]{roc}}) containing cross-validated results.}
 #' }
 #'
-#' @seealso \code{\link{glm}}
+#' @seealso \code{\link[stats]{glm}}
 #'
 #' @examples
 #' ## Evaluate the performance of screening thresholds based on a logisitc model
@@ -59,7 +59,7 @@
 #' data(unicorns)
 #' help(unicorns)
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, link = "logit")
+#'                              data = unicorns, link = "logit", Nfolds = 20)
 #' summary(unitool)
 #' plot(unitool)
 #' \dontrun{testCounts(unitool)}
@@ -86,12 +86,16 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
+#'
+#' @seealso \code{\link{mebinomScreening}}
 #' @import pROC
+#' @importFrom plyr is.formula
+#' @importFrom stats binomial predict model.response
 #' @export
 binomialScreening <- function(formula,
                               data = NULL,
                               link = "logit",
-                              Nfolds = 20L,
+                              Nfolds = 40L,
                               ...){
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
@@ -144,7 +148,7 @@ binomialScreening <- function(formula,
 #'
 #' @param object an object of class \code{binomscreenr} produced by function
 #' \code{binomialScreening}.
-#' @param diagnostics a logical value; plot model diagnostics if \code{TRUE}.
+#' @param diagnostics a logical value; plot model diagnostics if \verb{TRUE}.
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @return Nothing.  Summaries are printed as a side effect.
@@ -174,7 +178,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' in-sample ROC curve.
 #'
 #' @param x an object of class "binomscreenr".
-#' @param ... additional arguments passed to \code{\link{plot.roc}} and friends.
+#' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
 #'
 #' @return Nothing.  This function produces a plot as a side effect.
 #'
@@ -191,7 +195,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
-#'
+#' @importFrom graphics legend plot
 #' @export
 plot.binomscreenr <- function(x, ...){
     if(!class(x) == "binomscreenr") stop("x is not a binomscreenr object")
@@ -235,7 +239,7 @@ print.binomscreenr <- function(x, quote = FALSE, ...){
     df_ <- data.frame(threshold = x$CVroc$thresholds,
                       sensitivity = x$CVroc$sensitivities,
                       specificity = x$CVroc$specificities)
-    df_
+    print(df_)
 }
 
 

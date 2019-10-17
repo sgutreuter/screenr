@@ -12,6 +12,8 @@ first in both rows and columns.}
 }
 \value{
 A list containing components sensitivity and specificity.
+Sensitivities and specificities are displayed as proportions rather than
+percentages.
 }
 \description{
 Computes sensitivity and specificity of a test.

@@ -26,26 +26,26 @@
 #' test.  Out-of-sample performance is estimated using \emph{k}-fold cross
 #' validation.
 #'
-#' @param formula an object of class \code{\link{formula}}  defining the testing
+#' @param formula an object of class \code{\link[stats]{formula}}  defining the testing
 #' outcome and predictor covariates, which is passed to \code{lme4::glmer()}.
 #' @param id a vector (variable) which identifies the sampling clusters.
 #' @param data  the "training" sample; a data frame containing the testing
 #' outcome and predictive covariates to be used for testing screening.  The
 #' testing outcome must be binary (0,1) indicating negative and positive test
-#' results, respectively, or logical (TRUE/FALSE).  The covariates are typically
+#' results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates are typically
 #' binary (0 = no, 1 = yes) responses to questions which may be predictive of
 #' the test result, but any numeric or factor covariates can be used.
 #' @param link the character-valued name of the link function for binomial
-#' regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
-#' "\code{probit}".
+#' regression.  Choices are \code{"logit"} (default), \code{"cloglog"} or
+#' \code{"probit"}.
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
-#' validation (default = 20).
+#' validation (default = 40).
 #' @param ... additional arguments passsed to \code{lme4::glmer}.
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class \code{\link{merMod}}}
+#' \item{\code{ModelFit}}{An object of class \code{\link[lme4]{merMod}}}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 #' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
@@ -55,7 +55,7 @@
 #' specificities.}
 #' }
 #'
-#' @seealso \code{\link{glmer}}
+#' @seealso \code{\link[lme4]{glmer}}
 #'
 #' @examples
 #' ## Evaluate the performance of screening thresholds based on a mixed-effect
@@ -94,13 +94,15 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
-#' @import lme4 pROC
+#' @import lme4 pROC plyr
+#' @importFrom plyr is.formula
+#' @importFrom stats update model.frame complete.cases binomial fitted predict model.response
 #' @export
 mebinomScreening <- function(formula,
                              id = NULL,
                              data = NULL,
                              link = "logit",
-                             Nfolds = 20L,
+                             Nfolds = 40L,
                               ...){
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")

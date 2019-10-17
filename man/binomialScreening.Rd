@@ -4,26 +4,26 @@
 \alias{binomialScreening}
 \title{Test-Screening Tool Based on Binomial Regression}
 \usage{
-binomialScreening(formula, data = NULL, link = "logit", Nfolds = 20L,
+binomialScreening(formula, data = NULL, link = "logit", Nfolds = 40L,
   ...)
 }
 \arguments{
-\item{formula}{an object of class \code{\link{formula}}  defining the testing
+\item{formula}{an object of class \code{\link[stats]{formula}}  defining the testing
 outcome and predictor covariates, which is passed to \code{stats::glm()}.}
 
 \item{data}{the "training" sample; a data frame containing the testing
 outcome and predictive covariates to be used for testing screening.  The
 testing outcome must be binary (0,1) indicating negative and positive test
-results, respectively, or logical (TRUE/FALSE).  The covariates are typically
+results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates are typically
 binary (0 = no, 1 = yes) responses to questions which may be predictive of
 the test result, but any numeric or factor covariates can be used.}
 
 \item{link}{the character-valued name of the link function for binomial
-regression.  Choices are "\code{logit}" (default), "\code{cloglog}" or
-"\code{probit}".}
+regression.  Choices are \verb{"logit"} (default), \verb{"cloglog"} or
+\verb{"probit"}.}
 
 \item{Nfolds}{an integer number of folds used for \emph{k}-fold cross
-validation (default = 20).}
+validation (default = 40).}
 
 \item{...}{additional arguments passsed to or from other \code{stats::glm}
 or \code{pROC::roc}.}
@@ -33,11 +33,11 @@ An object of class binomscreenr containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
 \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{glm}}) containing the results of the model fit.}
-\item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
+\item{\code{Prevalence}}{Prevalence (proportion) of the test condition in the training sample.}
 \item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
-\item{\code{ISroc}}{A list of class "roc" (see \code{\link{roc}}) containing in-sample (overly optimistic) results.}
+\item{\code{ISroc}}{A list of class "roc" (see \code{\link[pROC]{roc}}) containing in-sample (overly optimistic) results.}
 \item{\code{CVpreds}}{A data frame containing \emph{k}-fold cross-validation results.}
-\item{\code{CVroc}}{A list of class "roc" (See \code{\link{roc}}) containing cross-validated results.}
+\item{\code{CVroc}}{A list of class "roc" (See \code{\link[pROC]{roc}}) containing cross-validated results.}
 }
 }
 \description{
@@ -53,7 +53,7 @@ performance is estimated using \emph{k}-fold cross validation.
 data(unicorns)
 help(unicorns)
 unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-                             data = unicorns, link = "logit")
+                             data = unicorns, link = "logit", Nfolds = 20)
 summary(unitool)
 plot(unitool)
 \dontrun{testCounts(unitool)}
@@ -80,7 +80,10 @@ predict(unitool$ModelFit, newdata = new, type = "response")
 ## In practice, the computation of the probabilities of positive test results
 ## among newly observed individuals might be coded outside of R using, say, a
 ## spreadsheet.
+
 }
 \seealso{
-\code{\link{glm}}
+\code{\link[stats]{glm}}
+
+\code{\link{mebinomScreening}}
 }
