@@ -1,5 +1,7 @@
-test*.R
-TODO
-issues
-.git
-.gitignore
+^test*\\.R$
+^TODO*$
+^issues$
+^\\.git$
+^\\.gitignore$
+^HOWTO_install_screenr$
+^README\\.md$
