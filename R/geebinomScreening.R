@@ -27,7 +27,7 @@
 #' validation.
 #'
 #' @param formula an object of class \code{\link[stats]{formula}}  defining the testing
-#' outcome and predictor covariates, which is passed to \code{lme4::glmer()}.
+#' outcome and predictor covariates, which is passed to \code{geepack::geeglm()}.
 #' @param id a vector (variable) which identifies the sampling clusters.
 #' @param corstr a character string specifying the random-effect correlation
 #' structure; one of "exchangeable", "independence", "fixed" or "unstructured".
@@ -42,12 +42,12 @@
 #' \code{"probit"}.
 #' @param Nfolds an integer number of folds used for \emph{k}-fold cross
 #' validation (default = 40).
-#' @param ... additional arguments passsed to \code{gee::gee}.
+#' @param ... additional arguments passsed to \code{geepack::geeglm}.
 #'
 #' @return An object of class binomscreenr containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
-#' \item{\code{ModelFit}}{An object of class \code{\link[gee]{gee}}}
+#' \item{\code{ModelFit}}{An object of class \code{\link[geepack]{geeglm}}}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 #' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
@@ -57,7 +57,7 @@
 #' specificities.}
 #' }
 #'
-#' @seealso \code{\link[gee]{gee}}
+#' @seealso \code{\link[geepack]{geeglm}}
 #'
 #' @examples
 #' ## Evaluate the performance of screening thresholds based on a mixed-effect
@@ -96,14 +96,13 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
-#' @import gee pROC plyr
+#' @import geepack pROC plyr
 #' @importFrom plyr is.formula
 #' @importFrom stats update model.frame complete.cases binomial fitted predict model.response
 #' @export
 geebinomScreening <- function(formula,
                              id = NULL,
-                             corstr = c("exchangeable", "independence", "fixed",
-                                        "unstructured"),
+                             corstr = "exchangeable",
                              data = NULL,
                              link = "logit",
                              Nfolds = 40L,
@@ -115,7 +114,7 @@ geebinomScreening <- function(formula,
         stop("Invalid corstr")
     call <- match.call()
     formx <- update(formula, paste("~ . + ", id))
-    mf <- model.frame(formx, data)
+    mf <- model.frame(formx, data = data)
     dat <- eval(mf, parent.frame())
     dat <- dat[complete.cases(dat), ]
     dat <- dat[order(dat[[id]]), ]
@@ -124,16 +123,16 @@ geebinomScreening <- function(formula,
     y <- stats::model.response(dat, "numeric")
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
     prev <- mean(y, na.rm = TRUE)
-    ## FIXME: id = as.symbol(id) fails somehow
-    wtf <- model.extract(mf, "clinic")  ## This is what gee does
-    lrfit <- gee::gee(formula, id = as.symbol(id), corstr = corstr, data = dat,
+    ## FIXME: cls <- model.extract(mf, clinic) fails.  Is mf a model.frame?
+    ##cls <- model.extract(mf, clinic)
+    lrfit <- geepack::geeglm(formula, id = id, corstr = corstr, data = dat,
                       family = binomial(link = link))
     is.roc <- pROC::roc(lrfit@resp$y, fitted(lrfit))
     N <- nrow(dat)
     holdouts <- split(sample(1:N), 1:Nfolds)
     cv.results <- data.frame(NULL)
     for(i in 1:Nfolds){
-        res <- gee::gee(formula, id = dat[[id]], corstr = corstr,
+        res <- geepack::geeglm(formula, id = dat[[id]], corstr = corstr,
                         data = dat[-holdouts[[i]], ],
                         family = binomial(link = link))
         pred.prob <- inverseLink(link,
