@@ -16,6 +16,8 @@
 ##                  connection therewith.
 ##
 #################################################################################
+
+## Function binomialScreening
 #' Test-Screening Tool Based on Binomial Regression
 #'
 #' Estimate binomial model parameters and cross-validated performance of test
@@ -143,7 +145,7 @@ binomialScreening <- function(formula,
 }
 
 
-
+## Function summary.binomscreenr
 #' Print Summaries of \code{binomscreenr} Objects
 #'
 #' @param object an object of class \code{binomscreenr} produced by function
@@ -171,6 +173,8 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
         cv.auc, "\n", sep = "")
 }
 
+
+## Function plot.binomscreenr
 #' Plot ROC Curves of \code{binomscreenr} Objects
 #'
 #' Plot cross-validated (out-of-sample) ROC curve with pointwise 95% confidence
@@ -207,9 +211,10 @@ plot.binomscreenr <- function(x, ...){
 }
 
 
+## Function print.binomscreenr
 #' Print Receiver Operating Characteristics for \code{binomscreenr} Objects
 #'
-#' @param x an object of class \code{binomscreenr} produced by function.
+#' @param x an object of class \code{binomscreenr}.
 #' @param ... further arguments passed to or from other methods.
 #' @param quote logical, indicating whether or not strings should be printed
 #' with surrounding quotes.
@@ -240,6 +245,48 @@ print.binomscreenr <- function(x, quote = FALSE, ...){
                       sensitivity = x$CVroc$sensitivities,
                       specificity = x$CVroc$specificities)
     print(df_)
+}
+
+
+## Function getCoefficients
+#' Extract the estimated coefficients from \code{binomscreenr} objects
+#'
+#' @param x An object of class \code{biomscreenr}
+#'
+#' @return A numeric vector containing the estimated coefficients on the logit
+#' scale.
+#' @export
+getCoefficients <- function(x){
+    stopifnot(class(x) == "binomscreenr")
+    x[["ModelFit"]][["coefficients"]]
+}
+
+
+##Function getOddsRatios
+#' Extract a dataframe containing odds ratios and their profile-likelihood confidence intervals
+#'
+#' @param x An object of class \code{biomscreenr}
+#' @param level The desired confidence level.  The default is 0.95.
+#'
+#' @return A dataframe containing:
+#' \describe{
+#' \item{\code{Variable}}{The names of predictor covariates.}
+#' \item{\code{OddsRatio}}{The estimated odds ratios.}
+#' \item{\code{LCL}}{Lower confidence limit}
+#' \item{\code{UCL}}{Uppper confidence limit}
+#' }
+#' @export
+getOddsRatios <- function(x, level = 0.95){
+    stopifnot(class(x) == "binomscreenr")
+    parms <- getCoefficients(x)
+    CI <- confint(x[["ModelFit"]], level = level)
+    or <- exp(cbind(parms, CI))
+    or <- data.frame(or[-1, ])
+    or$variable <- rownames(or)
+    or <- or[, c(4, 1, 2, 3)]
+    names(or) <- c("Variable", "OddsRatio", "LCL", "UCL")
+    rownames(or) <- 1:dim(or)[1]
+    or
 }
 
 
