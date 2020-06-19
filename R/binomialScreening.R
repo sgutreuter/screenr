@@ -275,6 +275,7 @@ getCoefficients <- function(x){
 #' \item{\code{LCL}}{Lower confidence limit}
 #' \item{\code{UCL}}{Uppper confidence limit}
 #' }
+#' @importFrom stats confint
 #' @export
 getOddsRatios <- function(x, level = 0.95){
     stopifnot(class(x) == "binomscreenr")
