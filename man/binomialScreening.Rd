@@ -4,8 +4,7 @@
 \alias{binomialScreening}
 \title{Test-Screening Tool Based on Binomial Regression}
 \usage{
-binomialScreening(formula, data = NULL, link = "logit", Nfolds = 40L,
-  ...)
+binomialScreening(formula, data = NULL, link = "logit", Nfolds = 40L, ...)
 }
 \arguments{
 \item{formula}{an object of class \code{\link[stats]{formula}}  defining the testing
@@ -74,7 +73,7 @@ inverseLink("logit",
 predict(unitool$ModelFit, newdata = new, type = "response")
 
 ## If p.threshold = 0.025 is chosen as the screening threshold
-## (sensitivity and specificity 77\\\% and 69\\\%, respectively) then "Bernie P."
+## (sensitivity and specificity 77\\% and 69\\%, respectively) then "Bernie P."
 ## would be offered testing and "Alice D." would not.
 
 ## In practice, the computation of the probabilities of positive test results

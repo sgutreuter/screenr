@@ -1,4 +1,4 @@
-#################################################################################
+################################################################################
 ##       R PROGRAM: geebinomScreening.R
 ##
 ##         PROJECT: R fuctions for HIV screening
@@ -11,10 +11,10 @@
 ##                  implied, is made by the CDC or the U.S. Government as to the
 ##                  accuracy and functioning of the code and related program
 ##                  material nor shall the fact of distribution constitute any
-##                  such warranty, and no responsibility is assumed by the CDC in
-##                  connection therewith.
+##                  such warranty, and no responsibility is assumed by the CDC
+##                  in connection therewith.
 ##
-#################################################################################
+################################################################################
 #' Test-Screening Tool Based on Marginal Estimation from Mixed-Effects Binomial
 #' Models
 #'
@@ -26,17 +26,19 @@
 #' test.  Out-of-sample performance is estimated using \emph{k}-fold cross
 #' validation.
 #'
-#' @param formula an object of class \code{\link[stats]{formula}}  defining the testing
-#' outcome and predictor covariates, which is passed to \code{geepack::geeglm()}.
+#' @param formula an object of class \code{\link[stats]{formula}}  defining the
+#' testing outcome and predictor covariates, which is passed to
+#' \code{geepack::geeglm()}.
 #' @param id a vector (variable) which identifies the sampling clusters.
 #' @param corstr a character string specifying the random-effect correlation
 #' structure; one of "exchangeable", "independence", "fixed" or "unstructured".
 #' @param data  the "training" sample; a data frame containing the testing
 #' outcome and predictive covariates to be used for testing screening.  The
 #' testing outcome must be binary (0,1) indicating negative and positive test
-#' results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates are typically
-#' binary (0 = no, 1 = yes) responses to questions which may be predictive of
-#' the test result, but any numeric or factor covariates can be used.
+#' results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates
+#' are typically binary (0 = no, 1 = yes) responses to questions which may be
+#' predictive of the test result, but any numeric or factor covariates can be
+#' used.
 #' @param link the character-valued name of the link function for binomial
 #' regression.  Choices are \code{"logit"} (default), \code{"cloglog"} or
 #' \code{"probit"}.
@@ -48,13 +50,16 @@
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{ModelFit}}{An object of class \code{\link[geepack]{geeglm}}}
-#' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
-#' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
-#' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
+#' \item{\code{Prevalence}}{Prevalence of the test condition in the training
+#' sample.}
+#' \item{\code{ParmEst}}{A vector containing the binomial regression parameter
+#' estimates.}
+#' \item{\code{InSamplePerf}}{A data frame containing in-sample
+#' (overly-optimistic) sensitivities and specificities.}
+#' \item{\code{CrossVal}}{A data frame containing \emph{k}-fold cross-validation
+#' results.}
+#' \item{\code{CrossValPerf}}{A data frame containing out-of-sample
 #' sensitivities and specificities.}
-#' \item{\code{CrossVal}}{A data frame containing \emph{k}-fold cross-validation results.}
-#' \item{\code{CrossValPerf}}{A data frame containing out-of-sample  sensitivities and
-#' specificities.}
 #' }
 #'
 #' @seealso \code{\link[geepack]{geeglm}}
@@ -63,32 +68,33 @@
 #' ## Evaluate the performance of screening thresholds based on a mixed-effect
 #' ## logisitc model
 #'
-#' data(unicorns)
-#' help(unicorns)
-#' unitool <- geebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5, id = "clinic",
-#'                              data = unicorns, link = "logit")
-#' summary(unitool)
-#' plot(unitool)
-#' \dontrun{testCounts(unitool)}
+#' ##data(unicorns)
+#' ##help(unicorns)
+#' ##unitool <- geebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' ##id = "clinic", data = unicorns, link = "logit")
+#'
+#' ##summary(unitool)
+#' ##plot(unitool)
+#' ##\dontrun{testCounts(unitool)}
 #'
 #' ## Example implementation of screening based on those results
 #' ## Suppose there are new observations (excluding testing) from two previously
 #' ## untested unicorns:
 #'
-#' new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0),
-#'                    Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0),
-#'                    clinic = factor(c("C-5", "C-15"),
-#'                                    levels = c("C-1", "C-10", "C-11", "C-12", "C-13",
-#'                                               "C-14", "C-15", "C-16", "C-17,", "C-18",
-#'                                               "C-19", "C-2", "C-20", "C-3", "C-4",
-#'                                               "C-5", "C-6", "C-7", "C-8", "C-9")))
-#' print(new)
+#' ##new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0),
+#' ##Q2 = c(0, 0), Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0),
+#' ##clinic = factor(c("C-5", "C-15"),
+#' ##                         levels = c("C-1", "C-10", "C-11", "C-12", "C-13",
+#' ##                                    "C-14", "C-15", "C-16", "C-17,", "C-18",
+#' ##                                    "C-19", "C-2", "C-20", "C-3", "C-4",
+#' ##                                    "C-5", "C-6", "C-7", "C-8", "C-9")))
+#' ##print(new)
 #' ## Compute point estimates of their predicted probabilities testing positive:
-#' inverseLink("logit",
-#'             as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
-#'                             as.matrix(unitool$ParamEst, ncol = 1))
+#' ##inverseLink("logit",
+#' ##            as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
+#' ##                            as.matrix(unitool$ParamEst, ncol = 1))
 #' ## or, more simply,
-#' predict(unitool$ModelFit, newdata = new, type = "response")
+#' ##predict(unitool$ModelFit, newdata = new, type = "response")
 #' ## If, for example, \code{p} = 0.025 is chosen as the screening threshold
 #' ## (sensitivity and specificity 77\% and 69\%, respectively) then "Bernie P."
 #' ## would be offered testing and "Alice D." would not.
@@ -96,9 +102,10 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
-#' @import geepack pROC plyr
+#' @import pROC plyr
 #' @importFrom plyr is.formula
-#' @importFrom stats update model.frame complete.cases binomial fitted predict model.response
+#' @importFrom stats update model.frame complete.cases binomial fitted predict
+#' model.response
 #' @export
 geebinomScreening <- function(formula,
                              id = NULL,
@@ -107,6 +114,7 @@ geebinomScreening <- function(formula,
                              link = "logit",
                              Nfolds = 40L,
                              ...){
+    stop("Function geebinomScreening is broken")   ## FUNCTION BROKEN; See below
     if(!plyr::is.formula(formula)) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")

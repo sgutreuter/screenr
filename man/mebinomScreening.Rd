@@ -5,8 +5,14 @@
 \title{Test-Screening Tool Based on Marginal Estimation from Mixed-Effects Binomial
 Models}
 \usage{
-mebinomScreening(formula, id = NULL, data = NULL, link = "logit",
-  Nfolds = 40L, ...)
+mebinomScreening(
+  formula,
+  id = NULL,
+  data = NULL,
+  link = "logit",
+  Nfolds = 40L,
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{\link[stats]{formula}}  defining the testing
@@ -83,8 +89,8 @@ inverseLink("logit",
                             as.matrix(unitool$ParamEst, ncol = 1))
 ## or, more simply,
 predict(unitool$ModelFit, newdata = new, type = "response")
-## If, for example, \\code{p} = 0.025 is chosen as the screening threshold
-## (sensitivity and specificity 77\\\% and 69\\\%, respectively) then "Bernie P."
+## If, for example, \code{p} = 0.025 is chosen as the screening threshold
+## (sensitivity and specificity 77\\% and 69\\%, respectively) then "Bernie P."
 ## would be offered testing and "Alice D." would not.
 
 ## In practice, the computation of the probabilities of positive test results

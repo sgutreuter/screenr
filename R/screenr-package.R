@@ -19,9 +19,9 @@
 #' The high-level functions in the \code{screenr} package are:
 #' \describe{
 #' \item{\code{\link{binomialScreening}}}{Test-Screening Tool Based on Binomial Regression}
-#' \item{\code{getCoefficients}}{Extract the estimated coefficients from \code{binomscreenr objects}}
+#' \item{\code{getCoefficients}}{Extract the estimated coefficients from \code{binomscreenr} objects}
 #' \item{\code{getOddsRatios}}{Extract a dataframe containing odds ratios and their profile-likelihood confidence intervals}
-#' \item{\code{\link{getROC}}}{Extract Receiver Operating Characteristics from Objects
+#' \item{\code{\link{getROC}}}{Extract Receiver Operating Characteristics from Objects}
 
 #' \item{\code{\link{inverseLink}}}{Inverse of Binomial Regression Link Functions}
 #' \item{\code{\link{mebinomScreening}}}{Test-Screening Tool Based on Mixed-Effects Binomial Regression}

@@ -4,7 +4,8 @@
 \name{unicorns}
 \alias{unicorns}
 \title{UIV Testing Data on Unicorns}
-\format{A data frame with six columns:
+\format{
+A data frame with six columns:
 \describe{
 \item{\code{clinic}}{Clinic code}
 \item{\code{Q1}}{Response to screening question 1 (0 = "no", 1 = "yes")}
@@ -13,7 +14,8 @@
 \item{\code{Q4}}{Response to screening question 4 (0 = "no", 1 = "yes")}
 \item{\code{Q5}}{Response to screening question 5 (0 = "no", 1 = "yes")}
 \item{\code{testresult}}{UIV status, where 0 and 1 denote negative and positive test results, repectively.}
-}}
+}
+}
 \usage{
 unicorns
 }

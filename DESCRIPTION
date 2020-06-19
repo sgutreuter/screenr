@@ -1,8 +1,8 @@
 Package: screenr
 Type: Package
 Title: Construction of Binary Test-Screening Rules
-Version: 0.2.3
-Date: 2019-10-05
+Version: 0.2.4
+Date: 2020-06-19
 Authors@R: person("Steve", "Gutreuter", email = "sgutreuter@gmail.com",
 	  role = c("aut", "cre"))
 Depends: R(>= 3.5.0), lme4, pROC, plyr
@@ -21,4 +21,4 @@ Description: Consider the situation where a definitive test for some condition
 License: GPL (>= 2)
 URL: https://github.com/sgutreuter/screenr.git
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

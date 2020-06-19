@@ -7,7 +7,7 @@
 \method{print}{binomscreenr}(x, quote = FALSE, ...)
 }
 \arguments{
-\item{x}{an object of class \code{binomscreenr} produced by function.}
+\item{x}{an object of class \code{binomscreenr}.}
 
 \item{quote}{logical, indicating whether or not strings should be printed
 with surrounding quotes.}
