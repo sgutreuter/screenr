@@ -102,8 +102,7 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
-#' @import pROC plyr
-#' @importFrom plyr is.formula
+#' @import pROC
 #' @importFrom stats update model.frame complete.cases binomial fitted predict
 #' model.response
 #' @export
@@ -115,7 +114,7 @@ geebinomScreening <- function(formula,
                              Nfolds = 40L,
                              ...){
     stop("Function geebinomScreening is broken")   ## FUNCTION BROKEN; See below
-    if(!plyr::is.formula(formula)) stop("Specify an model formula")
+    if(!inherits(formula, "formula")) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
     if(!corstr %in% c("exchangeable", "independence", "fixed", "unstructured"))

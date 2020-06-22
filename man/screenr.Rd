@@ -17,9 +17,25 @@ estimated from an initial sample.  The choice of a particular screening
 threshold is left to the user, and should be based on careful consideration
 of application-specific tradeoffs between sensitivity and specificity.
 }
-\seealso{
+\details{
+The high-level functions in the \code{screenr} package are:
+\describe{
+\item{\code{\link{binomialScreening}}}{Test-Screening Tool Based on Binomial Regression}
+\item{\code{\link{getCoefficients}}}{Extract the estimated coefficients from \code{binomscreenr} objects}
+\item{\code{\link{getOddsRatios}}}{Extract a dataframe containing odds ratios and their profile-likelihood confidence intervals}
+\item{\code{\link{getROC}}}{Extract Receiver Operating Characteristics from Objects}
+\item{\code{\link{inverseLink}}}{Inverse of Binomial Regression Link Functions}
+\item{\code{\link{mebinomScreening}}}{Test-Screening Tool Based on Mixed-Effects Binomial Regression
+produced by \code{binomialScreening}, \code{mebinomScreening} and \code{simpleScreening}}
+\item{\code{\link{sens_spec}}}{Sensitivity and Specificity from a 2 x 2 Table}
+\item{\code{\link{simpleScreening}}}{Simple Un-optimized Test-Screening Tool}
+\item{\code{\link{testCounts}}}{Expected Number of Tests Required per Positive Test Result}
+}
 
+In addition, there are \code{plot}, \code{print} and \code{summary} methods
+for the objects produced by \code{binomialScreening}, \code{mebinomScreening} and
+\code{simpleScreening}.
 }
 \author{
-Steve Gutreuter: \email{sgutreuter@gmail.gov}
+Steve Gutreuter: \email{sgutreuter@gmail.com}
 }

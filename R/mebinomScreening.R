@@ -94,8 +94,7 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
-#' @import lme4 pROC plyr
-#' @importFrom plyr is.formula
+#' @import lme4 pROC
 #' @importFrom stats update model.frame complete.cases binomial fitted predict model.response
 #' @export
 mebinomScreening <- function(formula,
@@ -104,13 +103,13 @@ mebinomScreening <- function(formula,
                              link = "logit",
                              Nfolds = 40L,
                               ...){
-    if(!plyr::is.formula(formula)) stop("Specify an model formula")
+    if(!inherits(formula, "formula")) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
     call <- match.call()
     meform <- update(formula, paste("~ . + (1|", id, ")"))
     formx <- update(formula, paste("~ . +", id))
-    mf <- model.frame(formx, data)
+    mf <- stats::model.frame(formx, data)
     dat <- eval(mf, parent.frame())
     dat <- dat[complete.cases(dat), ]
     if(Nfolds > 0.20*dim(dat)[1])
@@ -126,8 +125,8 @@ mebinomScreening <- function(formula,
     for(i in 1:Nfolds){
         res <- lme4::glmer(meform, data = dat[-holdouts[[i]], ],
                            family = binomial(link = link))
-        pred.prob <- inverseLink(link, predict(res, newdata = dat[holdouts[[i]], ]))
-        y <- model.response(dat[holdouts[[i]], ])
+        pred.prob <- inverseLink(link, stats::predict(res, newdata = dat[holdouts[[i]], ]))
+        y <- stats::model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
                                              y = y,
