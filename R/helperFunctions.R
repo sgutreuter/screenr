@@ -120,10 +120,12 @@ getROC <- function(x, simplify = TRUE){
     res <- data.frame(threshold = th,
                       sensitivity = obj$sensitivities,
                       specificity = obj$specificities)
-    cleaned <- res %>%
-        dplyr::group_by(sensitivity) %>%
-        dplyr::summarize(specificity = max(specificity))
-    if(simplify) res <- dplyr::right_join(res, cleaned)
+    if(simplify) {
+        cleaned <- res %>%
+            dplyr::group_by(sensitivity) %>%
+            dplyr::summarize(specificity = max(specificity))
+        res <- dplyr::right_join(res, cleaned)
+    }
     res
 }
 
