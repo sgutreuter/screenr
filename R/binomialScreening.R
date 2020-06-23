@@ -91,7 +91,6 @@
 #'
 #' @seealso \code{\link{mebinomScreening}}
 #' @import pROC
-#' @importFrom plyr is.formula
 #' @importFrom stats binomial predict model.response
 #' @export
 binomialScreening <- function(formula,
@@ -99,7 +98,7 @@ binomialScreening <- function(formula,
                               link = "logit",
                               Nfolds = 40L,
                               ...){
-    if(!plyr::is.formula(formula)) stop("Specify an model formula")
+    if(!inherits(formula, "formula")) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
     call <- match.call()
@@ -121,8 +120,8 @@ binomialScreening <- function(formula,
     for(i in 1:Nfolds){
         res <- stats::glm(formula, data = dat[-holdouts[[i]], ],
                           family = binomial(link = link))
-        pred.prob <- inverseLink(link, predict(res, newdata = dat[holdouts[[i]], ]))
-        y <- model.response(dat[holdouts[[i]], ])
+        pred.prob <- inverseLink(link, stats::predict(res, newdata = dat[holdouts[[i]], ]))
+        y <- stats::model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
                                              y = y,

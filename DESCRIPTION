@@ -1,11 +1,11 @@
 Package: screenr
 Type: Package
 Title: Construction of Binary Test-Screening Rules
-Version: 0.2.4
-Date: 2020-06-19
+Version: 0.2.5
+Date: 2020-06-23
 Authors@R: person("Steve", "Gutreuter", email = "sgutreuter@gmail.com",
 	  role = c("aut", "cre"))
-Depends: R(>= 3.5.0), lme4, pROC, plyr
+Depends: R(>= 3.5.0), lme4, pROC, dplyr
 Description: Consider the situation where a definitive test for some condition
     is expensive, and the condition is rare.  In that case, universal testing
     would not be efficient in terms of the yield of postive results per test

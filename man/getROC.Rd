@@ -4,10 +4,13 @@
 \alias{getROC}
 \title{Extract ROCs from "binomscreenr" or "simplescreenr" Objects}
 \usage{
-getROC(x)
+getROC(x, simplify = TRUE)
 }
 \arguments{
 \item{x}{An object of class "binomscreenr" or "simplescreenr".}
+
+\item{simplify}{Logical: Simplify result to the maximum values of specificity
+corresponding to unique values of sensitivity (default is \code{TRUE})}
 }
 \value{
 A data frame containing threshold scores, sensitivities and
@@ -24,7 +27,6 @@ data(unicorns)
 unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
                              data = unicorns, Nfolds = 20)
 (uniROC <- getROC(unitool))
-
 }
 \references{
 Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.

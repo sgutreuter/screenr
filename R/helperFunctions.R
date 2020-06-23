@@ -77,6 +77,8 @@ inverseLink <- function(link, lp){
 #' easy use and export of the ROC.
 #'
 #' @param x An object of class "binomscreenr" or "simplescreenr".
+#' @param simplify Logical: Simplify result to the maximum values of specificity
+#' corresponding to unique values of sensitivity (default is \code{TRUE})
 #'
 #' @return A data frame containing threshold scores, sensitivities and
 #' specificities. Sensitivities and specificities are displayed as proportions
@@ -101,9 +103,11 @@ inverseLink <- function(link, lp){
 #' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                              data = unicorns, Nfolds = 20)
 #' (uniROC <- getROC(unitool))
-#'
+#' @import dplyr
+#' @importFrom dplyr group_by summarize right_join
 #' @export
-getROC <- function(x){
+getROC <- function(x, simplify = TRUE){
+    sensitivity <- specificity <- NULL
     if(!class(x) %in% c("binomscreenr", "simplescreenr"))
         stop("x not a binomscreenr or simplescreenr object.")
     if(class(x) == "binomscreenr"){
@@ -116,7 +120,10 @@ getROC <- function(x){
     res <- data.frame(threshold = th,
                       sensitivity = obj$sensitivities,
                       specificity = obj$specificities)
-    res
+    cleaned <- res %>%
+        dplyr::group_by(sensitivity) %>%
+        dplyr::summarize(specificity = max(specificity))
+    res <- ifelse(simplify, dplyr::right_join(res, cleaned), res)
 }
 
 
@@ -206,6 +213,5 @@ keepfirst <- function(x, colnames, data = NULL){
     }
     res
 }
-
 
 ################################   END of FILE   ################################
