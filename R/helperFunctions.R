@@ -123,7 +123,7 @@ getROC <- function(x, simplify = TRUE){
     cleaned <- res %>%
         dplyr::group_by(sensitivity) %>%
         dplyr::summarize(specificity = max(specificity))
-    res <- ifelse(simplify, dplyr::right_join(res, cleaned), res)
+    if(simplify) res <- dplyr::right_join(res, cleaned)
     res
 }
 
