@@ -4,20 +4,41 @@
 \alias{plot.binomscreenr}
 \title{Plot ROC Curves of \code{binomscreenr} Objects}
 \usage{
-\method{plot}{binomscreenr}(x, ...)
+\method{plot}{binomscreenr}(
+  x,
+  plot_ci = TRUE,
+  print_ci = TRUE,
+  conf_level = 0.95,
+  bootreps = 2000,
+  ...
+)
 }
 \arguments{
-\item{x}{an object of class "binomscreenr".}
+\item{x}{An object of class "binomscreenr".}
+
+\item{plot_ci}{Logical indicator for plotting point-wise confidence
+intervals at the locally maximum subset of coordinates for
+on sensitivity and specificity (default = TRUE). See also
+\code{\link[pROC]{ci.thresholds}}.}
+
+\item{print_ci}{Logical indicator to return a dataframe of numerical values,
+intervals.}
+
+\item{conf_level}{Confidence level in the interval (0,1). Default is 0.95
+producing 95\% confidence intervals}
+
+\item{bootreps}{Number of bootstrap replications for estimation of confidence
+(default = 2000).}
 
 \item{...}{additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.}
 }
 \value{
-Nothing.  This function produces a plot as a side effect.
+This function produces a plot as a side effect and (optionally)
+returns a dataframe dataframe containing numerical values.
 }
 \description{
-Plot cross-validated (out-of-sample) ROC curve with pointwise 95% confidence
-intevals on specificity (gray shaded region), along with the overly optimistic
-in-sample ROC curve.
+Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
+intevals, along with the overly optimistic in-sample ROC curve.
 }
 \references{
 Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.

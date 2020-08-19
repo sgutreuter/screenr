@@ -10,7 +10,7 @@ getROC(x, simplify = TRUE)
 \item{x}{An object of class "binomscreenr" or "simplescreenr".}
 
 \item{simplify}{Logical: Simplify result to the maximum values of specificity
-corresponding to unique values of sensitivity (default is \code{TRUE})}
+corresponding to unique values of sensitivity (default is \code{TRUE}).}
 }
 \value{
 A data frame containing threshold scores, sensitivities and

@@ -40,9 +40,9 @@ sens_spec <- function(x){
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor
 #'
+#' @param lp Numeric vector containing the estimated linear predictor.
 #' @param link Character link function (one of \verb{"logit"}, \verb{"cloglog"}
 #' or \verb{"probit"}).
-#' @param lp Numeric vector containing the estimated linear predictor.
 #'
 #' @return A numeric vector containing the inverse of the link function for the
 #' linear predictor.

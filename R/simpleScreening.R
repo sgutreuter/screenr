@@ -112,8 +112,14 @@ summary.simplescreenr <- function(object, ...){
 #' containing numerical values.
 #'
 #' @param x A object of class "simplescreenr".
+#' @param plot_ci Logical indicator for plotting point-wise confidence
+#' intervals at the locally maximum subset of coordinates for
+#' on sensitivity and specificity (default = TRUE). See also
+#' \code{\link[pROC]{ci.thresholds}}.
 #' @param print_ci Logical-valued indicator for returning a dataframe of
 #' numerical values (default = TRUE).
+#' @param conf_level Confidence level in the interval (0,1). Default is 0.95
+#' producing 95\% confidence intervals
 #' @param bootreps Numeric-valued number of bootstrap replication for estimation
 #' of 95\% confidence intervals.
 #' @param ... Additional arguments passed to \code{\link{plot.roc}} and friends.
@@ -162,7 +168,7 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #' Print Receiver Operating Characteristics for \code{simplescreenr} Objects
 #'
 #' @param x a \code{simplescreenr} class object.
-#'
+#' @param ... further arguments passed to or from other methods.
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
 #'
@@ -182,7 +188,7 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #'
 #' @seealso \code{\link{getROC}} and \code{\link{plot.simplescreenr}}
 #' @export
-print.simplescreenr <- function(x){
+print.simplescreenr <- function(x, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
     df_ <- data.frame(score = 0:(length(x$ISroc$sensitivities) - 1),

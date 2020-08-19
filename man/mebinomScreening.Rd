@@ -84,11 +84,10 @@ new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0
                                               "C-5", "C-6", "C-7", "C-8", "C-9")))
 print(new)
 ## Compute point estimates of their predicted probabilities testing positive:
-inverseLink("logit",
-            as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) \%*\%
-                            as.matrix(unitool$ParamEst, ncol = 1))
+inverseLink(as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) \%*\%
+as.matrix(unitool$ParamEst, ncol = 1), "logit")
 ## or, more simply,
-predict(unitool$ModelFit, newdata = new, type = "response")
+predict(unitool$ModelFit, newdata = new, type = "response", re.form = NA)
 ## If, for example, \code{p} = 0.025 is chosen as the screening threshold
 ## (sensitivity and specificity 77\\% and 69\\%, respectively) then "Bernie P."
 ## would be offered testing and "Alice D." would not.

@@ -7,13 +7,14 @@
 simpleScreening(formula, data)
 }
 \arguments{
-\item{formula}{an object of class \code{\link[stats]{formula}} defining the testing
-outcome and predictor covariates.}
+\item{formula}{an object of class \code{\link[stats]{formula}} defining the
+testing outcome and predictor covariates.}
 
 \item{data}{the "training" sample; a data frame containing the testing outcome
 and predictive covariates to be used for testing screening.  The testing
 outcome must be binary (0,1) indicating negative and positive test results,
-respectively, or logical (TRUE/FALSE).  The covariates are typically binary
+respectively, or logical (TRUE/FALSE), and the screening scores are the row-wise
+sums of the values of those covariates.  The covariates are typically binary
 (0 = no, 1 = yes) responses to questions, but the responses may also be
 ordinal numeric values.}
 }
@@ -28,8 +29,9 @@ sensitivities and specificities.}
 }
 }
 \description{
-Compute the in-sample (\emph{overly optimistic}) performances for development of a
-very simple test screening tool. The results provide information from which to
+Compute the in-sample (\emph{overly optimistic}) performances for development
+of a very simple test screening tool implementing the method described in the
+reference.  The results provide information from which to
 choose a counting-based threshold score above which a diagnostic test would be
 performed. However, it is unlikely that the target sensitivity and specificity
 would be acheived from new data.  \code{simpleScreening} is intended for use
@@ -40,8 +42,8 @@ certaily out-perform \code{simpleScreening}.
 }
 \examples{
 data(unicorns)
-simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 ,
-                       data = unicorns)
+simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+                          data = unicorns)
 summary(simple)
 plot(simple)
 \dontrun{testCounts(simple)}

@@ -7,8 +7,10 @@
 sens_spec(x)
 }
 \arguments{
-\item{x}{A 2 x 2 table, with the numbers of negative test results appearing
-first in both rows and columns.}
+\item{x}{A 2 x 2 table, with columns representing frequencies of
+gold-standard status and rows representing frequencies of status ascertained
+from testing.  The first row contains frequencies of negative test results
+and the first column contain frequencies of true negatives.}
 }
 \value{
 A list containing components sensitivity and specificity.
@@ -19,7 +21,7 @@ percentages.
 Computes sensitivity and specificity of a test.
 }
 \examples{
-TestResults <- ordered(c(0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0))
-TrueResults <- ordered(c(0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0))
-sens_spec(table(TestResults, TrueResults))
+Gold <- rbinom(20, 1, 0.50)
+Test <- Gold; Test[c(3, 9, 12, 16)] <- 1 - Test[c(3, 9, 12, 16)]
+sens_spec(table(Test, Gold))
 }

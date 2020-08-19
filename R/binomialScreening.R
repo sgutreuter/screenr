@@ -110,7 +110,9 @@ binomialScreening <- function(formula,
     for(i in 1:Nfolds){
         res <- stats::glm(formula, data = dat[-holdouts[[i]], ],
                           family = binomial(link = link))
-        pred.prob <- inverseLink(link, stats::predict(res, newdata = dat[holdouts[[i]], ]))
+        pred.prob <- inverseLink(stats::predict(res,
+                                                newdata = dat[holdouts[[i]], ]),
+                                 link = link)
         y <- stats::model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
@@ -166,8 +168,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' Plot ROC Curves of \code{binomscreenr} Objects
 #'
 #' Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
-#' intevals on specificity (gray shaded region), along with the overly
-#' optimistic in-sample ROC curve.
+#' intevals, along with the overly optimistic in-sample ROC curve.
 #'
 #' @param x An object of class "binomscreenr".
 #' @param plot_ci Logical indicator for plotting point-wise confidence
@@ -177,7 +178,7 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' @param print_ci Logical indicator to return a dataframe of numerical values,
 #' intervals.
 #' @param conf_level Confidence level in the interval (0,1). Default is 0.95
-#' producing 95% confidence intervals
+#' producing 95\% confidence intervals
 #' @param bootreps Number of bootstrap replications for estimation of confidence
 #' (default = 2000).
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
@@ -230,7 +231,6 @@ plot.binomscreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #' Print Receiver Operating Characteristics for \code{binomscreenr} Objects
 #'
 #' @param x an object of class \code{binomscreenr}.
-#' @param ... further arguments passed to or from other methods.
 #' @param quote logical, indicating whether or not strings should be printed
 #' @param ... further arguments passed to or from other methods.
 #' with surrounding quotes.

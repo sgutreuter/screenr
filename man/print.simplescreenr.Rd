@@ -4,13 +4,10 @@
 \alias{print.simplescreenr}
 \title{Print Receiver Operating Characteristics for \code{simplescreenr} Objects}
 \usage{
-\method{print}{simplescreenr}(x, quote = FALSE, ...)
+\method{print}{simplescreenr}(x, ...)
 }
 \arguments{
 \item{x}{a \code{simplescreenr} class object.}
-
-\item{quote}{logical, indicating whether or not strings should be printed
-with surrounding quotes.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -36,5 +33,5 @@ pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 }
 \seealso{
-\code{\link{getROC}}
+\code{\link{getROC}} and \code{\link{plot.simplescreenr}}
 }

@@ -4,20 +4,43 @@
 \alias{plot.simplescreenr}
 \title{Plot ROC Curves of \code{simplescreenr} Objects}
 \usage{
-\method{plot}{simplescreenr}(x, ...)
+\method{plot}{simplescreenr}(
+  x,
+  plot_ci = TRUE,
+  print_ci = TRUE,
+  conf_level = 0.95,
+  bootreps = 2000,
+  ...
+)
 }
 \arguments{
 \item{x}{A object of class "simplescreenr".}
 
+\item{plot_ci}{Logical indicator for plotting point-wise confidence
+intervals at the locally maximum subset of coordinates for
+on sensitivity and specificity (default = TRUE). See also
+\code{\link[pROC]{ci.thresholds}}.}
+
+\item{print_ci}{Logical-valued indicator for returning a dataframe of
+numerical values (default = TRUE).}
+
+\item{conf_level}{Confidence level in the interval (0,1). Default is 0.95
+producing 95\% confidence intervals}
+
+\item{bootreps}{Numeric-valued number of bootstrap replication for estimation
+of 95\% confidence intervals.}
+
 \item{...}{Additional arguments passed to \code{\link{plot.roc}} and friends.}
 }
 \value{
-Nothing.  This function produces a plot as a side effect
+This function produces a plot as a side effect, and (optionally)
+returns a dataframe dataframe containing medians and
+bootstrap 95\% confidence limits of sensitivity and specificity.
 }
 \description{
-Plot cross-validated (out-of-sample) ROC curve with pointwise 95% confidence
-intevals on specificity (gray shaded region), along with the overly optimistic
-in-sample ROC curve.
+Plot ROC curve with pointwise 95% confidence
+intevals on sensitivity and specificity and (optionally) returns a dataframe
+containing numerical values.
 }
 \references{
 Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.

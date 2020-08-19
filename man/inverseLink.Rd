@@ -4,13 +4,13 @@
 \alias{inverseLink}
 \title{Compute Inverses of Binomial Regression Link Functions}
 \usage{
-inverseLink(link, lp)
+inverseLink(lp, link)
 }
 \arguments{
-\item{link}{Character link function (one of \verb{"logit"}, \verb{"cloglog"}
-or \verb{"probit"})}
+\item{lp}{Numeric vector containing the estimated linear predictor.}
 
-\item{lp}{Numeric vector containin the linear predictor}
+\item{link}{Character link function (one of \verb{"logit"}, \verb{"cloglog"}
+or \verb{"probit"}).}
 }
 \value{
 A numeric vector containing the inverse of the link function for the

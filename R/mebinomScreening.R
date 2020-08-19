@@ -115,7 +115,9 @@ mebinomScreening <- function(formula,
     for(i in 1:Nfolds){
         res <- lme4::glmer(meform, data = dat[-holdouts[[i]], ],
                            family = binomial(link = link))
-        pred.prob <- inverseLink(link, stats::predict(res, newdata = dat[holdouts[[i]], ]))
+        pred.prob <- inverseLink(stats::predict(res,
+                                                newdata = dat[holdouts[[i]], ]),
+                                 link = link)
         y <- stats::model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),

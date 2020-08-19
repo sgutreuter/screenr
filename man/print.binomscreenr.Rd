@@ -9,10 +9,10 @@
 \arguments{
 \item{x}{an object of class \code{binomscreenr}.}
 
-\item{quote}{logical, indicating whether or not strings should be printed
-with surrounding quotes.}
+\item{quote}{logical, indicating whether or not strings should be printed}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{...}{further arguments passed to or from other methods.
+with surrounding quotes.}
 }
 \value{
 Nothing. Thresholds, specificities and sensitivities are printed as a
