@@ -2,17 +2,8 @@
 ##       R PROGRAM: mebinomScreening.R
 ##
 ##         PROJECT: R fuctions for HIV screening
-##      WRITTEN BY: Steve Gutreuter, CDC/CGH/DGHT/Statistics, Estimation and
-##                               Modeling Team
-##                  E-mail:  sgutreuter@cdc.gov
-##
-##      DISCLAIMER: Although this code has been used by the Centers for Disease
-##                  Control & Prevention (CDC), no warranty, expressed or
-##                  implied, is made by the CDC or the U.S. Government as to the
-##                  accuracy and functioning of the code and related program
-##                  material nor shall the fact of distribution constitute any
-##                  such warranty, and no responsibility is assumed by the CDC in
-##                  connection therewith.
+##      WRITTEN BY: Steve Gutreuter
+##                  E-mail:  sgutreuter@gmail.com
 ##
 #################################################################################
 #' Test-Screening Tool Based on Marginal Estimation from Mixed-Effects Binomial
@@ -82,11 +73,10 @@
 #'                                               "C-5", "C-6", "C-7", "C-8", "C-9")))
 #' print(new)
 #' ## Compute point estimates of their predicted probabilities testing positive:
-#' inverseLink("logit",
-#'             as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
-#'                             as.matrix(unitool$ParamEst, ncol = 1))
+#' inverseLink(as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
+#' as.matrix(unitool$ParamEst, ncol = 1), "logit")
 #' ## or, more simply,
-#' predict(unitool$ModelFit, newdata = new, type = "response")
+#' predict(unitool$ModelFit, newdata = new, type = "response", re.form = NA)
 #' ## If, for example, \code{p} = 0.025 is chosen as the screening threshold
 #' ## (sensitivity and specificity 77\% and 69\%, respectively) then "Bernie P."
 #' ## would be offered testing and "Alice D." would not.
@@ -134,8 +124,7 @@ mebinomScreening <- function(formula,
                                              cv.pred.prob = pred.prob)))
     }
     cv.roc <- pROC::roc(cv.results$y, cv.results$cv.pred.prob,
-                                  auc = TRUE, ci = TRUE, of = "sp",
-                                  se = seq(0, 1, 0.05), ci.type = "shape")
+                                  auc = TRUE)
     class(cv.results) <-  c("cv.predictions", "data.frame")
     result <- list(Call = call,
                    ModelFit = lrfit,

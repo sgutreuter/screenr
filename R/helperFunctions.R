@@ -1,19 +1,10 @@
 #################################################################################
 ##       R PROGRAM: helperFunctions.R
 ##
-##         PROJECT: R fuctions for HIV screening tool development
+##         PROJECT: R functions for HIV screening tool development
 ##
-##      WRITTEN BY: Steve Gutreuter, CDC/CGH/DGHT/Statistics, Estimation and
-##                               Modeling Team
-##                  E-mail:  sgutreuter@cdc.gov
-##
-##      DISCLAIMER: Although this code has been used by the Centers for Disease
-##                  Control & Prevention (CDC), no warranty, expressed or
-##                  implied, is made by the CDC or the U.S. Government as to the
-##                  accuracy and functioning of the code and related program
-##                  material nor shall the fact of distribution constitute any
-##                  such warranty, and no responsibility is assumed by the CDC in
-##                  connection therewith.
+##      WRITTEN BY: Steve Gutreuter
+##                  E-mail:  sgutreuter@gmail.com
 ##
 #################################################################################
 
@@ -22,15 +13,17 @@
 #'
 #' Computes sensitivity and specificity of a test.
 #'
-#' @param x A 2 x 2 table, with the numbers of negative test results appearing
-#' first in both rows and columns.
+#' @param x A 2 x 2 table, with columns representing frequencies of
+#' gold-standard status and rows representing frequencies of status ascertained
+#' from testing.  The first row contains frequencies of negative test results
+#' and the first column contain frequencies of true negatives.
 #' @return A list containing components sensitivity and specificity.
 #' Sensitivities and specificities are displayed as proportions rather than
 #' percentages.
 #' @examples
-#' TestResults <- ordered(c(0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0))
-#' TrueResults <- ordered(c(0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0))
-#' sens_spec(table(TestResults, TrueResults))
+#' Gold <- rbinom(20, 1, 0.50)
+#' Test <- Gold; Test[c(3, 9, 12, 16)] <- 1 - Test[c(3, 9, 12, 16)]
+#' sens_spec(table(Test, Gold))
 #' @export
 sens_spec <- function(x){
     if(!class(x) == "table") stop('arg class is not "table"')
@@ -48,14 +41,14 @@ sens_spec <- function(x){
 #' predictor
 #'
 #' @param link Character link function (one of \verb{"logit"}, \verb{"cloglog"}
-#' or \verb{"probit"})
-#' @param lp Numeric vector containin the linear predictor
+#' or \verb{"probit"}).
+#' @param lp Numeric vector containing the estimated linear predictor.
 #'
 #' @return A numeric vector containing the inverse of the link function for the
 #' linear predictor.
 #' @importFrom stats pnorm
 #' @export
-inverseLink <- function(link, lp){
+inverseLink <- function(lp, link){
     if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
     if(link == "logit"){
         p <- exp(lp) / (1 + exp(lp))
@@ -78,7 +71,7 @@ inverseLink <- function(link, lp){
 #'
 #' @param x An object of class "binomscreenr" or "simplescreenr".
 #' @param simplify Logical: Simplify result to the maximum values of specificity
-#' corresponding to unique values of sensitivity (default is \code{TRUE})
+#' corresponding to unique values of sensitivity (default is \code{TRUE}).
 #'
 #' @return A data frame containing threshold scores, sensitivities and
 #' specificities. Sensitivities and specificities are displayed as proportions
@@ -115,7 +108,7 @@ getROC <- function(x, simplify = TRUE){
         th <- obj$thresholds
     } else {
         obj <- x$ISroc
-        th <- ceiling(obj$thresholds)
+        th <- 0:(length(x$ISroc$sensitivities) - 1)
     }
     res <- data.frame(threshold = th,
                       sensitivity = obj$sensitivities,

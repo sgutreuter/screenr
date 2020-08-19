@@ -1,19 +1,10 @@
 #################################################################################
 ##       R PROGRAM: binomialScreening.R
 ##
-##         PROJECT: R fuctions for HIV screening tool development
+##         PROJECT: R functions for HIV screening tool development
 ##
-##      WRITTEN BY: Steve Gutreuter, CDC/CGH/DGHT/Statistics, Estimation and
-##                               Modeling Team
-##                  E-mail:  sgutreuter@cdc.gov
-##
-##      DISCLAIMER: Although this code has been used by the Centers for Disease
-##                  Control & Prevention (CDC), no warranty, expressed or
-##                  implied, is made by the CDC or the U.S. Government as to the
-##                  accuracy and functioning of the code and related program
-##                  material nor shall the fact of distribution constitute any
-##                  such warranty, and no responsibility is assumed by the CDC in
-##                  connection therewith.
+##      WRITTEN BY: Steve Gutreuter
+##                  E-mail:  sgutreuter@gmail.com
 ##
 #################################################################################
 
@@ -75,9 +66,8 @@
 #' print(new)
 #'
 #' ## Compute point estimates of their predicted probabilities testing positive:
-#' inverseLink("logit",
-#'             as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
-#'                            as.matrix(unitool$ParamEst, ncol = 1))
+#' inverseLink(as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
+#'                            as.matrix(unitool$ParamEst, ncol = 1), "logit")
 #' ## or, more simply,
 #' predict(unitool$ModelFit, newdata = new, type = "response")
 #'
@@ -129,8 +119,7 @@ binomialScreening <- function(formula,
                                              cv.pred.prob = pred.prob)))
     }
     cv.roc <- pROC::roc(cv.results$y, cv.results$cv.pred.prob,
-                                  auc = TRUE, ci = TRUE, of = "sp",
-                                  se = seq(0, 1, 0.05), ci.type = "shape")
+                                  auc = TRUE)
     class(cv.results) <-  c("cv.predictions", "data.frame")
     result <- list(Call = call,
                    ModelFit = lrfit,
@@ -176,14 +165,25 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 ## Function plot.binomscreenr
 #' Plot ROC Curves of \code{binomscreenr} Objects
 #'
-#' Plot cross-validated (out-of-sample) ROC curve with pointwise 95% confidence
-#' intevals on specificity (gray shaded region), along with the overly optimistic
-#' in-sample ROC curve.
+#' Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
+#' intevals on specificity (gray shaded region), along with the overly
+#' optimistic in-sample ROC curve.
 #'
-#' @param x an object of class "binomscreenr".
+#' @param x An object of class "binomscreenr".
+#' @param plot_ci Logical indicator for plotting point-wise confidence
+#' intervals at the locally maximum subset of coordinates for
+#' on sensitivity and specificity (default = TRUE). See also
+#' \code{\link[pROC]{ci.thresholds}}.
+#' @param print_ci Logical indicator to return a dataframe of numerical values,
+#' intervals.
+#' @param conf_level Confidence level in the interval (0,1). Default is 0.95
+#' producing 95% confidence intervals
+#' @param bootreps Number of bootstrap replications for estimation of confidence
+#' (default = 2000).
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
 #'
-#' @return Nothing.  This function produces a plot as a side effect.
+#' @return This function produces a plot as a side effect and (optionally)
+#' returns a dataframe dataframe containing numerical values.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
@@ -200,13 +200,29 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #' @importFrom graphics legend plot
 #' @export
-plot.binomscreenr <- function(x, ...){
+plot.binomscreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
+                              conf_level = 0.95, bootreps = 2000, ...){
     if(!class(x) == "binomscreenr") stop("x is not a binomscreenr object")
-    rocobj1 <- plot(x$CVroc, print.auc = TRUE, ci = TRUE, of = "sp",
-                    se = seq(0, 1, 0.01), ci.type = "shape")
-    rocobj2 <- lines.roc(x$ISroc, lty = 3)
-    legend("bottomright", legend = c("cross-validated", "in-sample"), lty = c(1, 3),
-       lwd = c(2, 2))
+    stopifnot(conf_level > 0 & conf_level < 1)
+    plot(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
+    if(plot_ci | print_ci){
+        ciplt <- ci.thresholds(x$CVroc, boot.n = bootreps, progress = "text",
+                               conf.level = conf_level,
+                               thresholds = "local maximas")
+    }
+    if(print_ci){
+        threshold <- attr(ciplt, "thresholds")
+        citable <- data.frame(cbind(threshold, ciplt$sensitivity,
+                                    ciplt$specificity))
+        names(citable) <- c("threshold", "se.low", "se.median",
+                            "se.high", "sp.low", "sp.median", "sp.high")
+        row.names(citable) <- 1:(dim(ciplt$sensitivity)[1])
+    }
+    if(plot_ci) plot(ciplt)
+    lines.roc(x$ISroc, lty = 3)
+    legend("bottomright", legend = c("cross-validated", "in-sample"),
+           lty = c(1, 3), lwd = c(2, 2))
+    if(print_ci) return(citable)
 }
 
 
@@ -216,6 +232,7 @@ plot.binomscreenr <- function(x, ...){
 #' @param x an object of class \code{binomscreenr}.
 #' @param ... further arguments passed to or from other methods.
 #' @param quote logical, indicating whether or not strings should be printed
+#' @param ... further arguments passed to or from other methods.
 #' with surrounding quotes.
 #'
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a

@@ -19,7 +19,7 @@
 #' \item{\code{\link{getCoefficients}}}{Extract the estimated coefficients from \code{binomscreenr} objects}
 #' \item{\code{\link{getOddsRatios}}}{Extract a dataframe containing odds ratios and their profile-likelihood confidence intervals}
 #' \item{\code{\link{getROC}}}{Extract Receiver Operating Characteristics from Objects}
-#' \item{\code{\link{inverseLink}}}{Inverse of Binomial Regression Link Functions}
+#' \item{\code{\link{inverseLink}}}{Inverse of binomial regression link functions}
 #' \item{\code{\link{mebinomScreening}}}{Test-Screening Tool Based on Mixed-Effects Binomial Regression
 #' produced by \code{binomialScreening}, \code{mebinomScreening} and \code{simpleScreening}}
 #' \item{\code{\link{sens_spec}}}{Sensitivity and Specificity from a 2 x 2 Table}
