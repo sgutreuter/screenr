@@ -1,7 +1,8 @@
-HOWTO Install screenr from GitHub or CDC GitLab
------------------------------------------------
+HOWTO Install screenr from GitHub
+---------------------------------
 
 1.  Start an R session.
+
 2.  Install package devtools, if not already installed:
 
     install.packages("devtools")
@@ -10,18 +11,11 @@ HOWTO Install screenr from GitHub or CDC GitLab
 
     library(devtools)
 
-4a. Install screenr from GitHub (authoratative source):
+4. Install screenr from GitHub (authoratative source):
 
     devtools::install_github("sgutreuter/screenr")
-
-    -or-
-
-4b. Install screenr from CDC GitLab (CDC only):
-
-    url <- "https://git.biotech.cdc.gov/wqh4/screenr.git"
-	 devtools::install_git(url = url)
 
 5.  Attach screenr and proceed:
 
     library(screenr)
-	 ?screenr
+    ?screenr
