@@ -28,7 +28,7 @@
 #' @param link the character-valued name of the link function for binomial
 #' regression.  Choices are \verb{"logit"} (default), \verb{"cloglog"} or
 #' \verb{"probit"}.
-#' @param Nfolds an integer number of folds used for \emph{k}-fold cross
+#' @param Nfolds number of folds used for \emph{k}-fold cross
 #' validation (default = 40).
 #' @param ... additional arguments passsed to or from other \code{stats::glm}
 #' or \code{pROC::roc}.
@@ -170,16 +170,16 @@ summary.binomscreenr <- function(object, diagnostics = FALSE, ...){
 #' Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
 #' intevals, along with the overly optimistic in-sample ROC curve.
 #'
-#' @param x An object of class "binomscreenr".
-#' @param plot_ci Logical indicator for plotting point-wise confidence
+#' @param x an object of class \code{binomscreenr}.
+#' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
-#' on sensitivity and specificity (default = TRUE). See also
+#' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
-#' @param print_ci Logical indicator to return a dataframe of numerical values,
-#' intervals.
-#' @param conf_level Confidence level in the interval (0,1). Default is 0.95
+#' @param print_ci logical indicator to return a dataframe of numerical values,
+#' intervals  (default = \verb{TRUE}).
+#' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals
-#' @param bootreps Number of bootstrap replications for estimation of confidence
+#' @param bootreps number of bootstrap replications for estimation of confidence
 #' (default = 2000).
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
 #'
@@ -231,7 +231,7 @@ plot.binomscreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #' Print Receiver Operating Characteristics for \code{binomscreenr} Objects
 #'
 #' @param x an object of class \code{binomscreenr}.
-#' @param quote logical, indicating whether or not strings should be printed
+#' @param quote logical indicator for whether or not strings should be printed.
 #' @param ... further arguments passed to or from other methods.
 #' with surrounding quotes.
 #'
@@ -267,7 +267,7 @@ print.binomscreenr <- function(x, quote = FALSE, ...){
 ## Function getCoefficients
 #' Extract the estimated coefficients from \code{binomscreenr} objects
 #'
-#' @param x An object of class \code{biomscreenr}
+#' @param x an object of class \code{biomscreenr}
 #'
 #' @return A numeric vector containing the estimated coefficients on the logit
 #' scale.
@@ -281,8 +281,8 @@ getCoefficients <- function(x){
 ##Function getOddsRatios
 #' Extract a dataframe containing odds ratios and their profile-likelihood confidence intervals
 #'
-#' @param x An object of class \code{biomscreenr}
-#' @param level The desired confidence level.  The default is 0.95.
+#' @param x an object of class \code{biomscreenr}
+#' @param level the desired confidence level.  The default is 0.95.
 #'
 #' @return A dataframe containing:
 #' \describe{
@@ -295,6 +295,7 @@ getCoefficients <- function(x){
 #' @export
 getOddsRatios <- function(x, level = 0.95){
     stopifnot(class(x) == "binomscreenr")
+    stopifnot(level > 0 & level < 1)
     parms <- getCoefficients(x)
     CI <- confint(x[["ModelFit"]], level = level)
     or <- exp(cbind(parms, CI))

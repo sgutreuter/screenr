@@ -7,7 +7,7 @@
 \method{summary}{simplescreenr}(object, ...)
 }
 \arguments{
-\item{object}{A \code{simplescreenr} class object.}
+\item{object}{an object of class \code{simplescreenr}.}
 
 \item{...}{further arguments passed to or from other methods.}
 }

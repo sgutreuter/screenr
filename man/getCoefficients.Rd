@@ -7,7 +7,7 @@
 getCoefficients(x)
 }
 \arguments{
-\item{x}{An object of class \code{biomscreenr}}
+\item{x}{an object of class \code{biomscreenr}}
 }
 \value{
 A numeric vector containing the estimated coefficients on the logit

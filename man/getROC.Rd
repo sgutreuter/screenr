@@ -2,14 +2,14 @@
 % Please edit documentation in R/helperFunctions.R
 \name{getROC}
 \alias{getROC}
-\title{Extract ROCs from "binomscreenr" or "simplescreenr" Objects}
+\title{Extract ROCs from code{binomscreenr} or \code{simplescreenr} Objects}
 \usage{
 getROC(x, simplify = TRUE)
 }
 \arguments{
-\item{x}{An object of class "binomscreenr" or "simplescreenr".}
+\item{x}{an object of class \code{binomscreenr} or \code{simplescreenr}.}
 
-\item{simplify}{Logical: Simplify result to the maximum values of specificity
+\item{simplify}{logical: simplify result to the maximum values of specificity
 corresponding to unique values of sensitivity (default is \code{TRUE}).}
 }
 \value{
@@ -19,8 +19,8 @@ rather than percentages.
 }
 \description{
 Extract the receiver operating characteristics from an object of class
-"simplescreenr" or "binomscreenr".  This is a convenience function to enable
-easy use and export of the ROC.
+\code{binomscreenr} or \code{simplescreenr}.  This is a convenience function
+to enable easy use and export of the ROC.
 }
 \examples{
 data(unicorns)

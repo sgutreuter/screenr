@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{an object of class \code{binomscreenr}.}
 
-\item{quote}{logical, indicating whether or not strings should be printed}
+\item{quote}{logical indicator for whether or not strings should be printed.}
 
 \item{...}{further arguments passed to or from other methods.
 with surrounding quotes.}

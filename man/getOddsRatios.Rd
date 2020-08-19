@@ -7,9 +7,9 @@
 getOddsRatios(x, level = 0.95)
 }
 \arguments{
-\item{x}{An object of class \code{biomscreenr}}
+\item{x}{an object of class \code{biomscreenr}}
 
-\item{level}{The desired confidence level.  The default is 0.95.}
+\item{level}{the desired confidence level.  The default is 0.95.}
 }
 \value{
 A dataframe containing:

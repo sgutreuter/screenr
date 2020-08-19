@@ -14,28 +14,28 @@
 )
 }
 \arguments{
-\item{x}{A object of class "simplescreenr".}
+\item{x}{an object of class \code{simplescreenr}.}
 
-\item{plot_ci}{Logical indicator for plotting point-wise confidence
+\item{plot_ci}{logical indicator for plotting point-wise confidence
 intervals at the locally maximum subset of coordinates for
-on sensitivity and specificity (default = TRUE). See also
+on sensitivity and specificity (default = \verb{TRUE}). See also
 \code{\link[pROC]{ci.thresholds}}.}
 
-\item{print_ci}{Logical-valued indicator for returning a dataframe of
-numerical values (default = TRUE).}
+\item{print_ci}{logical indicator for returning a dataframe of
+numerical values (default = \verb{TRUE}).}
 
-\item{conf_level}{Confidence level in the interval (0,1). Default is 0.95
-producing 95\% confidence intervals}
+\item{conf_level}{confidence level in the interval (0,1). Default is 0.95
+producing 95\% confidence intervals.}
 
-\item{bootreps}{Numeric-valued number of bootstrap replication for estimation
+\item{bootreps}{numeric-valued number of bootstrap replication for estimation
 of 95\% confidence intervals.}
 
-\item{...}{Additional arguments passed to \code{\link{plot.roc}} and friends.}
+\item{...}{additional arguments passed to \verb{\link{plot.roc}} and friends.}
 }
 \value{
 This function produces a plot as a side effect, and (optionally)
 returns a dataframe dataframe containing medians and
-bootstrap 95\% confidence limits of sensitivity and specificity.
+bootstrap confidence limits of sensitivity and specificity.
 }
 \description{
 Plot ROC curve with pointwise 95% confidence

@@ -15,29 +15,32 @@ mebinomScreening(
 )
 }
 \arguments{
-\item{formula}{an object of class \code{\link[stats]{formula}}  defining the testing
-outcome and predictor covariates, which is passed to \code{lme4::glmer()}.}
+\item{formula}{an object of class \code{\link[stats]{formula}}  defining the
+testing outcome and predictor covariates, which is passed to
+\code{lme4::glmer()}.}
 
-\item{id}{a vector (variable) which identifies the sampling clusters.}
+\item{id}{a character-valued name of the variable which identifies the
+sampling clusters.}
 
 \item{data}{the "training" sample; a data frame containing the testing
 outcome and predictive covariates to be used for testing screening.  The
 testing outcome must be binary (0,1) indicating negative and positive test
-results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates are typically
-binary (0 = no, 1 = yes) responses to questions which may be predictive of
-the test result, but any numeric or factor covariates can be used.}
+results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates
+are typically binary (0 = no, 1 = yes) responses to questions which may be
+predictive of the test result, but any numeric or factor covariates can be
+used.}
 
 \item{link}{the character-valued name of the link function for binomial
-regression.  Choices are \code{"logit"} (default), \code{"cloglog"} or
+regression.  Choices are \verb{"logit"} (default), \verb{"cloglog"} or
 \code{"probit"}.}
 
-\item{Nfolds}{an integer number of folds used for \emph{k}-fold cross
+\item{Nfolds}{number of folds used for \emph{k}-fold cross
 validation (default = 40).}
 
 \item{...}{additional arguments passsed to \code{lme4::glmer}.}
 }
 \value{
-An object of class binomscreenr containing the elements:
+An object of class \code{binomscreenr} containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
 \item{\code{ModelFit}}{An object of class \code{\link[lme4]{merMod-class}}}

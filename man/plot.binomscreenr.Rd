@@ -14,20 +14,20 @@
 )
 }
 \arguments{
-\item{x}{An object of class "binomscreenr".}
+\item{x}{an object of class \code{binomscreenr}.}
 
-\item{plot_ci}{Logical indicator for plotting point-wise confidence
+\item{plot_ci}{logical indicator for plotting point-wise confidence
 intervals at the locally maximum subset of coordinates for
-on sensitivity and specificity (default = TRUE). See also
+on sensitivity and specificity (default = \verb{TRUE}). See also
 \code{\link[pROC]{ci.thresholds}}.}
 
-\item{print_ci}{Logical indicator to return a dataframe of numerical values,
-intervals.}
+\item{print_ci}{logical indicator to return a dataframe of numerical values,
+intervals  (default = \verb{TRUE}).}
 
-\item{conf_level}{Confidence level in the interval (0,1). Default is 0.95
+\item{conf_level}{confidence level in the interval (0,1). Default is 0.95
 producing 95\% confidence intervals}
 
-\item{bootreps}{Number of bootstrap replications for estimation of confidence
+\item{bootreps}{number of bootstrap replications for estimation of confidence
 (default = 2000).}
 
 \item{...}{additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.}

@@ -13,13 +13,13 @@ testing outcome and predictor covariates.}
 \item{data}{the "training" sample; a data frame containing the testing outcome
 and predictive covariates to be used for testing screening.  The testing
 outcome must be binary (0,1) indicating negative and positive test results,
-respectively, or logical (TRUE/FALSE), and the screening scores are the row-wise
-sums of the values of those covariates.  The covariates are typically binary
-(0 = no, 1 = yes) responses to questions, but the responses may also be
-ordinal numeric values.}
+respectively, or logical (\verb{TRUE}/\verb{FALSE}), and the screening scores
+are the row-wise sums of the values of those covariates.  The covariates are
+typically binary (0 = no, 1 = yes) responses to questions, but the responses
+may also be ordinal numeric values.}
 }
 \value{
-An object of class "simplescreenr" containing the elements:
+An object of class \code{simplescreenr} containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
 \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}

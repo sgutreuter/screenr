@@ -13,11 +13,11 @@
 #'
 #' Computes sensitivity and specificity of a test.
 #'
-#' @param x A 2 x 2 table, with columns representing frequencies of
+#' @param x a 2 x 2 table, with columns representing frequencies of
 #' gold-standard status and rows representing frequencies of status ascertained
 #' from testing.  The first row contains frequencies of negative test results
 #' and the first column contain frequencies of true negatives.
-#' @return A list containing components sensitivity and specificity.
+#' @return a list containing components sensitivity and specificity.
 #' Sensitivities and specificities are displayed as proportions rather than
 #' percentages.
 #' @examples
@@ -40,8 +40,8 @@ sens_spec <- function(x){
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor
 #'
-#' @param lp Numeric vector containing the estimated linear predictor.
-#' @param link Character link function (one of \verb{"logit"}, \verb{"cloglog"}
+#' @param lp numeric vector containing the estimated linear predictor.
+#' @param link character link function (one of \verb{"logit"}, \verb{"cloglog"}
 #' or \verb{"probit"}).
 #'
 #' @return A numeric vector containing the inverse of the link function for the
@@ -63,14 +63,15 @@ inverseLink <- function(lp, link){
 }
 
 
-#' Extract ROCs from "binomscreenr" or "simplescreenr" Objects
+#' Extract ROCs from code{binomscreenr} or \code{simplescreenr} Objects
 #'
 #' Extract the receiver operating characteristics from an object of class
-#' "simplescreenr" or "binomscreenr".  This is a convenience function to enable
-#' easy use and export of the ROC.
+#' \code{binomscreenr} or \code{simplescreenr}.  This is a convenience function
+#' to enable easy use and export of the ROC.
 #'
-#' @param x An object of class "binomscreenr" or "simplescreenr".
-#' @param simplify Logical: Simplify result to the maximum values of specificity
+#' @param x an object of class \code{binomscreenr} or \code{simplescreenr}.
+#'
+#' @param simplify logical: simplify result to the maximum values of specificity
 #' corresponding to unique values of sensitivity (default is \code{TRUE}).
 #'
 #' @return A data frame containing threshold scores, sensitivities and
@@ -130,12 +131,13 @@ getROC <- function(x, simplify = TRUE){
 #' among the untested given implementation of test screening options having
 #' the specified values of sensitivity and specificity.
 #'
-#' @param x A data frame containing columns "sensitivity" and
-#' "specificity", or an object of class 'simplescreenr' or 'binomscreenr'.
-#' @param prev Numeric proportion of the population expressing positive test
-#' results.  \code{prev} is \emph{optional} for class 'simplescreenr' and
-#' 'binomscreenr' objects, for which the default is the prevalence of the test
-#' condition in the training sample.
+#' @param x a data frame containing columns \code{sensitivity} and
+#' \code{specificity}, or an object of class \code{binomscreenr} or
+#' \code{simplescreenr}.
+#' @param prev numeric proportion of the population expressing positive test
+#' results.  \code{prev} is \emph{optional} for class \code{binomscreenr} or
+#' \code{simplescreenr} objects, for which the default is the prevalence of
+#' the test condition in the training sample.
 #'
 #' @return A data frame containing the following columns:
 #' \describe{

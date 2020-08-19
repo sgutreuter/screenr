@@ -7,7 +7,7 @@
 \method{print}{simplescreenr}(x, ...)
 }
 \arguments{
-\item{x}{a \code{simplescreenr} class object.}
+\item{x}{an object of class \code{simplescreenr}.}
 
 \item{...}{further arguments passed to or from other methods.}
 }

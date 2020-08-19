@@ -26,12 +26,12 @@
 #' @param data the "training" sample; a data frame containing the testing outcome
 #' and predictive covariates to be used for testing screening.  The testing
 #' outcome must be binary (0,1) indicating negative and positive test results,
-#' respectively, or logical (TRUE/FALSE), and the screening scores are the row-wise
-#' sums of the values of those covariates.  The covariates are typically binary
-#' (0 = no, 1 = yes) responses to questions, but the responses may also be
-#' ordinal numeric values.
+#' respectively, or logical (\verb{TRUE}/\verb{FALSE}), and the screening scores
+#' are the row-wise sums of the values of those covariates.  The covariates are
+#' typically binary (0 = no, 1 = yes) responses to questions, but the responses
+#' may also be ordinal numeric values.
 #'
-#' @return An object of class "simplescreenr" containing the elements:
+#' @return An object of class \code{simplescreenr} containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
@@ -84,7 +84,7 @@ simpleScreening <- function(formula, data){
 
 #' Print Summaries of \code{simplescreenr} Objects
 #'
-#' @param object A \code{simplescreenr} class object.
+#' @param object an object of class \code{simplescreenr}.
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @return Nothing.  Thresholds, specificities and sensitivities are printed as
@@ -111,22 +111,22 @@ summary.simplescreenr <- function(object, ...){
 #' intevals on sensitivity and specificity and (optionally) returns a dataframe
 #' containing numerical values.
 #'
-#' @param x A object of class "simplescreenr".
-#' @param plot_ci Logical indicator for plotting point-wise confidence
+#' @param x an object of class \code{simplescreenr}.
+#' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
-#' on sensitivity and specificity (default = TRUE). See also
+#' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
-#' @param print_ci Logical-valued indicator for returning a dataframe of
-#' numerical values (default = TRUE).
-#' @param conf_level Confidence level in the interval (0,1). Default is 0.95
-#' producing 95\% confidence intervals
-#' @param bootreps Numeric-valued number of bootstrap replication for estimation
+#' @param print_ci logical indicator for returning a dataframe of
+#' numerical values (default = \verb{TRUE}).
+#' @param conf_level confidence level in the interval (0,1). Default is 0.95
+#' producing 95\% confidence intervals.
+#' @param bootreps numeric-valued number of bootstrap replication for estimation
 #' of 95\% confidence intervals.
-#' @param ... Additional arguments passed to \code{\link{plot.roc}} and friends.
+#' @param ... additional arguments passed to \verb{\link{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect, and (optionally)
 #' returns a dataframe dataframe containing medians and
-#' bootstrap 95\% confidence limits of sensitivity and specificity.
+#' bootstrap confidence limits of sensitivity and specificity.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
@@ -167,7 +167,7 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 
 #' Print Receiver Operating Characteristics for \code{simplescreenr} Objects
 #'
-#' @param x a \code{simplescreenr} class object.
+#' @param x an object of class \code{simplescreenr}.
 #' @param ... further arguments passed to or from other methods.
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.

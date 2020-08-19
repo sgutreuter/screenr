@@ -21,7 +21,7 @@ the test result, but any numeric or factor covariates can be used.}
 regression.  Choices are \verb{"logit"} (default), \verb{"cloglog"} or
 \verb{"probit"}.}
 
-\item{Nfolds}{an integer number of folds used for \emph{k}-fold cross
+\item{Nfolds}{number of folds used for \emph{k}-fold cross
 validation (default = 40).}
 
 \item{...}{additional arguments passsed to or from other \code{stats::glm}

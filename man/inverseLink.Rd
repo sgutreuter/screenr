@@ -7,9 +7,9 @@
 inverseLink(lp, link)
 }
 \arguments{
-\item{lp}{Numeric vector containing the estimated linear predictor.}
+\item{lp}{numeric vector containing the estimated linear predictor.}
 
-\item{link}{Character link function (one of \verb{"logit"}, \verb{"cloglog"}
+\item{link}{character link function (one of \verb{"logit"}, \verb{"cloglog"}
 or \verb{"probit"}).}
 }
 \value{

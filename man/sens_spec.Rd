@@ -7,13 +7,13 @@
 sens_spec(x)
 }
 \arguments{
-\item{x}{A 2 x 2 table, with columns representing frequencies of
+\item{x}{a 2 x 2 table, with columns representing frequencies of
 gold-standard status and rows representing frequencies of status ascertained
 from testing.  The first row contains frequencies of negative test results
 and the first column contain frequencies of true negatives.}
 }
 \value{
-A list containing components sensitivity and specificity.
+a list containing components sensitivity and specificity.
 Sensitivities and specificities are displayed as proportions rather than
 percentages.
 }

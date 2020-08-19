@@ -7,13 +7,14 @@
 testCounts(x = NULL, prev = NULL)
 }
 \arguments{
-\item{x}{A data frame containing columns "sensitivity" and
-"specificity", or an object of class 'simplescreenr' or 'binomscreenr'.}
+\item{x}{a data frame containing columns \code{sensitivity} and
+\code{specificity}, or an object of class \code{binomscreenr} or
+\code{simplescreenr}.}
 
-\item{prev}{Numeric proportion of the population expressing positive test
-results.  \code{prev} is \emph{optional} for class 'simplescreenr' and
-'binomscreenr' objects, for which the default is the prevalence of the test
-condition in the training sample.}
+\item{prev}{numeric proportion of the population expressing positive test
+results.  \code{prev} is \emph{optional} for class \code{binomscreenr} or
+\code{simplescreenr} objects, for which the default is the prevalence of
+the test condition in the training sample.}
 }
 \value{
 A data frame containing the following columns:

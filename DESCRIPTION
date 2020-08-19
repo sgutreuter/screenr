@@ -1,8 +1,8 @@
 Package: screenr
 Type: Package
 Title: Construction of Binary Test-Screening Rules
-Version: 0.2.5
-Date: 2020-06-23
+Version: 0.3.0
+Date: 2020-08-21
 Authors@R: person("Steve", "Gutreuter", email = "sgutreuter@gmail.com",
 	  role = c("aut", "cre"))
 Depends: R(>= 3.5.0), lme4, pROC, dplyr
