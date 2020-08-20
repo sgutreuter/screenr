@@ -5,4 +5,4 @@
 ^\\.gitignore$
 ^HOWTO_install_screenr$
 ^README\\.md$
-^build_it
+^maintenance
