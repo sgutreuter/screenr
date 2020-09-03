@@ -25,7 +25,7 @@
 #' clusters.
 #' @param corstr a character string specifying the random-effect correlation
 #' structure; one of "exchangeable", "independence", "ar1", "unstructured" or
-#' "userdefined".  See \code{\link[geepack{geeglm}]}.
+#' "userdefined".  See \code{\link[geepack]{geeglm}}.
 #' @param data  the "training" sample; a data frame containing the testing
 #' outcome and predictive covariates to be used for testing screening.  The
 #' testing outcome must be binary (0,1) indicating negative and positive test

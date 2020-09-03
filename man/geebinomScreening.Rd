@@ -24,7 +24,7 @@ clusters.}
 
 \item{corstr}{a character string specifying the random-effect correlation
 structure; one of "exchangeable", "independence", "ar1", "unstructured" or
-"userdefined".  See \code{\link[geepack{geeglm}]}.}
+"userdefined".  See \code{\link[geepack]{geeglm}}.}
 
 \item{data}{the "training" sample; a data frame containing the testing
 outcome and predictive covariates to be used for testing screening.  The

@@ -187,7 +187,7 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #'
 #' @seealso \code{\link{getROC}} and \code{\link{plot.simplescreenr}}
 #' @export
-print.simplescreenr <- function(x, quote = FALSE, ...){
+print.simplescreenr <- function(x, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
     df_ <- pROC::coords(x$ISroc, transpose = FALSE)
