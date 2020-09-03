@@ -100,8 +100,7 @@
 #' ## In practice, the computation of the probabilities of positive test results
 #' ## among newly observed individuals might be coded outside of R using, say, a
 #' ## spreadsheet.
-#' @import geepack
-#' @import pROC
+#' @import geepack pROC
 #' @importFrom stats update model.frame complete.cases binomial fitted predict
 #' model.response
 #' @export

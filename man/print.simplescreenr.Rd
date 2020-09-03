@@ -4,7 +4,7 @@
 \alias{print.simplescreenr}
 \title{Print Receiver Operating Characteristics for \code{simplescreenr} Objects}
 \usage{
-\method{print}{simplescreenr}(x, ...)
+\method{print}{simplescreenr}(x, quote = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{simplescreenr}.}

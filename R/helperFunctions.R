@@ -105,15 +105,11 @@ getROC <- function(x, simplify = TRUE){
     if(!class(x) %in% c("binomscreenr", "simplescreenr"))
         stop("x not a binomscreenr or simplescreenr object.")
     if(class(x) == "binomscreenr"){
-        obj <- x$CVroc
-        th <- obj$thresholds
+        res <- pROC::coords(x$CVroc, transpose = FALSE)
     } else {
-        obj <- x$ISroc
-        th <- 0:(length(x$ISroc$sensitivities) - 1)
+        res <- pROC::coords(x$ISroc, transpose = FALSE)
+        res$threshold  <-  res$threshold + 0.5
     }
-    res <- data.frame(threshold = th,
-                      sensitivity = obj$sensitivities,
-                      specificity = obj$specificities)
     if(simplify) {
         cleaned <- res %>%
             dplyr::group_by(sensitivity) %>%

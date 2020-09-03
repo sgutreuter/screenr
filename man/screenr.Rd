@@ -21,12 +21,14 @@ of application-specific tradeoffs between sensitivity and specificity.
 The high-level functions in the \code{screenr} package are:
 \describe{
 \item{\code{\link{binomialScreening}}}{Test-screening based on binomial regression}
+\item{\code{\link{geebinomScreening}}}{Test-screening based on logistic
+regression implemented using generalized estimating equations (GEE) to
+accommodate cluster sampling}
 \item{\code{\link{getCoefficients}}}{Extract the estimated coefficients from \code{binomscreenr} objects}
 \item{\code{\link{getOddsRatios}}}{Extract a dataframe containing odds ratios and their profile-likelihood confidence intervals}
 \item{\code{\link{getROC}}}{Extract Receiver Operating Characteristics from objects}
 \item{\code{\link{inverseLink}}}{Inverse of binomial regression link functions}
-\item{\code{\link{mebinomScreening}}}{Test-screening based on mixed-effects binomial regression
-produced by \code{binomialScreening}, \code{mebinomScreening} and \code{simpleScreening}}
+\item{\code{\link{mebinomScreening}}}{Test-screening based on mixed-effects binomial regression to accommodate cluster sampling}
 \item{\code{\link{sens_spec}}}{Sensitivity and specificity from a 2 x 2 table}
 \item{\code{\link{simpleScreening}}}{Simple un-optimized test-screening}
 \item{\code{\link{testCounts}}}{Expected number of tests required per positive test result}

@@ -9,9 +9,14 @@
 #' Test-Screening Tool Based on Marginal Estimation from Mixed-Effects Binomial
 #' Models
 #'
-#' Estimation of the marginal (population averaged) binomial model parameters in
+#' Estimation of the mixed-effect binomial model parameters in
 #' the presence of cluster-level random effects, and cross-validated performance
-#' of test screening.  The results
+#' of test screening.  The approximate "population-averaged" parameter estimates
+#' are obtained by ignoring the random effects after model fitting.  See
+#' \code{\link[screenr]{geebinomScreening}} for an alternative approach which
+#' offers some flexibility in the choice of covariance structures.
+#'
+#' The results
 #' provide information from which to choose a probability threshold above which
 #' individual out-of-sample probabilies indicate the need to perform a diagnostic
 #' test.  Out-of-sample performance is estimated using \emph{k}-fold cross
@@ -42,11 +47,13 @@
 #' \item{\code{ModelFit}}{An object of class \code{\link[lme4]{merMod-class}}}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
-#' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly-optimistic)
-#' sensitivities and specificities.}
-#' \item{\code{CrossVal}}{A data frame containing \emph{k}-fold cross-validation results.}
-#' \item{\code{CrossValPerf}}{A data frame containing out-of-sample  sensitivities and
-#' specificities.}
+#' \item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
+#' the "in-sample" (overly-optimistic) receiver operating characteristics.}
+#' \item{\code{CVpreds}}{An object of class \code{cv.predictions} containing
+#' the data and cross-validated predicted condition \code{y}.}
+#' \item{\code{CVroc}}{An object of class \code{\link[pROC]{roc}} containing
+#' the \emph{k}-fold cross-validated "out-of-sample" receiver operating
+#' characteristics.}
 #' }
 #'
 #' @seealso \code{\link[lme4]{glmer}}

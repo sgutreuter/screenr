@@ -23,8 +23,8 @@ An object of class \code{simplescreenr} containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
 \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
-\item{\code{InSamplePerf}}{A data frame containing in-sample (overly optimistic)
-sensitivities and specificities.}
+\item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
+the "in-sample" (overly-optimistic) receiver operating characteristics.}
 \item{\code{Scores}}{The training sample, including the scores.}
 }
 }

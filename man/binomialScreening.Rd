@@ -7,13 +7,15 @@
 binomialScreening(formula, data = NULL, link = "logit", Nfolds = 40L, ...)
 }
 \arguments{
-\item{formula}{an object of class \code{\link[stats]{formula}}  defining the testing
+\item{formula}{an object of class \code{\link[stats]{formula}}  defining the
+testing
 outcome and predictor covariates, which is passed to \code{stats::glm()}.}
 
 \item{data}{the "training" sample; a data frame containing the testing
 outcome and predictive covariates to be used for testing screening.  The
 testing outcome must be binary (0,1) indicating negative and positive test
-results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates are typically
+results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates
+are typically
 binary (0 = no, 1 = yes) responses to questions which may be predictive of
 the test result, but any numeric or factor covariates can be used.}
 
@@ -31,12 +33,19 @@ or \code{pROC::roc}.}
 An object of class binomscreenr containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
-\item{\code{ModelFit}}{An object of class "glm" (See \code{\link{glm}}) containing the results of the model fit.}
-\item{\code{Prevalence}}{Prevalence (proportion) of the test condition in the training sample.}
-\item{\code{ParamEst}}{A vector containing the binomial regression parameter estimates.}
-\item{\code{ISroc}}{A list of class "roc" (see \code{\link[pROC]{roc}}) containing in-sample (overly optimistic) results.}
-\item{\code{CVpreds}}{A data frame containing \emph{k}-fold cross-validation results.}
-\item{\code{CVroc}}{A list of class "roc" (See \code{\link[pROC]{roc}}) containing cross-validated results.}
+\item{\code{ModelFit}}{An object of class "glm" (See \code{\link{glm}})
+containing the results of the model fit.}
+\item{\code{Prevalence}}{Prevalence (proportion) of the test condition in the
+training sample.}
+\item{\code{ParamEst}}{A vector containing the binomial regression parameter
+estimates.}
+\item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
+the "in-sample" (overly-optimistic) receiver operating characteristics.}
+\item{\code{CVpreds}}{An object of class \code{cv.predictions} containing
+the data and cross-validated predicted condition \code{y}.}
+\item{\code{CVroc}}{An object of class \code{\link[pROC]{roc}} containing
+the \emph{k}-fold cross-validated "out-of-sample" receiver operating
+characteristics.}
 }
 }
 \description{

@@ -11,9 +11,13 @@
 
 #################################################################################
 ## Set paths and working directory
+#################################################################################
 codepath <- file.path(Sys.getenv("DEVEL"), "screenr/R")
-workpath <- file.path(Sys.getenv("DEVEL"), "screenr-testing")
+workpath <- file.path(Sys.getenv("DEVEL"), "screenr/maintenance")
 setwd(workpath)
+
+library(pROC)
+library(tidyverse)
 
 #################################################################################
 ## Source the screenr R code for experimentation and testing
@@ -40,7 +44,9 @@ simpleScreening <- function(formula, data){
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
-    is.roc <- pROC::roc(y, score, auc = TRUE)
+    is.roc <- pROC::roc(y, score, auc = TRUE, direction = "<",
+                        partial.auc = c(1, 0.8), partial.auc.correct = TRUE,
+                        partial.auc.focus = "sens")
     scores <- cbind(dat, score = score)
     result <- list(Call = call,
                    Prevalence = prev,
@@ -50,23 +56,38 @@ simpleScreening <- function(formula, data){
     invisible(result)
 }
 
+summary.simplescreenr <- function(object, ...){
+    if(!("simplescreenr" %in% class(object)))
+        stop("object not a simplescreenr object")
+    cat("Call:\n")
+    print(object$Call)
+    cat("\nPrevalence (In-sample prevalence of condition):\n")
+    print(object$Prevalence)
+    cat("\nReceiver Operating Characteristics:\n")
+    auc <- round(as.numeric(object$ISroc$auc), digits = 4)
+    cat(paste("\nIn-sample area under the ROC curve: ",
+              auc, "\n", sep = ""))
+}
+
+
 ## plot.simplescreenr
 plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
                                conf_level = 0.95, bootreps = 2000,...){
     if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci | print_ci){
-        ciplt <- ci.thresholds(x$ISroc, boot.n = bootreps, progress = "none",
-                               conf.level = conf_level,
-                               thresholds = "local maximas")
+        ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
+                                     progress = "none",
+                                     conf.level = conf_level,
+                                     thresholds = "local maximas")
         }
     if(print_ci){
-        threshold <- 0:(length(dimnames(ciplt$sensitivity)[[1]]) -1 )
+        threshold <- as.numeric(rownames(ciplt$sensitivity)) + 0.5
         citable <- data.frame(cbind(threshold, ciplt$sensitivity,
                                     ciplt$specificity))
         names(citable) <- c("threshold", "se.low", "se.median",
                             "se.high", "sp.low", "sp.median", "sp.high")
-        row.names(citable)  <- threshold + 1
+        row.names(citable)  <- 1:length(threshold)
     }
     if(plot_ci) plot(ciplt)
     if(print_ci) return(citable)
@@ -76,12 +97,10 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 print.simplescreenr <- function(x, quote = FALSE, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
-    df_ <- data.frame(score = 0:(length(x$ISroc$sensitivities) - 1),
-                      sensitivity = x$ISroc$sensitivities,
-                      specificity = x$ISroc$specificities)
+    df_ <- pROC::coords(x$ISroc, transpose = FALSE)
+    df_["threshold"] <- df_["threshold"] + 0.5
     print(df_)
 }
-print(smpl, quote = TRUE)
 
 ## getROC
 getROC <- function(x, simplify = TRUE){
@@ -89,15 +108,11 @@ getROC <- function(x, simplify = TRUE){
     if(!class(x) %in% c("binomscreenr", "simplescreenr"))
         stop("x not a binomscreenr or simplescreenr object.")
     if(class(x) == "binomscreenr"){
-        obj <- x$CVroc
-        th <- obj$thresholds
+        res <- pROC::coords(x$CVroc, transpose = FALSE)
     } else {
-        obj <- x$ISroc
-        th <- 0:(length(x$ISroc$sensitivities) - 1)
+        res <- pROC::coords(x$ISroc, transpose = FALSE)
+        res$threshold  <-  res$threshold + 0.5
     }
-    res <- data.frame(threshold = th,
-                      sensitivity = obj$sensitivities,
-                      specificity = obj$specificities)
     if(simplify) {
         cleaned <- res %>%
             dplyr::group_by(sensitivity) %>%
@@ -122,6 +137,7 @@ print(smpl)
 getROC(smpl)
 getROC(smpl, simplify = FALSE)
 
+debugonce(plot.simplescreenr)
 plot(smpl)
 plot(smpl, print_ci = FALSE)
 

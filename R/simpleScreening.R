@@ -35,8 +35,8 @@
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
-#' \item{\code{InSamplePerf}}{A data frame containing in-sample (overly optimistic)
-#' sensitivities and specificities.}
+#' \item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
+#' the "in-sample" (overly-optimistic) receiver operating characteristics.}
 #' \item{\code{Scores}}{The training sample, including the scores.}
 #' }
 #'
@@ -71,7 +71,7 @@ simpleScreening <- function(formula, data){
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
-    is.roc <- pROC::roc(y, score, auc = TRUE)
+    is.roc <- pROC::roc(y, score, auc = TRUE, direction = "<")
     scores <- cbind(dat, score = score)
     result <- list(Call = call,
                    Prevalence = prev,
@@ -80,7 +80,6 @@ simpleScreening <- function(formula, data){
     class(result) <- "simplescreenr"
     invisible(result)
 }
-
 
 #' Print Summaries of \code{simplescreenr} Objects
 #'
@@ -101,7 +100,7 @@ summary.simplescreenr <- function(object, ...){
     print(object$Prevalence)
     cat("\nReceiver Operating Characteristics:\n")
     auc <- round(as.numeric(object$ISroc$auc), digits = 4)
-    cat(paste("\nIn-sample (overly optimistic) area under the curve: ",
+    cat(paste("\nIn-sample area under the ROC curve: ",
               auc, "\n", sep = ""))
 }
 
@@ -148,22 +147,22 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci | print_ci){
-        ciplt <- ci.thresholds(x$ISroc, boot.n = bootreps, progress = "none",
-                               conf.level = conf_level,
-                               thresholds = "local maximas")
+        ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
+                                     progress = "none",
+                                     conf.level = conf_level,
+                                     thresholds = "local maximas")
         }
     if(print_ci){
-        threshold <- 0:(length(dimnames(ciplt$sensitivity)[[1]]) -1 )
+        threshold <- as.numeric(rownames(ciplt$sensitivity)) + 0.5
         citable <- data.frame(cbind(threshold, ciplt$sensitivity,
                                     ciplt$specificity))
         names(citable) <- c("threshold", "se.low", "se.median",
                             "se.high", "sp.low", "sp.median", "sp.high")
-        row.names(citable)  <- threshold + 1
+        row.names(citable)  <- 1:length(threshold)
     }
     if(plot_ci) plot(ciplt)
     if(print_ci) return(citable)
 }
-
 
 #' Print Receiver Operating Characteristics for \code{simplescreenr} Objects
 #'
@@ -188,12 +187,11 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #'
 #' @seealso \code{\link{getROC}} and \code{\link{plot.simplescreenr}}
 #' @export
-print.simplescreenr <- function(x, ...){
+print.simplescreenr <- function(x, quote = FALSE, ...){
     if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
-    df_ <- data.frame(score = 0:(length(x$ISroc$sensitivities) - 1),
-                      sensitivity = x$ISroc$sensitivities,
-                      specificity = x$ISroc$specificities)
+    df_ <- pROC::coords(x$ISroc, transpose = FALSE)
+    df_["threshold"] <- df_["threshold"] + 0.5
     print(df_)
 }
 
