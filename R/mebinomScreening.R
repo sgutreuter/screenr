@@ -12,9 +12,7 @@
 #' Estimation of the mixed-effect binomial model parameters in
 #' the presence of cluster-level random effects, and cross-validated performance
 #' of test screening.  The approximate "population-averaged" parameter estimates
-#' are obtained by ignoring the random effects after model fitting.  See
-#' \code{\link[screenr]{geebinomScreening}} for an alternative approach which
-#' offers some flexibility in the choice of covariance structures.
+#' are obtained by ignoring the random effects after model fitting.
 #'
 #' The results
 #' provide information from which to choose a probability threshold above which

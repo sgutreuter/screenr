@@ -5,7 +5,7 @@ Version: 0.3.1
 Date: 2020-08-20
 Authors@R: person("Steve", "Gutreuter", email = "sgutreuter@gmail.com",
 	  role = c("aut", "cre"))
-Depends: R(>= 3.5.0), lme4, pROC, dplyr, geepack
+Depends: R(>= 3.5.0), lme4, pROC, dplyr
 Description: Consider the situation where a definitive test for some condition
     is expensive, and the condition is rare.  In that case, universal testing
     would not be efficient in terms of the yield of postive results per test

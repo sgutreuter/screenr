@@ -21,9 +21,6 @@ of application-specific tradeoffs between sensitivity and specificity.
 The high-level functions in the \code{screenr} package are:
 \describe{
 \item{\code{\link{binomialScreening}}}{Test-screening based on binomial regression}
-\item{\code{\link{geebinomScreening}}}{Test-screening based on logistic
-regression implemented using generalized estimating equations (GEE) to
-accommodate cluster sampling}
 \item{\code{\link{getCoefficients}}}{Extract the estimated coefficients from \code{binomscreenr} objects}
 \item{\code{\link{getOddsRatios}}}{Extract a dataframe containing odds ratios and their profile-likelihood confidence intervals}
 \item{\code{\link{getROC}}}{Extract Receiver Operating Characteristics from objects}
