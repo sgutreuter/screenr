@@ -51,12 +51,15 @@ sample.}
 \item{\code{ParamEst}}{A vector containing the GEE parameter
 estimates.}
 \item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
-the "in-sample" (overly-optimistic) receiver operating characteristics.}
+the "in-sample" (overly-optimistic) receiver operating characteristics,
+and additional functions for use with this object are
+available in the \code{pROC} package.}
 \item{\code{CVpreds}}{An object of class \code{cv.predictions} containing
 the data and cross-validated predicted condition \code{y}.}
 \item{\code{CVroc}}{An object of class \code{\link[pROC]{roc}} containing
 the \emph{k}-fold cross-validated "out-of-sample" receiver operating
-characteristics.}
+characteristics, and additional functions for use with this object are
+available in the \code{pROC} package.}
 }
 }
 \description{
@@ -68,37 +71,41 @@ individual out-of-sample probabilies indicate the need to perform a diagnostic
 test.  Out-of-sample performance is estimated using \emph{k}-fold cross
 validation.
 }
+\details{
+The receiver operating characteristics are computed using the \code{pROC}
+package. See References and package documentation for additional details.
+}
 \examples{
 ## Evaluate the performance of screening thresholds based on a mixed-effect
 ## logisitc model
 
-##data(unicorns)
-##help(unicorns)
-##unitool <- geebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-##id = "clinic", data = unicorns)
+data(unicorns)
+\dontrun{help(unicorns)}
+unitool <- geebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+                             id = "clinic", data = unicorns, Nfolds = 5L)
 
-##summary(unitool)
-##plot(unitool)
-##\dontrun{testCounts(unitool)}
+summary(unitool)
+\dontrun{plot(unitool)}
+\dontrun{testCounts(unitool)}
 
 ## Example implementation of screening based on those results
 ## Suppose there are new observations (excluding testing) from two previously
 ## untested unicorns:
 
-##new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0),
-##Q2 = c(0, 0), Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0),
-##clinic = factor(c("C-5", "C-15"),
-##                         levels = c("C-1", "C-10", "C-11", "C-12", "C-13",
-##                                    "C-14", "C-15", "C-16", "C-17,", "C-18",
-##                                    "C-19", "C-2", "C-20", "C-3", "C-4",
-##                                    "C-5", "C-6", "C-7", "C-8", "C-9")))
-##print(new)
+new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0),
+                  Q2 = c(0, 0), Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0),
+                  clinic = factor(c("C-5", "C-15"),
+                                 levels = c("C-1", "C-10", "C-11", "C-12", "C-13",
+                                 "C-14", "C-15", "C-16", "C-17,", "C-18",
+                                 "C-19", "C-2", "C-20", "C-3", "C-4",
+                                 "C-5", "C-6", "C-7", "C-8", "C-9")))
+\dontrun{print(new)}
 ## Compute point estimates of their predicted probabilities testing positive:
-##inverseLink("logit",
-##            as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) \%*\%
-##                            as.matrix(unitool$ParamEst, ncol = 1))
+##inverseLink(as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) \%*\%
+##                            as.matrix(unitool$ParamEst, ncol = 1),
+##            link = "logit")
 ## or, more simply,
-##predict(unitool$ModelFit, newdata = new, type = "response")
+## predict(unitool$ModelFit, newdata = new, type = "response")
 ## If, for example, \code{p} = 0.025 is chosen as the screening threshold
 ## (sensitivity and specificity 77\\% and 69\\%, respectively) then "Bernie P."
 ## would be offered testing and "Alice D." would not.
@@ -108,9 +115,14 @@ validation.
 ## spreadsheet.
 }
 \references{
-Halekoh et al. The R package geepack for generalized
+Halekoh U, Højsgaard S, Yan J. The R package geepack for generalized
 estimating equations.  Journal of Statistical Software. 2006; 15(2):1-11
 \url{https://www.jstatsoft.org/article/view/v015i02}
+
+Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
+Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
+analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
+\url{http://doi.org/10.1186/1471-2105-12-77}
 }
 \seealso{
 \code{\link[geepack]{geeglm}}

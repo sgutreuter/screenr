@@ -22,6 +22,9 @@
 #' test.  Out-of-sample performance is estimated using \emph{k}-fold cross
 #' validation.
 #'
+#' The receiver operating characteristics are computed using the \code{pROC}
+#' package. See References and package documentation for additional details.
+#'
 #' @param formula an object of class \code{\link[stats]{formula}}  defining the
 #' testing outcome and predictor covariates, which is passed to
 #' \code{lme4::glmer()}.
@@ -48,15 +51,24 @@
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ParmEst}}{A vector containing the binomial regression parameter estimates.}
 #' \item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
-#' the "in-sample" (overly-optimistic) receiver operating characteristics.}
+#' the "in-sample" (overly-optimistic) receiver operating characteristics,
+#' and additional functions for use with this object are
+#' available in the \code{pROC} package.}
 #' \item{\code{CVpreds}}{An object of class \code{cv.predictions} containing
 #' the data and cross-validated predicted condition \code{y}.}
 #' \item{\code{CVroc}}{An object of class \code{\link[pROC]{roc}} containing
 #' the \emph{k}-fold cross-validated "out-of-sample" receiver operating
-#' characteristics.}
+#' characteristics, and additional functions for use with this object are
+#' available in the \code{pROC} package.}
 #' }
 #'
 #' @seealso \code{\link[lme4]{glmer}}
+#'
+#' @references
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
+#' Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
+#' analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
+#' \url{http://doi.org/10.1186/1471-2105-12-77}
 #'
 #' @examples
 #' ## Evaluate the performance of screening thresholds based on a mixed-effect
@@ -65,7 +77,7 @@
 #' data(unicorns)
 #' help(unicorns)
 #' unitool <- mebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5, id = "clinic",
-#'                              data = unicorns, link = "logit")
+#'                              data = unicorns, link = "logit", Nfolds = 5L)
 #' summary(unitool)
 #' plot(unitool)
 #' \dontrun{testCounts(unitool)}
@@ -82,11 +94,9 @@
 #'                                               "C-19", "C-2", "C-20", "C-3", "C-4",
 #'                                               "C-5", "C-6", "C-7", "C-8", "C-9")))
 #' print(new)
-#' ## Compute point estimates of their predicted probabilities testing positive:
-#' inverseLink(as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
-#' as.matrix(unitool$ParamEst, ncol = 1), "logit")
-#' ## or, more simply,
-#' predict(unitool$ModelFit, newdata = new, type = "response", re.form = NA)
+#' ## Compute the predicted probabilities that the new unicorns will test
+#' ## positive, ignoring the random effects:
+#' predict(unitool$ModelFit, newdata = new, type = "response", re.form = ~0)
 #' ## If, for example, \code{p} = 0.025 is chosen as the screening threshold
 #' ## (sensitivity and specificity 77\% and 69\%, respectively) then "Bernie P."
 #' ## would be offered testing and "Alice D." would not.
@@ -125,9 +135,10 @@ mebinomScreening <- function(formula,
     for(i in 1:Nfolds){
         res <- lme4::glmer(meform, data = dat[-holdouts[[i]], ],
                            family = binomial(link = link))
-        pred.prob <- inverseLink(stats::predict(res,
-                                                newdata = dat[holdouts[[i]], ]),
-                                 link = link)
+        pred.prob <- predict(res,
+                             newdata = dat[holdouts[[i]], ],
+                             type = "response",
+                             re.form = ~0)
         y <- stats::model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),

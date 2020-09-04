@@ -12,7 +12,7 @@
 #################################################################################
 ## Set paths and working directory
 codepath <- file.path(Sys.getenv("DEVEL"), "screenr/R")
-workpath <- file.path(Sys.getenv("DEVEL"), "screenr-testing")
+workpath <- file.path(Sys.getenv("DEVEL"), "screenr/maintenance")
 setwd(workpath)
 
 #################################################################################
@@ -60,7 +60,10 @@ mebinomScreening <- function(formula,
     for(i in 1:Nfolds){
         res <- lme4::glmer(meform, data = dat[-holdouts[[i]], ],
                            family = binomial(link = link))
-        pred.prob <- inverseLink(link, stats::predict(res, newdata = dat[holdouts[[i]], ]))
+        pred.prob <- predict(res,
+                             newdata = dat[holdouts[[i]], ],
+                             type = "response",
+                             re.form = ~0)
         y <- stats::model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
@@ -84,7 +87,7 @@ mebinomScreening <- function(formula,
 
 
 meobj <- mebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5, id = "clinic",
-                          data = unicorns, link = "logit")
+                          data = unicorns, link = "logit", Nfolds = 5L)
 
 str(meobj)
 
@@ -99,11 +102,8 @@ plot(meobj)
 plot(meobj, print_ci = FALSE)
 
 ## Compute point estimates of their predicted probabilities testing positive:
-predict(meobj$ModelFit, newdata = new, type = "response", re.form = NA)
-## or, compute directly
-inverseLink("logit",
-            as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
-                            as.matrix(meobj$ParamEst, ncol = 1))
+predict(meobj$ModelFit, newdata = new, type = "response", re.form = ~0)
+
 
 
 

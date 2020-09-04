@@ -70,8 +70,8 @@ geebinomScreening <- function(formula,
     for(i in 1:Nfolds){
         geeargs[["data"]] <- dat[-holdouts[[i]], ]
         res <- do.call(geepack::geeglm, geeargs)
-        pred.prob <- inverseLink("logit",
-                                 predict(res, newdata = dat[holdouts[[i]], ]))
+        pred.prob <- inverseLink(predict(res, newdata = dat[holdouts[[i]], ]),
+                                 link = "logit")
         y <- model.response(dat[holdouts[[i]], ])
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
@@ -100,12 +100,20 @@ geebinomScreening <- function(formula,
 
 debugonce(geebinomScreening)
 res1 <- geebinomScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-                          id = "clinic", data = unicorns, Nfolds = 5L)
+                          id = "clinic", data = unicorns, Nfolds = 2L)
 
+summary(res1)
 
+new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0),
+                   Q2 = c(0, 0), Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0),
+                   clinic = factor(c("C-5", "C-15"),
+                                  levels = c("C-1", "C-10", "C-11", "C-12", "C-13",
+                                  "C-14", "C-15", "C-16", "C-17,", "C-18",
+                                  "C-19", "C-2", "C-20", "C-3", "C-4",
+                                  "C-5", "C-6", "C-7", "C-8", "C-9")))
 
-summary(unitool)
+inverseLink(as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
+            as.matrix(res1$ParamEst, ncol = 1),
+            link = "logit")
 
-res2 <- geepack::geeglm(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5, id = clinic,
-                        data = unicorns, family = binomial(link = "logit"))
-summary(res2)
+predict(res1$ModelFit, newdata = new, type = "response", re.form = ~0)

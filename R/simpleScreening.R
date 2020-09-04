@@ -21,6 +21,9 @@
 #' implemented by \code{binomialScreening} and \code{mebinomScreening} will almost
 #' certaily out-perform \code{simpleScreening}.
 #'
+#' The receiver operating characteristics are computed using the \code{pROC}
+#' package. See References and package documentation for additional details.
+#'
 #' @param formula an object of class \code{\link[stats]{formula}} defining the
 #' testing outcome and predictor covariates.
 #' @param data the "training" sample; a data frame containing the testing outcome
@@ -36,14 +39,24 @@
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
 #' \item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
-#' the "in-sample" (overly-optimistic) receiver operating characteristics.}
+#' the "in-sample" (overly-optimistic) receiver operating characteristics,
+#' and additional functions for use with this object are available in the
+#' \code{pROC} package.}
 #' \item{\code{Scores}}{The training sample, including the scores.}
 #' }
 #'
-#' @references Bandason et al 2016. Validation of a screening tool to
+#' @references
+#' Bandason T, McHugh G, Dauya E, Mungofa S, Munyati SM, Weiss HA, Mujuru H,
+#' Kranzer K, Ferrand RA. Validation of a screening tool to
 #' identify older children living with HIV in primary care facilities in high
-#' HIV prevalence settings. AIDS 30(5):779-785
+#' HIV prevalence settings. AIDS. 2016;30(5):779-785
 #' \url{http://dx.doi.org/10.1097/QAD.0000000000000959}
+#'
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
+#' Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
+#' analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
+#' \url{http://doi.org/10.1186/1471-2105-12-77}
+#'
 #'
 #' @examples
 #' data(unicorns)

@@ -138,11 +138,11 @@ summary(smpl)
 
 print(smpl)
 
-getROC(smpl)
-getROC(smpl, simplify = FALSE)
+(wtf <- getROC(smpl))
+(wtf <- getROC(smpl, simplify = FALSE))
 
 debugonce(plot.simplescreenr)
-plot(smpl)
+(ci <- plot(smpl))
 plot(smpl, print_ci = FALSE)
 
 
