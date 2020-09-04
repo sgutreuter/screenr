@@ -100,7 +100,8 @@ new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0
                                               "C-19", "C-2", "C-20", "C-3", "C-4",
                                               "C-5", "C-6", "C-7", "C-8", "C-9")))
 print(new)
-## Compute point estimates of their predicted probabilities testing positive:
+## Compute the predicted probabilities that the new unicorns will test
+## positive, ignoring the random effects:
 predict(unitool$ModelFit, newdata = new, type = "response", re.form = ~0)
 ## If, for example, \code{p} = 0.025 is chosen as the screening threshold
 ## (sensitivity and specificity 77\\% and 69\\%, respectively) then "Bernie P."
