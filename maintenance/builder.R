@@ -21,9 +21,10 @@ install.packages(workpath, repos = NULL, type = "source")
 #################################################################################
 ## Install screenr from GitHub
 #################################################################################
-devtools::install_github("sgutreuter/screenr")
+devtools::install_github("sgutreuter/screenr", ref = "master")
+devtools::install_github("sgutreuter/screenr", ref = "testing")
 
 #################################################################################
 ## Remove screenr package
 #################################################################################
-##remove.packages("screenr")
+remove.packages("screenr")

@@ -25,6 +25,10 @@ library(tidyverse)
 source(file.path(codepath, "helperFunctions.R"))
 source(file.path(codepath, "simpleScreening.R"))
 source(file.path(workpath, "genData.R"))
+#################################################################################
+## or attach the package
+#################################################################################
+library(screenr)
 
 #################################################################################
 ## Test code
