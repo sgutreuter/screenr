@@ -63,7 +63,7 @@
 #' simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                           data = unicorns)
 #' summary(simple)
-#' plot(simple)
+#' plot(simple, type = "S")
 #' \dontrun{testCounts(simple)}
 #'
 #' @seealso \code{\link{binomialScreening}}, \code{\link{mebinomScreening}}

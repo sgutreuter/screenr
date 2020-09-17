@@ -48,8 +48,11 @@ simpleScreening <- function(formula, data){
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
-    is.roc <- pROC::roc(y, score, auc = TRUE, direction = "<",
-                        partial.auc = c(1, 0.8), partial.auc.correct = TRUE,
+    is.roc <- pROC::roc(y, score,
+                        auc = TRUE,
+                        direction = "<",
+                        partial.auc = c(1, 0.8),
+                        partial.auc.correct = TRUE,
                         partial.auc.focus = "sens")
     scores <- cbind(dat, score = score)
     result <- list(Call = call,
@@ -76,12 +79,13 @@ summary.simplescreenr <- function(object, ...){
 
 ## plot.simplescreenr
 plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
-                               conf_level = 0.95, bootreps = 2000,...){
+                               conf_level = 0.95, bootreps = 2000, ...){
     if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci | print_ci){
-        ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
-                                     progress = "none",
+        ciplt <- pROC::ci.thresholds(x$ISroc,
+                                     boot.n = bootreps,
+                                     progress = "text",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
         }
@@ -143,7 +147,7 @@ print(smpl)
 
 debugonce(plot.simplescreenr)
 (ci <- plot(smpl))
-plot(smpl, print_ci = FALSE)
+plot(smpl, print_ci = FALSE, type = "S")
 
 
 
