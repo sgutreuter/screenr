@@ -208,4 +208,27 @@ keepfirst <- function(x, colnames, data = NULL){
     res
 }
 
+#' Rescale a strictly positive vector of real numbers to integers
+#'
+#' A convenience wrapper function which rescales a strictly positive (all
+#' elements are greater than zero) vector and rescales it to a vector of
+#' integers.
+#'
+#' @param x numeric vector of positive real numbers.
+#' @param max the value of largest element in the rescaled integer-valued
+#' vector.
+#'
+#' @return A vector of integers corresponding to \code{x} in which smallest
+#' element is 1 and the largest element is \code{max}
+#'
+#' @seealso \code{\link[scales]{rescale}}
+#'
+#' @import scales
+#' @export
+rescale_to_Int <- function(x, max) {
+    stopifnot(!(any(x <= 0) | max <= 0))
+    y <- round(scales::rescale(x, to = c(1, max)))
+    y
+}
+
 ################################   END of FILE   ################################

@@ -30,7 +30,7 @@ producing 95\% confidence intervals.}
 \item{bootreps}{numeric-valued number of bootstrap replication for estimation
 of 95\% confidence intervals.}
 
-\item{...}{additional arguments passed to \verb{\link{plot.roc}} and friends.}
+\item{...}{additional arguments for base \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.}
 }
 \value{
 This function produces a plot as a side effect, and (optionally)
@@ -41,6 +41,12 @@ bootstrap confidence limits of sensitivity and specificity.
 Plot ROC curve with pointwise 95% confidence
 intevals on sensitivity and specificity and (optionally) returns a dataframe
 containing numerical values.
+}
+\examples{
+data(unicorns)
+simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+                          data = unicorns)
+plot(simple, type = "S")
 }
 \references{
 Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
