@@ -48,12 +48,7 @@ simpleScreening <- function(formula, data){
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
-    is.roc <- pROC::roc(y, score,
-                        auc = TRUE,
-                        direction = "<",
-                        partial.auc = c(1, 0.8),
-                        partial.auc.correct = TRUE,
-                        partial.auc.focus = "sens")
+    is.roc <- pROC::roc(y, score, auc = TRUE, direction = "<")
     scores <- cbind(dat, score = score)
     result <- list(Call = call,
                    Prevalence = prev,
@@ -63,6 +58,7 @@ simpleScreening <- function(formula, data){
     invisible(result)
 }
 
+## summary.simplescreenr
 summary.simplescreenr <- function(object, ...){
     if(!("simplescreenr" %in% class(object)))
         stop("object not a simplescreenr object")
@@ -77,15 +73,15 @@ summary.simplescreenr <- function(object, ...){
 }
 
 
+
 ## plot.simplescreenr
 plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
-                               conf_level = 0.95, bootreps = 2000, ...){
+                               conf_level = 0.95, bootreps = 2000,...){
     if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci | print_ci){
-        ciplt <- pROC::ci.thresholds(x$ISroc,
-                                     boot.n = bootreps,
-                                     progress = "text",
+        ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
+                                     progress = "none",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
         }
@@ -100,6 +96,7 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     if(plot_ci) plot(ciplt)
     if(print_ci) return(citable)
 }
+
 
 ## print.simplescreenr
 print.simplescreenr <- function(x, quote = FALSE, ...){
