@@ -63,7 +63,6 @@
 #' simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                           data = unicorns)
 #' summary(simple)
-#' plot(simple)
 #' \dontrun{testCounts(simple)}
 #'
 #' @seealso \code{\link{binomialScreening}}, \code{\link{mebinomScreening}}
@@ -134,7 +133,7 @@ summary.simplescreenr <- function(object, ...){
 #' producing 95\% confidence intervals.
 #' @param bootreps numeric-valued number of bootstrap replication for estimation
 #' of 95\% confidence intervals.
-#' @param ... additional arguments passed to \verb{\link{plot.roc}} and friends.
+#' @param ... additional arguments for base \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect, and (optionally)
 #' returns a dataframe dataframe containing medians and
@@ -153,6 +152,12 @@ summary.simplescreenr <- function(object, ...){
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#'
+#' @examples
+#' data(unicorns)
+#' simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#'                           data = unicorns)
+#' plot(simple, type = "S")
 #' @importFrom graphics plot
 #' @export
 plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,

@@ -26,6 +26,7 @@ The high-level functions in the \code{screenr} package are:
 \item{\code{\link{getROC}}}{Extract Receiver Operating Characteristics from objects}
 \item{\code{\link{inverseLink}}}{Inverse of binomial regression link functions}
 \item{\code{\link{mebinomScreening}}}{Test-screening based on mixed-effects binomial regression to accommodate cluster sampling}
+\item{\code{link{rescale_to_Int}}}{Rescale a strictly positive vector of real numbers to integers}
 \item{\code{\link{sens_spec}}}{Sensitivity and specificity from a 2 x 2 table}
 \item{\code{\link{simpleScreening}}}{Simple un-optimized test-screening}
 \item{\code{\link{testCounts}}}{Expected number of tests required per positive test result}

@@ -48,9 +48,7 @@ simpleScreening <- function(formula, data){
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
-    is.roc <- pROC::roc(y, score, auc = TRUE, direction = "<",
-                        partial.auc = c(1, 0.8), partial.auc.correct = TRUE,
-                        partial.auc.focus = "sens")
+    is.roc <- pROC::roc(y, score, auc = TRUE, direction = "<")
     scores <- cbind(dat, score = score)
     result <- list(Call = call,
                    Prevalence = prev,
@@ -60,6 +58,7 @@ simpleScreening <- function(formula, data){
     invisible(result)
 }
 
+## summary.simplescreenr
 summary.simplescreenr <- function(object, ...){
     if(!("simplescreenr" %in% class(object)))
         stop("object not a simplescreenr object")
@@ -72,6 +71,7 @@ summary.simplescreenr <- function(object, ...){
     cat(paste("\nIn-sample area under the ROC curve: ",
               auc, "\n", sep = ""))
 }
+
 
 
 ## plot.simplescreenr
@@ -96,6 +96,7 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     if(plot_ci) plot(ciplt)
     if(print_ci) return(citable)
 }
+
 
 ## print.simplescreenr
 print.simplescreenr <- function(x, quote = FALSE, ...){
@@ -143,7 +144,7 @@ print(smpl)
 
 debugonce(plot.simplescreenr)
 (ci <- plot(smpl))
-plot(smpl, print_ci = FALSE)
+plot(smpl, print_ci = FALSE, type = "S")
 
 
 

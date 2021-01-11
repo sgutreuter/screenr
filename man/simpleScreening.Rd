@@ -51,7 +51,6 @@ data(unicorns)
 simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
                           data = unicorns)
 summary(simple)
-plot(simple)
 \dontrun{testCounts(simple)}
 
 }

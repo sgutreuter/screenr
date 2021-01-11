@@ -142,7 +142,7 @@ binomialScreening <- function(formula,
                                              cv.pred.prob = pred.prob)))
     }
     cv.roc <- pROC::roc(cv.results$y, cv.results$cv.pred.prob,
-                                  auc = TRUE)
+                        auc = TRUE)
     class(cv.results) <-  c("cv.predictions", "data.frame")
     result <- list(Call = call,
                    ModelFit = lrfit,
@@ -228,9 +228,11 @@ plot.binomscreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     stopifnot(conf_level > 0 & conf_level < 1)
     plot(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
     if(plot_ci | print_ci){
-        ciplt <- ci.thresholds(x$CVroc, boot.n = bootreps, progress = "text",
-                               conf.level = conf_level,
-                               thresholds = "local maximas")
+        ciplt <- pROC::ci.thresholds(x$CVroc,
+                                     boot.n = bootreps,
+                                     progress = "text",
+                                     conf.level = conf_level,
+                                     thresholds = "local maximas")
     }
     if(print_ci){
         threshold <- attr(ciplt, "thresholds")
@@ -241,7 +243,7 @@ plot.binomscreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
         row.names(citable) <- 1:(dim(ciplt$sensitivity)[1])
     }
     if(plot_ci) plot(ciplt)
-    lines.roc(x$ISroc, lty = 3)
+    pROC::lines.roc(x$ISroc, lty = 3)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
     if(print_ci) return(citable)
