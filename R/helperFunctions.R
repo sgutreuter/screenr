@@ -1,12 +1,18 @@
 #################################################################################
-##       R PROGRAM: helperFunctions.R
+##  R CODE COLLECTION: helperFunctions.R
 ##
-##         PROJECT: R functions for HIV screening tool development
+##            PACKAGE: screenr
 ##
-##      WRITTEN BY: Steve Gutreuter
-##                  E-mail:  sgutreuter@gmail.com
+##        DESCRIPTION: R functions for HIV screening tool development
+##
+##         WRITTEN BY: Steve Gutreuter
+##                     sgutreuter@gmail.com
 ##
 #################################################################################
+
+#### TODO:
+####       1. Update testCounts for glmpath
+####       2. Test everything
 
 
 #' Compute Sensitivity and Specificity from a 2 x 2 Table
@@ -62,62 +68,6 @@ inverseLink <- function(lp, link){
     p
 }
 
-
-#' Extract ROCs from code{binomscreenr} or \code{simplescreenr} Objects
-#'
-#' Extract the receiver operating characteristics from an object of class
-#' \code{binomscreenr} or \code{simplescreenr}.  This is a convenience function
-#' to enable easy use and export of the ROC.
-#'
-#' @param x an object of class \code{binomscreenr} or \code{simplescreenr}.
-#'
-#' @param simplify logical: simplify result to the maximum values of specificity
-#' corresponding to unique values of sensitivity (default is \code{TRUE}).
-#'
-#' @return A data frame containing threshold scores, sensitivities and
-#' specificities. Sensitivities and specificities are displayed as proportions
-#' rather than percentages.
-#'
-#' @references
-#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
-#' 27(8):861-874.
-#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
-#'
-#' Linden A. Measuring diagnostic and predictive accuracy in disease
-#' management: an introduction to receiver operating characteristic (ROC) analysis.
-#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
-#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
-#'
-#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
-#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
-#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
-#'
-#' @examples
-#' data(unicorns)
-#' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, Nfolds = 20)
-#' (uniROC <- getROC(unitool))
-#' @import dplyr
-#' @importFrom dplyr group_by summarize right_join
-#' @export
-getROC <- function(x, simplify = TRUE){
-    sensitivity <- specificity <- NULL
-    if(!class(x) %in% c("binomscreenr", "simplescreenr"))
-        stop("x not a binomscreenr or simplescreenr object.")
-    if(class(x) == "binomscreenr"){
-        res <- pROC::coords(x$CVroc, transpose = FALSE)
-    } else {
-        res <- pROC::coords(x$ISroc, transpose = FALSE)
-        res$threshold  <-  res$threshold + 0.5
-    }
-    if(simplify) {
-        cleaned <- res %>%
-            dplyr::group_by(sensitivity) %>%
-            dplyr::summarize(specificity = max(specificity))
-        res <- dplyr::right_join(res, cleaned)
-    }
-    res
-}
 
 
 #' Expected Number of Tests Required per Positive Test Result
@@ -207,6 +157,7 @@ keepfirst <- function(x, colnames, data = NULL){
     }
     res
 }
+
 
 #' Rescale a strictly positive vector of real numbers to integers
 #'
