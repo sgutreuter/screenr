@@ -148,6 +148,7 @@ glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
     result <- list(
         Call = call,
         Prevalence = prev,
+        formula = formula,
         glmpathObj = res,
         Summary = sumry,
         isResults = list(minAIC = minAIC,
@@ -169,13 +170,13 @@ glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
 
 ## Function coef.glmpathScreener
 ##
-#' A method to extract the coefficients from \code{glmpathScreener} objects.
+#' A method to extract the estimated coefficients from \code{glmpathScreener} objects.
 #'
 #' @param object an object of class \code{glmpathScreener}.
 #' @param Intercept (logical) retain (\code{TRUE}, default) or drop
 #' (\code{FALSE}) the intercept coefficients.
 #' @param OR return odds ratios if \verb{TRUE}; logit-scale coefficients
-#' are the default
+#' are the default.
 #'
 #' @return a dataframe containing the estimated coefficients from the AIC-
 #' and BIC-best logistic regression models.
@@ -317,43 +318,42 @@ plot.glmpathScreener <- function(x, plot_ci = TRUE, print_ci = TRUE,
     if(print_ci) return(citable)
 }
 
-## Function getWhat
+
+## Function predict.glmpathScreener
 ##
-#' \code{getWhat} extracts elements from objects of class \code{glmpathScreener}.
+#' \code{predict.glmpathScreener} is a prediction method for objects of class \code{glmpathScreener}
 #'
-#' @param from an object of class glmpathScreener.
-#' @param what (character) the element to be extracted; valid values are
-#' \verb{"cvPreds"} (cross-validated predicted probabilities),
-#' \verb{"cvROC"} (cross validated \code{roc}-class object),
-#' \verb{"isPreds"} (predicted probabilities from the training set),
-#' \verb{"isROC"} (\code{roc}-class object from the training set) and
-#' \verb{"glmpathObj"} (the entire \code{glmpath}-class object).
-#' @param model (character) the model from which \code{what} is desired
-#' (\verb{"minAIC"} or \verb{"minBIC"}).  The value of \code{model} does not
-#' matter for \code{what =} \verb{glmpathObj}, but one of the two valid values
-#' must be specified (yes, that is a bit weird).
-#' @return the objects specified by \code{what}.
-#' @details This function is used to access the specified objects for those who
-#' need to perform computations not provided by the methods for class
-#' \code{glmpathScreener}.
+#' @param obj an object of class \code{\link[stats]{formula}} defining the binary test outcome.
+#' @param newdata new dataframe from which predicted probabilities of positive test results are desired.
+#' The dataframe must contain values of the same response variables and covariates that were used
+#' to obtain \code{x}.
+#' Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
+#'
+#' @return \code{predict.glmpathScreener} returns (invisibly) a dataframe augmenting the complete cases
+#' in \code{newdata} with the predicted probabilities of positive test results \code{phat_minAIC} and
+#' \code{phat_minBIC} from the models that produced the minimum AIC and BIC, respectively.
+#'
+#' @details This method is a convenience wrapper for \code{link[glmpath]{predict.glmpath}}.
+#'
+#' @import glmpath
 #' @export
-getWhat <- function(from,
-                    what = c("cvPreds", "isPreds",
-                             "cvROC", "isROC", "glmpathObj"),
-                    model = "minAIC"){
-    if(!("glmpathScreener" %in% class(from)))
-        stop("Object not glmpathScreener class")
-    if(!what %in% c("cvPreds", "isPreds", "cvROC", "isROC", "glmpathObj"))
-        stop("Invalid what; valid choices are 'cvPreds', 'cvROC, 'isPreds and 'isROC'.")
-    if(!what == "glmpathObj"){
-        if(!model %in% c("minAIC", "minBIC"))
-        stop("Specify 'minAIC' or 'minBIC' for model")
-        pfx <- substring(what, 1, 2)
-        typ <- substring(what, 3)
-        res <- paste0(pfx, "Results")
-        x <- from[[res]][[model]][[typ]]
-    } else {
-        x <- from$glmpathObj
-    }
-    invisible(x)
+predict.glmpathScreener <- function(obj, newdata){
+    if(!is.data.frame(newdata)) stop("Specify a dataframe")
+    if(!("glmpathScreener" %in% class(obj))) stop("obj not a glmpathScreener object")
+    formula  <- obj$formula
+    mf <- model.frame(formula, newdata)
+    y <- mf[, 1]
+    x <- as.matrix(mf[, -1])
+    obj <- obj$glmpathObj
+    sAIC <- which(obj$aic == min(obj$aic))
+    pAIC <- glmpath::predict.glmpath(obj, newx =  x,  newy = y,  s = sAIC, type = "response")
+    sBIC <- which(obj$bic == min(obj$bic))
+    pBIC <- glmpath::predict.glmpath(obj, newx =  x,  newy = y,  s = sBIC, type = "response")
+    rname <- as.character(formula[[2]])
+    dat <- data.frame(cbind(y, x))
+    names(dat)[1] <- rname
+    res <- data.frame(pAIC, pBIC)
+    names(res) <- c("phat_minAIC", "phat_minBIC")
+    res <- cbind(dat, res)
+    invisible(res)
 }

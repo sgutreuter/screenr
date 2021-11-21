@@ -11,13 +11,14 @@
 #################################################################################
 
 #### TODO:
-####       1. Update testCounts for glmpath
-####       2. Test everything
+####       1. Finish updating testCounts for glmpathScreener objects
+####       2. Update getWhat for simpleScreenr objects
+####       3. Test everything
 
 
+## Function sens_spec
+##
 #' Compute Sensitivity and Specificity from a 2 x 2 Table
-#'
-#' Computes sensitivity and specificity of a test.
 #'
 #' @param x a 2 x 2 table, with columns representing frequencies of
 #' gold-standard status and rows representing frequencies of status ascertained
@@ -41,35 +42,51 @@ sens_spec <- function(x){
 }
 
 
-#' Compute Inverses of Binomial Regression Link Functions
+## Function getWhat
+##
+#' \code{getWhat} extracts elements from objects of class \code{glmpathScreener} and
+#' \code{simpleScreenr}.
 #'
-#' Returns the inverse of logit, cloglog and probit link functions for a linear
-#' predictor
-#'
-#' @param lp numeric vector containing the estimated linear predictor.
-#' @param link character link function (one of \verb{"logit"}, \verb{"cloglog"}
-#' or \verb{"probit"}).
-#'
-#' @return A numeric vector containing the inverse of the link function for the
-#' linear predictor.
-#' @importFrom stats pnorm
+#' @param from an object of class glmpathScreener.
+#' @param what (character) the element to be extracted; valid values are
+#' \verb{"cvPreds"} (cross-validated predicted probabilities),
+#' \verb{"cvROC"} (cross validated \code{roc}-class object),
+#' \verb{"isPreds"} (predicted probabilities from the training set),
+#' \verb{"isROC"} (\code{roc}-class object from the training set) and
+#' \verb{"glmpathObj"} (the entire \code{glmpath}-class object).
+#' @param model (character) the model from which \code{what} is desired
+#' (\verb{"minAIC"} or \verb{"minBIC"}).  The value of \code{model} does not
+#' matter for \code{what =} \verb{glmpathObj}, but one of the two valid values
+#' must be specified (yes, that is a bit weird).
+#' @return the objects specified by \code{what}.
+#' @details This function is used to access the specified objects for those who
+#' need to perform computations not provided by the methods for class
+#' \code{glmpathScreener}.
 #' @export
-inverseLink <- function(lp, link){
-    if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
-    if(link == "logit"){
-        p <- exp(lp) / (1 + exp(lp))
-    }else{
-        if(link == "cloglog"){
-            p <- 1 - exp(-exp(lp))
-        } else {
-            p <- pnorm(lp)
-        }
+getWhat <- function(from,
+                    what = c("cvPreds", "isPreds",
+                             "cvROC", "isROC", "glmpathObj"),
+                    model = "minAIC"){
+    if(!("glmpathScreener" %in% class(from)))
+        stop("Object not glmpathScreener class")
+    if(!what %in% c("cvPreds", "isPreds", "cvROC", "isROC", "glmpathObj"))
+        stop("Invalid what; valid choices are 'cvPreds', 'cvROC, 'isPreds and 'isROC'.")
+    if(!what == "glmpathObj"){
+        if(!model %in% c("minAIC", "minBIC"))
+        stop("Specify 'minAIC' or 'minBIC' for model")
+        pfx <- substring(what, 1, 2)
+        typ <- substring(what, 3)
+        res <- paste0(pfx, "Results")
+        x <- from[[res]][[model]][[typ]]
+    } else {
+        x <- from$glmpathObj
     }
-    p
+    invisible(x)
 }
 
 
-
+## Function testCounts
+##
 #' Expected Number of Tests Required per Positive Test Result
 #'
 #' Compute the expected number of tests which need to be performed in order
@@ -78,10 +95,10 @@ inverseLink <- function(lp, link){
 #' the specified values of sensitivity and specificity.
 #'
 #' @param x a data frame containing columns \code{sensitivity} and
-#' \code{specificity}, or an object of class \code{binomscreenr} or
+#' \code{specificity}, or an object of class \code{glmpathScreener} or
 #' \code{simplescreenr}.
 #' @param prev numeric proportion of the population expressing positive test
-#' results.  \code{prev} is \emph{optional} for class \code{binomscreenr} or
+#' results.  \code{prev} is \emph{optional} for class \code{glmpathScreener} or
 #' \code{simplescreenr} objects, for which the default is the prevalence of
 #' the test condition in the training sample.
 #'
@@ -103,7 +120,7 @@ inverseLink <- function(lp, link){
 #'
 #' @export
 testCounts <- function(x = NULL, prev = NULL){
-    if("binomscreenr" %in% class(x)){
+    if("glmpathScreener" %in% class(x)){
         ss <- data.frame(sensitivity = x$CVroc$sensitivities,
                          specificity = x$CVroc$specificities)
         if(is.null(prev)) prev <- x$Prevalence

@@ -12,14 +12,9 @@
 #'
 #' Compute the in-sample (\emph{overly optimistic}) performances for development
 #' of a very simple test screening tool implementing the method described in the
-#' reference.  The results provide information from which to
-#' choose a counting-based threshold score above which a diagnostic test would be
-#' performed. However, it is unlikely that the target sensitivity and specificity
-#' would be acheived from new data.  \code{simpleScreening} is intended for use
-#' \emph{only} in those situations where the technical capacity for implementation
-#' of screening is limited to counting responses to questions.  The methods
-#' implemented by \code{binomialScreening} and \code{mebinomScreening} will almost
-#' certaily out-perform \code{simpleScreening}.
+#' reference.  \code{simpleScreener} is not optimized and is intended only
+#' for comparision with \code{glmpathScreener}, which will almost certainly
+#' out-perform \code{simpleScreening}.
 #'
 #' The receiver operating characteristics are computed using the \code{pROC}
 #' package. See References and package documentation for additional details.
