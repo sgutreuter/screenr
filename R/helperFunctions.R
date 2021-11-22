@@ -10,12 +10,6 @@
 ##
 #################################################################################
 
-#### TODO:
-####       1. Finish updating testCounts for glmpathScreener objects
-####       2. Update getWhat for simpleScreenr objects
-####       3. Test everything
-
-
 ## Function sens_spec
 ##
 #' Compute Sensitivity and Specificity from a 2 x 2 Table
@@ -41,6 +35,36 @@ sens_spec <- function(x){
     result
 }
 
+
+#' Compute Inverses of Binomial Regression Link Functions
+#'
+#' Returns the inverse of logit, cloglog and probit link functions for a linear
+#' predictor
+#'
+#' @param lp numeric vector containing the estimated linear predictor.
+#' @param link character link function (one of \verb{"logit"}, \verb{"cloglog"}
+#' or \verb{"probit"}).
+#'
+#' @return A numeric vector containing the inverse of the link function for the
+#' linear predictor.
+#' @importFrom stats pnorm
+#' @export
+inverseLink <- function(lp, link){
+    if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
+    if(link == "logit"){
+        p <- exp(lp) / (1 + exp(lp))
+    }else{
+        if(link == "cloglog"){
+            p <- 1 - exp(-exp(lp))
+        } else {
+            p <- pnorm(lp)
+        }
+    }
+    p
+}
+
+
+#### TODO: Finish inclusion of logisticScreener and simpleScreenr objects.
 
 ## Function getWhat
 ##
@@ -114,7 +138,7 @@ getWhat <- function(from,
 #'
 #' @examples
 #' data(unicorns)
-#' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' unitool <- logisticScreener(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                              data = unicorns, Nfolds = 20)
 #' testCounts(unitool)
 #'
@@ -179,10 +203,10 @@ keepfirst <- function(x, colnames, data = NULL){
 #' Rescale a strictly positive vector of real numbers to integers
 #'
 #' A convenience wrapper function which rescales a strictly positive (all
-#' elements are greater than zero) vector and rescales it to a vector of
-#' integers.
+#' elements are greater than zero) vector to a vector of
+#' integers ranging from 1 to \code{max}.
 #'
-#' @param x numeric vector of positive real numbers.
+#' @param x numeric vector of non-negative real numbers.
 #' @param max the value of largest element in the rescaled integer-valued
 #' vector.
 #'
@@ -194,7 +218,7 @@ keepfirst <- function(x, colnames, data = NULL){
 #' @import scales
 #' @export
 rescale_to_Int <- function(x, max) {
-    stopifnot(!(any(x <= 0) | max <= 0))
+    if(any(x <= 0) | max <= 0) stop("x must consist of non-negative numbers" )
     y <- round(scales::rescale(x, to = c(1, max)))
     y
 }

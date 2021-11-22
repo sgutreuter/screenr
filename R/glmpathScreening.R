@@ -72,7 +72,19 @@
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
 #'
 #' @examples
-#'
+#' ## Evaluate the performance of screening thresholds based on a logistic regressionW
+#' ## regression regularizer
+#' data(unicorns)
+#' help(unicorns)
+#' uniobj <- glmpathScreener(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#'                           data = unicorns, Nfolds = 10, seed = 123)
+#' summary(uniobj)
+#' ## Examine the coeffients for the models that minimized AIC and BIC:
+#' coef(uniobj)
+#' ## Examine all but the intercept coefficient on the odds-ratio scale:
+#' coef(uniobj, or = TRUE, intercept = FALSE)
+#' ## Plot receiver-operating characteristics for the model that minimized AIC
+#' plot(uniobj, model = "minAIC")
 #' @import pROC
 #' @import glmpath
 #' @export
@@ -85,7 +97,7 @@ glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
     if(Nfolds < 5)
         warning("Nfolds < 5 is not recommended; consider this testing mode.")
     call <- match.call()
-    mf <- model.frame(formula, dat)
+    mf <- model.frame(formula, data)
     y <- mf[, 1]
     x <- as.matrix(mf[, -1])
     N <- nrow(x)
@@ -95,7 +107,7 @@ glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
     for(i in c("AIC", "BIC")){
         minIC <- min(sumry[[i]])
         row <- rownames(sumry[sumry[[i]] == minIC, ])
-        step <- as.integer(unlist(str_split(row, " "))[2])
+        step <- as.integer(unlist(stringr::str_split(row, " "))[2])
         parmEst <- predict(res,
                            newx = x,
                            newy = y,
@@ -124,7 +136,7 @@ glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
         for(i in c("AIC", "BIC")){
             minIC <- min(sumryj[[i]])
             rowj <- rownames(sumryj[sumryj[[i]] == minIC, ])
-            stepj <- as.integer(unlist(str_split(rowj, " "))[2])
+            stepj <- as.integer(unlist(stringr::str_split(rowj, " "))[2])
             phatj <- predict(rescv,
                              newx = x[holdouts[[j]], ],
                              newy = y[holdouts[[j]]],
@@ -181,57 +193,23 @@ glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
 #' @return a dataframe containing the estimated coefficients from the AIC-
 #' and BIC-best logistic regression models.
 #' @examples
+#' load(uniobj)
+#' ## Examine the coeffients for the models that minimized AIC and BIC:
+#' coef(uniobj)
+#' ## Examine all but the intercept coefficient on the odds-ratio scale:
+#' coef(uniobj, or = TRUE, intercept = FALSE)
 #' @export
-coef.glmpathScreener <- function(object, Intercept = TRUE, OR = FALSE){
+coef.glmpathScreener <- function(object, intercept = TRUE, or = FALSE){
     if(!("glmpathScreener" %in% class(object)))
         stop("object not glmpathScreener class")
     coef <- rbind(object$isResults$minAIC$Coefficients,
                   object$isResults$minBIC$Coefficients)
     rownames(coef) <- c("AIC-best model", "BIC-best model")
-    if (Intercept == FALSE) coef <- coef
-    if (OR == TRUE) coef <- exp(coef)
+    if (intercept == FALSE) coef <- coef
+    if (or == TRUE) coef <- exp(coef)
     data.frame(coef)
 }
 
-
-## Function summary.glmpathScreener
-##
-#' An  summary of the GLM path regularizer
-#'
-#' @param object a glmpathScreener object
-#'
-#' @return a dataframe containing the summary, including the Df, Deviance,
-#' AIC and BIC for each step along the GLM path for which the active set
-#' changed.
-#'
-#' @details This is essentially a wrapper for \code{glmpath::summary.glmpath}
-#' provided for \code{glmpathScreener} objects.
-#'
-#' @export
-summary.glmpathScreener <- function(object){
-    if(!("glmpathScreener" %in% class(object)))
-        stop("object not glmpathScreener class")
-    res <- object$Summary
-    res
-}
-
-
-## Function print.glmpathScreener
-##
-#' A print method for \code{glmpathScreener} objects
-#'
-#' @param object an object of class \code{glmpathScreener}
-#'
-#' @export
-print.glmpathScreener <- function(object){
-    if(!("glmpathScreener" %in% class(object)))
-        stop("object not glmpathScreener class")
-    cat("Function call:\n")
-    print(object$Call)
-    cat("\nglmpath object:\n")
-    glmpath::print.glmpath(object$glmpathObj)
-    cat("\nPrevalence:", object$Prevalence, "\n")
-}
 
 
 ## Function plot.glmpathScreener
@@ -278,6 +256,10 @@ print.glmpathScreener <- function(object){
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#' @examples
+#' load(uniobj)
+#' ## Plot receiver-operating characteristics for the model that minimized AIC
+#' plot(uniobj, model = "minAIC")
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
@@ -336,12 +318,23 @@ plot.glmpathScreener <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #' @details This method is a convenience wrapper for \code{link[glmpath]{predict.glmpath}}.
 #'
 #' @import glmpath
+#' @examples
+#' load(uniobj)
+#' ## Get some new observations
+#' new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
+#'                         testresult = c(NA, NA), Q1 = c(0, 0),
+#'                         Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0), Q5 = c(0, 1))
+#' ## Predict the probabilities of testing positive for the new subjects
+#' (new_preds <- predict(uniobj, new_corns ))
 #' @export
 predict.glmpathScreener <- function(obj, newdata){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
     if(!("glmpathScreener" %in% class(obj))) stop("obj not a glmpathScreener object")
-    formula  <- obj$formula
-    mf <- model.frame(formula, newdata)
+    form  <- obj$formula
+    rname <- as.character(form[[2]])
+    nd <- newdata
+    nd[is.na(nd[[rname]]), rname] <- 0
+    mf <- model.frame(form, nd)
     y <- mf[, 1]
     x <- as.matrix(mf[, -1])
     obj <- obj$glmpathObj
@@ -349,11 +342,53 @@ predict.glmpathScreener <- function(obj, newdata){
     pAIC <- glmpath::predict.glmpath(obj, newx =  x,  newy = y,  s = sAIC, type = "response")
     sBIC <- which(obj$bic == min(obj$bic))
     pBIC <- glmpath::predict.glmpath(obj, newx =  x,  newy = y,  s = sBIC, type = "response")
-    rname <- as.character(formula[[2]])
     dat <- data.frame(cbind(y, x))
     names(dat)[1] <- rname
+    dat[[rname]] <- newdata[[rname]]
     res <- data.frame(pAIC, pBIC)
     names(res) <- c("phat_minAIC", "phat_minBIC")
     res <- cbind(dat, res)
     invisible(res)
+}
+
+
+## Function print.glmpathScreener
+##
+#' A print method for \code{glmpathScreener} objects
+#'
+#' @param object an object of class \code{glmpathScreener}
+#'
+#' @export
+print.glmpathScreener <- function(object){
+    if(!("glmpathScreener" %in% class(object)))
+        stop("object not glmpathScreener class")
+    cat("Function call:\n")
+    print(object$Call)
+    cat("\nglmpath object:\n")
+    glmpath::print.glmpath(object$glmpathObj)
+    cat("\nPrevalence:", object$Prevalence, "\n")
+}
+
+
+## Function summary.glmpathScreener
+##
+#' An  summary of the GLM path regularizer
+#'
+#' @param object a glmpathScreener object
+#'
+#' @return a dataframe containing the summary, including the Df, Deviance,
+#' AIC and BIC for each step along the GLM path for which the active set
+#' changed.
+#'
+#' @details This is essentially a wrapper for \code{glmpath::summary.glmpath}
+#' provided for \code{glmpathScreener} objects.
+#' @examples
+#' load(uniobj)
+#' print(uniobj)
+#' @export
+summary.glmpathScreener <- function(object){
+    if(!("glmpathScreener" %in% class(object)))
+        stop("object not glmpathScreener class")
+    res <- object$Summary
+    res
 }
