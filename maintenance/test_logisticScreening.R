@@ -1,5 +1,5 @@
 #################################################################################
-##      R PROGRAM: test_glmpathScreening.R
+##      R PROGRAM: test_logisticScreening.R
 ##
 ##        PROJECT: screenr Package
 ##
@@ -8,22 +8,21 @@
 ##     WRITTEN BY: Steve Gutreuter
 ##                 E-mail:  sgutreuter@gmail.gov
 #################################################################################
-library(stringr)
-library(glmpath )
+
 #################################################################################
 ## Set paths and working directory
 codepath <- file.path(Sys.getenv("DEVEL"), "screenr/R")
-workpath <- file.path(Sys.getenv("DEVEL"), "screenr/maintenance")
+workpath <- file.path(Sys.getenv("DEVEL"), "screenr-testing")
 datapath <- file.path(Sys.getenv("DEVEL"), "screenr/data")
 setwd(workpath)
 
 #################################################################################
-## Source the screenr R code and load the unicorns data
+## Source the screenr R code for experimentation and testing
 #################################################################################
-source(file.path(codepath, "glmpathScreening.R"))
+source(file.path(codepath, "logisticScreening.R"))
 source(file.path(codepath, "helperFunctions.R"))
-load(file.path(datapath, "unicorns.rda"))
-load(file.path(datapath, "uniobj.Rdata"))
+load(file.path(datapath, "unicorns.rda") )
+load(file.path(datapath, "uniobj.Rdata") )
 
 #################################################################################
 ## Create new data for prediction
@@ -33,17 +32,32 @@ new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0), Q5 = c(0, 1))
 
 
-#################################################################################
-## glmpathScreener testing
-#################################################################################
-uniobj <- glmpathScreener(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-                          data = unicorns, Nfolds = 2, seed = 123)
-saveRDS(uniobj, file.path(datapath, "uniobj.rds" ))
-print(uniobj)
-summary(uniobj )
-plot(uniobj, model =  "minAIC")
-coef(uniobj, or = FALSE, intercept = FALSE)
-coef(uniobj, or = TRUE, intercept = TRUE)
-(new_preds <- predict(uniobj, new_corns ))
+
+
+bsobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+                           data = unicorns, link = "logit", Nfolds = 10)
+
+str(bsobj2)
+
+summary(bsobj2)
+
+print(bsobj2)
+
+getROC(bsobj)
+getROC(bsobj, simplify = FALSE)
+
+debugonce(plot.logisticscreenr)
+plot(bsobj2)
+plot(bsobj2, print_ci = FALSE)
+
+testCounts(bsobj2)
+
+## Compute point estimates of their predicted probabilities testing positive:
+predict(bsobj2$ModelFit, newdata = new, type = "response")
+## or, compute directly
+inverseLink("logit",
+            as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
+                            as.matrix(bsobj$ParamEst, ncol = 1))
+
 
 #################################  End of File  #################################

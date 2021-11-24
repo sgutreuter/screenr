@@ -12,10 +12,10 @@
 #################################################################################
 
 
-## Function glmpathScreener
+## Function glmpathScreenr
 ##
-#' \code{glmpathScreener} Is a test-screening tool based on L1 regularization
-#' of logistic regression based on \code{\link[glmpath]{glmpath}}.
+#' \code{glmpathScreenr} is a used to develop test-screening tools based on \emph{L}1
+#' regularization of logistic regression based on \code{\link[glmpath]{glmpath}}.
 #'
 #' @param formula an object of class \code{\link[stats]{formula}} defining the
 #' testing outcome and predictor covariates
@@ -27,7 +27,8 @@
 #' @param seed RNG seed for cross-validation data splitting
 #' @param ... additional arguments passed to glmpath::glmpath or pROC::roc
 #'
-#' @return An object of class \code{glmpathScreener} containing the elements:
+#' @return Return (invisibly) an object of class \code{glmpathScreenr} containing
+#' the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{Prevalence}}{Prevalence of the binary response variable.}
@@ -53,18 +54,24 @@
 #' \item{\code{RNGseed}}{RNG seed.}
 #' }
 #'
-#' @details \code{glmpathScreener} is a convenience function which integrates
-#' logistic regression using the GLM path regularizer, \emph{k}-fold
+#' @details \code{glmpathScreenr} is a convenience function which integrates
+#' logistic regression using GLM-path \emph{L}1 regularization, \emph{k}-fold
 #' cross-validation and estimation of the receiver-operating characteristic.
 #' The in-sample and out-of-sample performance is estimated from the models
 #' which produced the minimum AIC and minimum BIC.  Execute
-#' \code{methods(class = "glmpathScreener")} to identify available methods.
+#' \code{methods(class = "glmpathScreenr")} to identify available methods.
+#'
+#' The GLM path regularizer of Park and Hastie (2007) is similar to the more
+#' familiar lasso and elastic net, but differs from the elastic net in that the L2
+#' penalty is extremely small.  Like the elastic net, GLM path regularization is
+#' robust to highly correlated predictors.
 #'
 #' @seealso \code{\link[glmpath]{glmpath}}, \code{link[pROC]{roc}}
 #'
 #' @references
-#' Park MY, Hastie T. L1-regularization path algorithm for generalized linear
+#' Park MY, Hastie T. \emph{L}1-regularization path algorithm for generalized linear
 #' models. Journal of the Royal Statistical Society Series B. 2007;69(4):659-677.
+#' \url{https://doi.org/10.1111/j.1467-9868.2007.00607.x}
 #'
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
 #' Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
@@ -76,7 +83,7 @@
 #' ## regression regularizer
 #' data(unicorns)
 #' help(unicorns)
-#' uniobj <- glmpathScreener(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' uniobj <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                           data = unicorns, Nfolds = 10, seed = 123)
 #' summary(uniobj)
 #' ## Examine the coeffients for the models that minimized AIC and BIC:
@@ -88,7 +95,7 @@
 #' @import pROC
 #' @import glmpath
 #' @export
-glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
+glmpathScreenr <- function(formula, data = NULL, Nfolds = 20,
                             seed = Sys.time(), ... ){
     if(!inherits(formula, "formula")) stop("Specify a model formula")
     if(!is.data.frame(data)) stop("Specify a dataframe")
@@ -175,48 +182,102 @@ glmpathScreener <- function(formula, data = NULL, Nfolds = 20,
         RNG = RNGkind(),
         RNGseed = seed
     )
-    class(result) <- "glmpathScreener"
+    class(result) <- "glmpathScreenr"
     invisible(result)
 }
 
 
-## Function coef.glmpathScreener
+## Function coef.glmpathScreenr
 ##
-#' A method to extract the estimated coefficients from \code{glmpathScreener} objects.
+#' A method to extract the estimated coefficients from \code{glmpathScreenr} objects.
 #'
-#' @param object an object of class \code{glmpathScreener}.
-#' @param Intercept (logical) retain (\code{TRUE}, default) or drop
+#' @param object an object of class \code{glmpathScreenr}.
+#'
+#' @param intercept (logical) retain (\code{TRUE}, default) or drop
 #' (\code{FALSE}) the intercept coefficients.
-#' @param OR return odds ratios if \verb{TRUE}; logit-scale coefficients
+#'
+#' @param or return odds ratios if \verb{TRUE}; logit-scale coefficients
 #' are the default.
 #'
 #' @return a dataframe containing the estimated coefficients from the AIC-
 #' and BIC-best logistic regression models.
+#'
 #' @examples
 #' load(uniobj)
-#' ## Examine the coeffients for the models that minimized AIC and BIC:
+#' ## Examine the logit-scale coefficients, including the intercept:
 #' coef(uniobj)
 #' ## Examine all but the intercept coefficient on the odds-ratio scale:
 #' coef(uniobj, or = TRUE, intercept = FALSE)
 #' @export
-coef.glmpathScreener <- function(object, intercept = TRUE, or = FALSE){
-    if(!("glmpathScreener" %in% class(object)))
-        stop("object not glmpathScreener class")
-    coef <- rbind(object$isResults$minAIC$Coefficients,
-                  object$isResults$minBIC$Coefficients)
+coef.glmpathScreenr <- function(object, intercept = TRUE, or = FALSE){
+    if(!("glmpathScreenr" %in% class(object)))
+        stop("object not glmpathScreenr class")
+    coef <- data.frame(rbind(object$isResults$minAIC$Coefficients,
+                             object$isResults$minBIC$Coefficients))
     rownames(coef) <- c("AIC-best model", "BIC-best model")
-    if (intercept == FALSE) coef <- coef
+    if (intercept == FALSE) coef <- coef[, -1]
     if (or == TRUE) coef <- exp(coef)
-    data.frame(coef)
+    coef
 }
 
 
-
-## Function plot.glmpathScreener
+## Function getWhat.glmpathScreenr
 ##
-#' \code{plot.glmpathScreener} is a plotting method for \code{glmpathScreener}
+#' \code{getWhat.glmpathScreenr} is an S3 method to extract components of
+#' \code{glmpathScreenr} objects.
+#'
+#' @param what the (character) name of the component to extract. Valid values are
+#' \verb{"glmpathObj"}, \verb{"cvROC"} and \verb{"isROC"}.
+#'
+#' @param model the (character) name of the model for which the component is
+#' desired.  Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
+#'
+#' @param object the \code{glmpathScreenr}-class object from which to extract
+#' the component.
+#'
+#' @return the selected component.
+#'
+#' @details
+#' \code{getWhat} is provided to enable easy extraction of components for those
+#' who wish to perform computations that are not provided by the \code{coef},
+#' \code{plot}, \code{predict}, \code{print} or \code{summary} methods.
+#'
+#' The following values of \code{what} return:
+#' \describe{
+#' \item{\verb{"glmpathObj"}}{the entire \code{glmpath}-class object produced by
+#' by \code{\link[glmpath]{glmpath}}}.
+#' \item{\verb{"cvROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
+#' containing the \emph{k}-fold cross-validated receiver-operating characteristic.}
+#' \item{\verb{"isROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
+#' containing the in-sample (overly optimistic) receiver-operating characteristic.}
+#' }
+#'
+#' @export
+getWhat.glmpathScreenr <- function(what = NULL, model = NULL, object){
+    if(!"glmpathScreenr" %in% class(x))
+        stop("Object not glmpathScreenr class")
+    if(!what %in% c("glmpathObj", "cvROC", "isROC"))
+        stop("Invalid what argument; must be one of 'glmpathObj', 'cvROC' or 'isROC'")
+    if(!model %in% c("minAIC", "minBIC"))
+        stop("Invalid model argument; must be one of 'minAIC' or 'minBIC'" )
+    if(what == "glmpathObj") {
+        res <- obj[[what]]
+    } else {
+        if(what == "cvROC") {
+            res <- obj[["cvResults"]][[model]][["ROC"]]
+        } else {
+            if(what == "isROC") res <- obj[["isResults"]][["ROC"]]
+        }
+    }
+    invisible(res)
+}
+
+
+## Function plot.glmpathScreenr
+##
+#' \code{plot.glmpathScreenr} is a plotting method for \code{glmpathScreenr}
 #' objects.
-#' @param x an object of class \code{glmpathScreener}.
+#' @param x an object of class \code{glmpathScreenr}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
 #' @param print_ci (logical) print a table of confidence intervals if
 #' \verb{TRUE}.
@@ -232,7 +293,7 @@ coef.glmpathScreener <- function(object, intercept = TRUE, or = FALSE){
 #' @return This function produces a plot as a side effect and (optionally)
 #' returns a dataframe containing sensitivities, specificities and their
 #' lower and upper confidence limits for threshold values of Pr(response = 1).
-#' @details \code{plot.glmpathScreener} is an enhanced convenience wrapper for
+#' @details \code{plot.glmpathScreenr} is an enhanced convenience wrapper for
 #' \link{\code{pROC::plot.roc}}.  The table is useful for identifying the
 #' minimum predicted response probabilities associated with particular
 #' sensitivities.  The sensitivities and specificities are the coordinates at
@@ -263,12 +324,12 @@ coef.glmpathScreener <- function(object, intercept = TRUE, or = FALSE){
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.glmpathScreener <- function(x, plot_ci = TRUE, print_ci = TRUE,
+plot.glmpathScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
                                  model = "minAIC",
                                  conf_level = 0.95, bootreps = 2000,
                                  se.min = 0.8, ...){
-    if(!("glmpathScreener" %in% class(x)))
-            stop("Object not glmpathScreener class")
+    if(!("glmpathScreenr" %in% class(x)))
+            stop("Object not glmpathScreenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
     if(!model %in% c("minAIC", "minBIC"))
         stop("Specify 'minAIC' or 'minBIC' for model")
@@ -301,17 +362,18 @@ plot.glmpathScreener <- function(x, plot_ci = TRUE, print_ci = TRUE,
 }
 
 
-## Function predict.glmpathScreener
+## Function predict.glmpathScreenr
 ##
-#' \code{predict.glmpathScreener} is a prediction method for objects of class \code{glmpathScreener}
+#' \code{predict.glmpathScreenr} is a prediction method for objects of class \code{glmpathScreenr}
 #'
-#' @param obj an object of class \code{\link[stats]{formula}} defining the binary test outcome.
+#' @param object an object of class \code{glmpathScreenr} produced by
+#' \code{\link[screenr]{glmpathScreenr}}.
+#'
 #' @param newdata new dataframe from which predicted probabilities of positive test results are desired.
 #' The dataframe must contain values of the same response variables and covariates that were used
-#' to obtain \code{x}.
-#' Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
+#' to obtain \code{obj}.
 #'
-#' @return \code{predict.glmpathScreener} returns (invisibly) a dataframe augmenting the complete cases
+#' @return \code{predict.glmpathScreenr} returns (invisibly) a dataframe augmenting the complete cases
 #' in \code{newdata} with the predicted probabilities of positive test results \code{phat_minAIC} and
 #' \code{phat_minBIC} from the models that produced the minimum AIC and BIC, respectively.
 #'
@@ -327,17 +389,17 @@ plot.glmpathScreener <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #' ## Predict the probabilities of testing positive for the new subjects
 #' (new_preds <- predict(uniobj, new_corns ))
 #' @export
-predict.glmpathScreener <- function(obj, newdata){
+predict.glmpathScreenr <- function(object =  NULL, newdata = NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
-    if(!("glmpathScreener" %in% class(obj))) stop("obj not a glmpathScreener object")
-    form  <- obj$formula
+    if(!("glmpathScreenr" %in% class(object))) stop("obj not a glmpathScreenr object")
+    form  <- object$formula
     rname <- as.character(form[[2]])
     nd <- newdata
     nd[is.na(nd[[rname]]), rname] <- 0
     mf <- model.frame(form, nd)
     y <- mf[, 1]
     x <- as.matrix(mf[, -1])
-    obj <- obj$glmpathObj
+    obj <- object$glmpathObj
     sAIC <- which(obj$aic == min(obj$aic))
     pAIC <- glmpath::predict.glmpath(obj, newx =  x,  newy = y,  s = sAIC, type = "response")
     sBIC <- which(obj$bic == min(obj$bic))
@@ -352,16 +414,16 @@ predict.glmpathScreener <- function(obj, newdata){
 }
 
 
-## Function print.glmpathScreener
+## Function print.glmpathScreenr
 ##
-#' A print method for \code{glmpathScreener} objects
+#' A print method for \code{glmpathScreenr} objects
 #'
-#' @param object an object of class \code{glmpathScreener}
+#' @param object an object of class \code{glmpathScreenr}
 #'
 #' @export
-print.glmpathScreener <- function(object){
-    if(!("glmpathScreener" %in% class(object)))
-        stop("object not glmpathScreener class")
+print.glmpathScreenr <- function(object){
+    if(!("glmpathScreenr" %in% class(object)))
+        stop("object not glmpathScreenr class")
     cat("Function call:\n")
     print(object$Call)
     cat("\nglmpath object:\n")
@@ -370,25 +432,25 @@ print.glmpathScreener <- function(object){
 }
 
 
-## Function summary.glmpathScreener
+## Function summary.glmpathScreenr
 ##
 #' An  summary of the GLM path regularizer
 #'
-#' @param object a glmpathScreener object
+#' @param object a glmpathScreenr object
 #'
 #' @return a dataframe containing the summary, including the Df, Deviance,
 #' AIC and BIC for each step along the GLM path for which the active set
 #' changed.
 #'
 #' @details This is essentially a wrapper for \code{glmpath::summary.glmpath}
-#' provided for \code{glmpathScreener} objects.
+#' provided for \code{glmpathScreenr} objects.
 #' @examples
 #' load(uniobj)
 #' print(uniobj)
 #' @export
-summary.glmpathScreener <- function(object){
-    if(!("glmpathScreener" %in% class(object)))
-        stop("object not glmpathScreener class")
+summary.glmpathScreenr <- function(object){
+    if(!("glmpathScreenr" %in% class(object)))
+        stop("object not glmpathScreenr class")
     res <- object$Summary
     res
 }

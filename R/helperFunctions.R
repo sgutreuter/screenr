@@ -1,18 +1,29 @@
 #################################################################################
-##  R CODE COLLECTION: helperFunctions.R
+##       R PROGRAM: helperFunctions.R
 ##
-##            PACKAGE: screenr
+##         PROJECT: R functions for HIV screening tool development
 ##
-##        DESCRIPTION: R functions for HIV screening tool development
-##
-##         WRITTEN BY: Steve Gutreuter
-##                     sgutreuter@gmail.com
+##      WRITTEN BY: Steve Gutreuter
+##                  E-mail:  sgutreuter@gmail.com
 ##
 #################################################################################
 
-## Function sens_spec
+
+## Function getWhat
 ##
+#' \code{getWhat} is an S3 generic function to extract components of objects
+#' produced by functions in the \code{screenr} package
+#'
+#' @usage \code{getWhat(object, ...)}
+#' @export
+getWhat <- function(object, ...) {
+    UseMethod("getWhat", object)
+}
+
+
 #' Compute Sensitivity and Specificity from a 2 x 2 Table
+#'
+#' Computes sensitivity and specificity of a test.
 #'
 #' @param x a 2 x 2 table, with columns representing frequencies of
 #' gold-standard status and rows representing frequencies of status ascertained
@@ -64,65 +75,73 @@ inverseLink <- function(lp, link){
 }
 
 
-#### TODO: Finish inclusion of logisticScreener and simpleScreenr objects.
-
-## Function getWhat
-##
-#' \code{getWhat} extracts elements from objects of class \code{glmpathScreener} and
-#' \code{simpleScreenr}.
+#' Extract ROCs from code{logisticScreenr} or \code{simplescreenr} Objects
 #'
-#' @param from an object of class glmpathScreener.
-#' @param what (character) the element to be extracted; valid values are
-#' \verb{"cvPreds"} (cross-validated predicted probabilities),
-#' \verb{"cvROC"} (cross validated \code{roc}-class object),
-#' \verb{"isPreds"} (predicted probabilities from the training set),
-#' \verb{"isROC"} (\code{roc}-class object from the training set) and
-#' \verb{"glmpathObj"} (the entire \code{glmpath}-class object).
-#' @param model (character) the model from which \code{what} is desired
-#' (\verb{"minAIC"} or \verb{"minBIC"}).  The value of \code{model} does not
-#' matter for \code{what =} \verb{glmpathObj}, but one of the two valid values
-#' must be specified (yes, that is a bit weird).
-#' @return the objects specified by \code{what}.
-#' @details This function is used to access the specified objects for those who
-#' need to perform computations not provided by the methods for class
-#' \code{glmpathScreener}.
+#' Extract the receiver operating characteristics from an object of class
+#' \code{logisticScreenr} or \code{simplescreenr}.  This is a convenience function
+#' to enable easy use and export of the ROC.
+#'
+#' @param x an object of class \code{logisticScreenr} or \code{simplescreenr}.
+#'
+#' @param simplify logical: simplify result to the maximum values of specificity
+#' corresponding to unique values of sensitivity (default is \code{TRUE}).
+#'
+#' @return A data frame containing threshold scores, sensitivities and
+#' specificities. Sensitivities and specificities are displayed as proportions
+#' rather than percentages.
+#'
+#' @references
+#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
+#' 27(8):861-874.
+#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
+#'
+#' Linden A. Measuring diagnostic and predictive accuracy in disease
+#' management: an introduction to receiver operating characteristic (ROC) analysis.
+#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
+#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
+#'
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
+#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
+#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#'
+#' @examples
+#' data(unicorns)
+#' unitool <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#'                              data = unicorns, Nfolds = 20)
+#' (uniROC <- getROC(unitool))
+#' @import dplyr
+#' @importFrom dplyr group_by summarize right_join
 #' @export
-getWhat <- function(from,
-                    what = c("cvPreds", "isPreds",
-                             "cvROC", "isROC", "glmpathObj"),
-                    model = "minAIC"){
-    if(!("glmpathScreener" %in% class(from)))
-        stop("Object not glmpathScreener class")
-    if(!what %in% c("cvPreds", "isPreds", "cvROC", "isROC", "glmpathObj"))
-        stop("Invalid what; valid choices are 'cvPreds', 'cvROC, 'isPreds and 'isROC'.")
-    if(!what == "glmpathObj"){
-        if(!model %in% c("minAIC", "minBIC"))
-        stop("Specify 'minAIC' or 'minBIC' for model")
-        pfx <- substring(what, 1, 2)
-        typ <- substring(what, 3)
-        res <- paste0(pfx, "Results")
-        x <- from[[res]][[model]][[typ]]
+getROC <- function(x, simplify = TRUE){
+    sensitivity <- specificity <- NULL
+    if(!class(x) %in% c("logisticScreenr", "simplescreenr"))
+        stop("x not a logisticScreenr or simplescreenr object.")
+    if(class(x) == "logisticScreenr"){
+        res <- pROC::coords(x$CVroc, transpose = FALSE)
     } else {
-        x <- from$glmpathObj
+        res <- pROC::coords(x$ISroc, transpose = FALSE)
+        res$threshold  <-  res$threshold + 0.5
     }
-    invisible(x)
+    if(simplify) {
+        cleaned <- res %>%
+            dplyr::group_by(sensitivity) %>%
+            dplyr::summarize(specificity = max(specificity))
+        res <- dplyr::right_join(res, cleaned)
+    }
+    res
 }
-
 
 ## Function testCounts
 ##
-#' Expected Number of Tests Required per Positive Test Result
-#'
-#' Compute the expected number of tests which need to be performed in order
-#' to identify the first positive test result and the expected prevalence
-#' among the untested given implementation of test screening options having
-#' the specified values of sensitivity and specificity.
+#' \code{testCounts} returns the anticipated number of tests required to
+#' observe a single positive test result.
 #'
 #' @param x a data frame containing columns \code{sensitivity} and
-#' \code{specificity}, or an object of class \code{glmpathScreener} or
+#' \code{specificity}, or an object of class \code{logisticScreenr} or
 #' \code{simplescreenr}.
+#'
 #' @param prev numeric proportion of the population expressing positive test
-#' results.  \code{prev} is \emph{optional} for class \code{glmpathScreener} or
+#' results.  \code{prev} is \emph{optional} for class \code{logisticScreenr} or
 #' \code{simplescreenr} objects, for which the default is the prevalence of
 #' the test condition in the training sample.
 #'
@@ -136,15 +155,20 @@ getWhat <- function(from,
 #' condition among those who are screened out of testing.}
 #' }
 #'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
 #' @examples
 #' data(unicorns)
-#' unitool <- logisticScreener(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                              data = unicorns, Nfolds = 20)
 #' testCounts(unitool)
 #'
 #' @export
 testCounts <- function(x = NULL, prev = NULL){
-    if("glmpathScreener" %in% class(x)){
+    if("logisticScreenr" %in% class(x)){
         ss <- data.frame(sensitivity = x$CVroc$sensitivities,
                          specificity = x$CVroc$specificities)
         if(is.null(prev)) prev <- x$Prevalence
@@ -174,14 +198,21 @@ testCounts <- function(x = NULL, prev = NULL){
     result
 }
 
-
-#' Return Data Frame Rows Having Unique Values in Selected Columns
+## Function keepfirst
+##
+#' \code{keepfirst} returns only those rows of a dataframe having unique values
+#' in selected columns.
 #'
-#' Sort a dataframe and then retain those rows which are unique with respect
-#' to the values of selected columns.
+#'
 #' @param x character-valued column name along which the dataframe is sorted.
+#'
 #' @param colnames a character vector of column names  to identify uniqueness.
+#'
 #' @param data a data frame.
+#'
+#' @details
+#' The dataframe \code{data} is sorted, and then only those rows which are unique
+#' with respect to the values of selected columns.
 #'
 #' @return A data frame consisting of the rows of \code{data} which are
 #' unique with respect to \code{colnames}
@@ -199,27 +230,34 @@ keepfirst <- function(x, colnames, data = NULL){
     res
 }
 
-
-#' Rescale a strictly positive vector of real numbers to integers
+## Function rescale_to_int
+##
+#' \code{rescale_to_int} rescales all non-zero elements of a non-negative
+#' numeric vector to integers from 1 to \verb{max}
 #'
-#' A convenience wrapper function which rescales a strictly positive (all
-#' elements are greater than zero) vector to a vector of
-#' integers ranging from 1 to \code{max}.
+#' @param x numeric vector of positive real numbers.
 #'
-#' @param x numeric vector of non-negative real numbers.
 #' @param max the value of largest element in the rescaled integer-valued
 #' vector.
 #'
 #' @return A vector of integers corresponding to \code{x} in which smallest
-#' element is 1 and the largest element is \code{max}
+#' \emph{non-zero} element is 1 and the largest element is \code{max}
+#'
+#' @note Any values of 0 in \code{x} are not rescaled, and are preserved in
+#' the result.
 #'
 #' @seealso \code{\link[scales]{rescale}}
 #'
 #' @import scales
 #' @export
-rescale_to_Int <- function(x, max) {
-    if(any(x <= 0) | max <= 0) stop("x must consist of non-negative numbers" )
-    y <- round(scales::rescale(x, to = c(1, max)))
+rescale_to_int <- function(x, max){
+    if(any(x < 0) | max <= 0) stop("Elements of x must be non-negative" )
+    x_ <- x
+    i0 <- which(x_ == 0)
+    min <- x_[which.min(replace(x_, x_ == 0, NA))]
+    x_[i0] <- min
+    y <- round(scales::rescale(x_, to = c(1, max)))
+    y[i0] <- 0
     y
 }
 

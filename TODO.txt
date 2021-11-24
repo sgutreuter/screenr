@@ -1,13 +1,14 @@
 TODO LIST
 
-Date         To Do
+Date
+completed    To Do
 ----------   --------------------------------------------------------------
-2021-11-21   Finish inclusion of of logisticScreener and simpleScreenr
-             objects in function getWhat (helperFunctions.R).
-2021-11-21   Finish updating testCounts for glmpathScreener objects.
-2021-11-21   Write a predict method for logisticScreener objects.
-2021-11-21   Include a glmpathScreener object in Data.
-2021-11-21   Update and expand Examples.
-2021-11-21   Develop a tutorial vignette demonstrating GLM path screening.
+*            Finish getWhat methods for logisticScreener and simpleScreenr
+               objects (generic getWhat in helperFunctions.R).
+*            Finish updating testCounts for glmpathScreener objects.
+*            Write a predict method for logisticScreener objects.
+2021-11-22   Include a glmpathScreener object in Data.
+*            Update and expand Examples.
+*            Develop a tutorial vignette demonstrating GLM path screening.
 
 TEST and RETEST everything

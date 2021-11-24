@@ -8,16 +8,9 @@
 ##
 #################################################################################
 
-#' Simple Un-optimized Test-Screening Tool
-#'
-#' Compute the in-sample (\emph{overly optimistic}) performances for development
-#' of a very simple test screening tool implementing the method described in the
-#' reference.  \code{simpleScreener} is not optimized and is intended only
-#' for comparision with \code{glmpathScreener}, which will almost certainly
-#' out-perform \code{simpleScreening}.
-#'
-#' The receiver operating characteristics are computed using the \code{pROC}
-#' package. See References and package documentation for additional details.
+## Function simpleScreenr
+##
+#' \code{simpleScreenr} is used to produce overly simple test-screening tools.
 #'
 #' @param formula an object of class \code{\link[stats]{formula}} defining the
 #' testing outcome and predictor covariates.
@@ -29,7 +22,7 @@
 #' typically binary (0 = no, 1 = yes) responses to questions, but the responses
 #' may also be ordinal numeric values.
 #'
-#' @return An object of class \code{simplescreenr} containing the elements:
+#' @return An object of class \code{simpleScreenr} containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}
@@ -39,6 +32,14 @@
 #' \code{pROC} package.}
 #' \item{\code{Scores}}{The training sample, including the scores.}
 #' }
+#'
+#' @details
+#' \code{simpleScreenr} computes the in-sample (\emph{overly optimistic})
+#' performances for development of a very simple test screening tool implementing
+#' the method of Bandason et al. (2016).  \code{simpleScreener} is not optimized
+#' and is intended only for comparision with \code{glmpathScreenr} or
+#' \code{logisticScreenr}, either of which will almost certainly  out-perform
+#' \code{simpleScreening}.
 #'
 #' @references
 #' Bandason T, McHugh G, Dauya E, Mungofa S, Munyati SM, Weiss HA, Mujuru H,
@@ -55,16 +56,17 @@
 #'
 #' @examples
 #' data(unicorns)
-#' simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                           data = unicorns)
-#' summary(simple)
-#' \dontrun{testCounts(simple)}
+#' summary(toosimple)
+#' \dontrun{testCounts(toosimple)}
 #'
-#' @seealso \code{\link{binomialScreening}}, \code{\link{mebinomScreening}}
+#' @seealso \code{\link{glmpathScreenr}}, \code{\link{logisticScreenr}}
 #' @import pROC
 #' @importFrom stats model.response complete.cases
 #' @export
-simpleScreening <- function(formula, data){
+simpleScreenr <- function(formula, data){
+    warning("WARNING! WARNING! WARNING! simpleScreenr is suboptimal and is provided only for comparison with other methods." )
     mf <- match.call(expand.dots = FALSE)
     call <- mf
     m <- match(c("formula", "data"), names(mf), 0L)
@@ -88,9 +90,13 @@ simpleScreening <- function(formula, data){
     invisible(result)
 }
 
-#' Print Summaries of \code{simplescreenr} Objects
+
+## Function summary.simpleSreenr
+##
+#' \code{summary.simpleScreenr} is a summary method for \code{simpleScreenr} objects
 #'
-#' @param object an object of class \code{simplescreenr}.
+#' @param object an object of class \code{simpleScreenr}.
+#'
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @return Nothing.  Thresholds, specificities and sensitivities are printed as
@@ -98,9 +104,9 @@ simpleScreening <- function(formula, data){
 #'
 #' @seealso \code{\link{getROC}}
 #' @export
-summary.simplescreenr <- function(object, ...){
-    if(!("simplescreenr" %in% class(object)))
-        stop("object not a simplescreenr object")
+summary.simpleScreenr <- function(object, ...){
+    if(!("simpleScreenr" %in% class(object)))
+        stop("object not a simpleScreenr object")
     cat("Call:\n")
     print(object$Call)
     cat("\nPrevalence (In-sample prevalence of condition):\n")
@@ -111,23 +117,31 @@ summary.simplescreenr <- function(object, ...){
               auc, "\n", sep = ""))
 }
 
-#' Plot ROC Curves of \code{simplescreenr} Objects
+
+## Function plot.simpleScreenr
+##
+#' \code{plot.simpleScreenr} is a plot method for \code{simpleScreenr} objects.
 #'
 #' Plot ROC curve with pointwise 95% confidence
 #' intevals on sensitivity and specificity and (optionally) returns a dataframe
 #' containing numerical values.
 #'
-#' @param x an object of class \code{simplescreenr}.
+#' @param x an object of class \code{simpleScreenr}.
+#'
 #' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
 #' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
+#'
 #' @param print_ci logical indicator for returning a dataframe of
 #' numerical values (default = \verb{TRUE}).
+#'
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals.
+#'
 #' @param bootreps numeric-valued number of bootstrap replication for estimation
 #' of 95\% confidence intervals.
+#'
 #' @param ... additional arguments for base \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect, and (optionally)
@@ -150,14 +164,14 @@ summary.simplescreenr <- function(object, ...){
 #'
 #' @examples
 #' data(unicorns)
-#' simple <- simpleScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
 #'                           data = unicorns)
-#' plot(simple, type = "S")
+#' plot(toosimple, type = "S")
 #' @importFrom graphics plot
 #' @export
-plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
+plot.simpleScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
                                conf_level = 0.95, bootreps = 2000,...){
-    if(!class(x) == "simplescreenr") stop("x is not a simplescreenr object")
+    if(!class(x) == "simpleScreenr") stop("x is not a simpleScreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci | print_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
@@ -177,12 +191,20 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     if(print_ci) return(citable)
 }
 
-#' Print Receiver Operating Characteristics for \code{simplescreenr} Objects
+
+## Function print.simpleScreenr
+##
+#' \code{print.simpleScreenr} is an S3 print method for \code{simpleScreenr} objects.
 #'
 #' @param x an object of class \code{simplescreenr}.
+#'
 #' @param ... further arguments passed to or from other methods.
+#'
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
+#'
+#' @details
+#' Plots an ROC curve.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
@@ -198,10 +220,10 @@ plot.simplescreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #'
-#' @seealso \code{\link{getROC}} and \code{\link{plot.simplescreenr}}
+#' @seealso \code{\link{getROC}} and \code{\link{plot.simpleScreenr}}
 #' @export
-print.simplescreenr <- function(x, ...){
-    if(!("simplescreenr" %in% class(x))) stop("x not a simplescreenr object")
+print.simpleScreenr <- function(x, ...){
+    if(!("simpleScreenr" %in% class(x))) stop("x not a simpleScreenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
     df_ <- pROC::coords(x$ISroc, transpose = FALSE)
     df_["threshold"] <- df_["threshold"] + 0.5

@@ -15,9 +15,9 @@
 #' @details
 #' The high-level functions in the \code{screenr} package are:
 #' \describe{
-#' \item{\code{\link{glmpathScreener}}}{Test-screening based on GLM path regularization of logistic regression models}
-#' \item{\code{\link{logisticScreener}}}{Test-screening based maximum-likelhood estimation of logistic regression models}
-#' \item{\code{\link{simpleScreener}}}{Simple un-optimized test-screening}
+#' \item{\code{\link{glmpathScreenr}}}{Test-screening based on GLM path regularization of logistic regression models}
+#' \item{\code{\link{logisticScreenr}}}{Test-screening based maximum-likelhood estimation of logistic regression models}
+#' \item{\code{\link{simpleScreenr}}}{Simple un-optimized test-screening}
 #' \item{\code{\link{getWhat}}}{Extract Receiver Operating Characteristics from objects}
 #' \item{\code{link{rescale_to_Int}}}{Rescale a strictly positive vector of real numbers to integers}
 #' \item{\code{\link{sens_spec}}}{Sensitivity and specificity from a 2 x 2 table}
@@ -25,7 +25,7 @@
 #' }
 #'
 #' In addition, there are \code{plot}, \code{print} and \code{summary}, \code{coef} and \code{predict} methods
-#' for the objects produced by \code{glmpathScreener} \code{logisticScreener} and \code{simpleScreener}.
+#' for the objects produced by \code{glmpathScreenr} \code{logisticScreenr} and \code{simpleScreenr}.
 #'
 #' @name screenr
 #' @docType package
