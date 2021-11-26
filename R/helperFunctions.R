@@ -9,29 +9,53 @@
 #################################################################################
 
 
-## Function getWhat
+## Generic function getWhat
 ##
 #' \code{getWhat} is an S3 generic function to extract components of objects
 #' produced by functions in the \code{screenr} package
 #'
 #' @usage \code{getWhat(object, ...)}
+#'
+#' @seealso \code{link[screenr]{getWhat.glmpathScreenr}}
+#' @seealso \code{link[screenr]{getWhat.logisticScreenr}}
 #' @export
-getWhat <- function(object, ...) {
-    UseMethod("getWhat", object)
+getWhat <- function(from, ...) {
+    UseMethod("getWhat", from)
 }
 
 
-#' Compute Sensitivity and Specificity from a 2 x 2 Table
+## Generic function ntpp
+##
+#' \code{ntpp} is an S3 generic function that computes the anticipated number of
+#' tests per positive test result and prevalence among the subjects who would be
+#' screened out of testing)
 #'
-#' Computes sensitivity and specificity of a test.
+#' @usage \code{getWhat(object, ...)}
+#
+#' @seealso \code{link[screenr]{ntpp.glmpathScreenr}}
+#' @seealso \code{link[screenr]{ntpp.logisticScreenr}}
+#' @seealso \code{link[screenr]{ntpp.data.frame}}
+#'
+#' @export
+ntpp <- function(object, ... ) {
+    UseMethod("ntpp", object)
+}
+
+
+## Function sens_spec
+##
+#' \code{sens_spec} Computes sensitivity and specificity of a test from a
+#' 2 x 2 table
 #'
 #' @param x a 2 x 2 table, with columns representing frequencies of
 #' gold-standard status and rows representing frequencies of status ascertained
 #' from testing.  The first row contains frequencies of negative test results
 #' and the first column contain frequencies of true negatives.
+#'
 #' @return a list containing components sensitivity and specificity.
 #' Sensitivities and specificities are displayed as proportions rather than
 #' percentages.
+#'
 #' @examples
 #' Gold <- rbinom(20, 1, 0.50)
 #' Test <- Gold; Test[c(3, 9, 12, 16)] <- 1 - Test[c(3, 9, 12, 16)]
@@ -47,20 +71,48 @@ sens_spec <- function(x){
 }
 
 
-#' Compute Inverses of Binomial Regression Link Functions
+## Function inverseLink
+##
+#' \code{inverseLink} computes inverse of logistic regression link functions
 #'
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor
 #'
-#' @param lp numeric vector containing the estimated linear predictor.
-#' @param link character link function (one of \verb{"logit"}, \verb{"cloglog"}
+#' @param lp numeric vector containing the estimated link.
+#'
+#' @param link (character) name of the link function (one of \verb{"logit"}, \verb{"cloglog"}
 #' or \verb{"probit"}).
 #'
 #' @return A numeric vector containing the inverse of the link function for the
 #' linear predictor.
+#'
+#' @details
+#' \code{inverseLink} returns the inverses of logit, cloglog and probit link functions,
+#' and is provided as a (laborious) way to compute predicted values from the \verb{ModelFit}
+#' component of \code{logisticScreenr}-class objects.  The \code{predict} methods are
+#' a better way to obtain predicted values.
+#'
+#' @seealso \code{\link[screenr]{predict.logisticScreenr}}
+#'
+#' @note \code{inverseLink} may not be included in future versions of the \code{screenr}
+#' package.
+#'
+#' @examples
+#' ## Make predictions of probability of infection from new observations
+#' load(bsobj2)
+#' class(bsobj2)
+#' new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
+#'                         testresult = c(NA, NA), Q1 = c(0, 0), Q2 = c(0, 0),
+#'                         Q3 = c(0, 0), Q4 = c(0, 0), Q5 = c(0, 1), Q6 = c(0, 1 ))
+#' mfit <- getWhat(what = "ModelFit", from = bsobj2 )
+#' coefs <- mfit$coefficients
+#' lp <- as.matrix(cbind(rep(1, nrow(new_corns)), new_corns[, 3:8])) %*%
+#'            as.matrix(coefs, ncol =  1)
+#' (preds <- inverseLink(lp, link = "logit"))
+#' ## Note that only the predicted values are returned.
 #' @importFrom stats pnorm
 #' @export
-inverseLink <- function(lp, link){
+inverseLink <- function(lp = NULL, link =  NULL){
     if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
     if(link == "logit"){
         p <- exp(lp) / (1 + exp(lp))
@@ -75,134 +127,64 @@ inverseLink <- function(lp, link){
 }
 
 
-#' Extract ROCs from code{logisticScreenr} or \code{simplescreenr} Objects
-#'
-#' Extract the receiver operating characteristics from an object of class
-#' \code{logisticScreenr} or \code{simplescreenr}.  This is a convenience function
-#' to enable easy use and export of the ROC.
-#'
-#' @param x an object of class \code{logisticScreenr} or \code{simplescreenr}.
-#'
-#' @param simplify logical: simplify result to the maximum values of specificity
-#' corresponding to unique values of sensitivity (default is \code{TRUE}).
-#'
-#' @return A data frame containing threshold scores, sensitivities and
-#' specificities. Sensitivities and specificities are displayed as proportions
-#' rather than percentages.
-#'
-#' @references
-#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
-#' 27(8):861-874.
-#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
-#'
-#' Linden A. Measuring diagnostic and predictive accuracy in disease
-#' management: an introduction to receiver operating characteristic (ROC) analysis.
-#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
-#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
-#'
-#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
-#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
-#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
-#'
-#' @examples
-#' data(unicorns)
-#' unitool <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, Nfolds = 20)
-#' (uniROC <- getROC(unitool))
-#' @import dplyr
-#' @importFrom dplyr group_by summarize right_join
-#' @export
-getROC <- function(x, simplify = TRUE){
-    sensitivity <- specificity <- NULL
-    if(!class(x) %in% c("logisticScreenr", "simplescreenr"))
-        stop("x not a logisticScreenr or simplescreenr object.")
-    if(class(x) == "logisticScreenr"){
-        res <- pROC::coords(x$CVroc, transpose = FALSE)
-    } else {
-        res <- pROC::coords(x$ISroc, transpose = FALSE)
-        res$threshold  <-  res$threshold + 0.5
-    }
-    if(simplify) {
-        cleaned <- res %>%
-            dplyr::group_by(sensitivity) %>%
-            dplyr::summarize(specificity = max(specificity))
-        res <- dplyr::right_join(res, cleaned)
-    }
-    res
-}
-
-## Function testCounts
+## Function ntpp.data.frame
 ##
-#' \code{testCounts} returns the anticipated number of tests required to
-#' observe a single positive test result.
+#' \code{ntpp.data.frame} is a method for computation of the anticipated
+#' number of tests per positive test result
 #'
-#' @param x a data frame containing columns \code{sensitivity} and
-#' \code{specificity}, or an object of class \code{logisticScreenr} or
-#' \code{simplescreenr}.
+#' @param dframe a one-row dataframe containing columns \code{sensitivity},
+#' \code{specificity} and \code{prev}.
 #'
-#' @param prev numeric proportion of the population expressing positive test
-#' results.  \code{prev} is \emph{optional} for class \code{logisticScreenr} or
-#' \code{simplescreenr} objects, for which the default is the prevalence of
-#' the test condition in the training sample.
-#'
-#' @return A data frame containing the following columns:
+#' @return a data frame containing the following columns:
 #' \describe{
-#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
-#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
-#' \item{\verb{E(Tests/Pos)}}{The expected number of tests required to discover
-#' a single positive test result.}
-#' \item{\verb{E(prev|untested)}}{The expected prevalence proportion of the test
-#' condition among those who are screened out of testing.}
-#' }
-#'
-#' @details
-#' The anticipated number of tests needed to observe a single positive test
-#' result is a function of sensitivity, specificity and the prevalence proportion
-#' of the condition being tested.
-#'
-#' @examples
-#' data(unicorns)
-#' unitool <- binomialScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                              data = unicorns, Nfolds = 20)
-#' testCounts(unitool)
-#'
+#' \item{\code{sensitivity}}{the sensitivity (proportion)}
+#' \item{\code{specificity}}{the specificity (proportion)}
+#' \item{\code{prev}}{prevalence proportion of the test condition}
+#' \item{\code{ntpp}}{anticipated total tests required per positive result}
+#' \item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
+#'}
 #' @export
-testCounts <- function(x = NULL, prev = NULL){
-    if("logisticScreenr" %in% class(x)){
-        ss <- data.frame(sensitivity = x$CVroc$sensitivities,
-                         specificity = x$CVroc$specificities)
-        if(is.null(prev)) prev <- x$Prevalence
-    } else {
-        if("simplescreenr" %in% class(x)){
-            ss <- data.frame(sensitivity = x$ISroc$sensitivities,
-                             specificity = x$ISroc$specificities)
-            if(is.null(prev)) prev <- x$Prevalence
-        } else {
-            ss <- x
-            if(!("sensitivity" %in% names(ss))) stop("No column 'sensitivity")
-            if(!("specificity" %in% names(ss))) stop("No column 'specificity")
-            if(any(ss[["sensitivity"]] < 0 | ss[["sensitivity"]] > 1))
-                stop("sensitivity not in (0,1)")
-            if(any(ss[["specificity"]] < 0 | ss[["specificity"]] > 1))
-                stop("specificity not in (0,1)")
-            if(is.null(prev)) stop("Argument prev missing")
-            if(!(prev > 0 & prev < 1)) stop("prev must be in (0,1)")
-        }
-    }
-    Etpp <- ((ss[["sensitivity"]] * prev) +
-             (1 - ss[["specificity"]]) * (1 - prev)) / (ss[["sensitivity"]] * prev)
-    Epu <- ((1 - ss[["sensitivity"]]) * prev) / ((1 - ss[["sensitivity"]]) * prev
-        + ss[["specificity"]] * (1 - prev))
-    result <- data.frame(cbind(ss, Etpp, Epu))
-    names(result)[ncol(ss) + c(1, 2)] <- c("E(Tests/Pos)", "E(prev|untested)")
+ntpp.data.frame <- function(dframe){
+    if(!is.data.frame(dframe)) stop("dframe not a data frame")
+    if(!"sensitivity" %in% names(dframe))
+        stop("dframe does not include sensitivity")
+    if(!"specificity" %in% names(dframe))
+        stop("dframe does not include specificity")
+    if(!"prev" %in% names(dframe))
+        stop("dframe does not include prev")
+    result <- nnt_(dframe)
     result
 }
+
+
+## Function nnt_
+##
+#' \code{nnt_} computes the anticpated number of tests per postive from a
+#' structured dataframe
+#'
+#' @param dframe a data frame containing columns \code{sensitivity},
+#' \code{specificity} and \code{prev}.
+#' @importFrom dplyr between
+nnt_ <- function(dframe) {
+    se <- dframe$sensitivity
+    sp <- dframe$specificity
+    pv <- dframe$prev
+    if(!all(c(dplyr::between(sp, 0, 1 ), dplyr::between(se, 0, 1 ),
+              dplyr::between(pv, 0, 1 )))) {
+        stop("sensitivity, specificity and prev must be between 0 and 1")
+    }
+    Etpp <- ((se * pv) + (1 - sp) * (1 - pv)) / (se * pv)
+    Epu <- ((1 - se) * pv) / ((pv * (1 - se)) + (sp * (1 - pv) ))
+    result <- data.frame(cbind(dframe, Etpp, Epu))
+    names(result)[ncol(dframe) + c(1, 2)] <- c("ntpp", "prev_untested")
+    result
+}
+
 
 ## Function keepfirst
 ##
 #' \code{keepfirst} returns only those rows of a dataframe having unique values
 #' in selected columns.
-#'
 #'
 #' @param x character-valued column name along which the dataframe is sorted.
 #'
@@ -217,6 +199,7 @@ testCounts <- function(x = NULL, prev = NULL){
 #' @return A data frame consisting of the rows of \code{data} which are
 #' unique with respect to \code{colnames}
 keepfirst <- function(x, colnames, data = NULL){
+    if(!("data.frame" %in% class(data))) stop("data argument must be a dataframe" )
     data <- data[order(data[[x]]), ]
     res <- data[1 ,]
     for(i in 2:(nrow(data) - 1)){
@@ -230,6 +213,7 @@ keepfirst <- function(x, colnames, data = NULL){
     res
 }
 
+
 ## Function rescale_to_int
 ##
 #' \code{rescale_to_int} rescales all non-zero elements of a non-negative
@@ -241,13 +225,17 @@ keepfirst <- function(x, colnames, data = NULL){
 #' vector.
 #'
 #' @return A vector of integers corresponding to \code{x} in which smallest
-#' \emph{non-zero} element is 1 and the largest element is \code{max}
+#' \emph{non-zero} element is 1 and the largest element is \code{max}. Any
+#' elements having value zero are unchanged.
 #'
 #' @note Any values of 0 in \code{x} are not rescaled, and are preserved in
 #' the result.
 #'
 #' @seealso \code{\link[scales]{rescale}}
 #'
+#' @examples
+#' x <- c(0.5, 1.2, 0.9, 0, 0.1)
+#' rescale_to_int(x, max = 5)
 #' @import scales
 #' @export
 rescale_to_int <- function(x, max){

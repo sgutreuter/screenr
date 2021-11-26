@@ -56,10 +56,9 @@
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                           data = unicorns)
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#'                            data = unicorns)
 #' summary(toosimple)
-#' \dontrun{testCounts(toosimple)}
 #'
 #' @seealso \code{\link{glmpathScreenr}}, \code{\link{logisticScreenr}}
 #' @import pROC
@@ -86,37 +85,96 @@ simpleScreenr <- function(formula, data){
                    Prevalence = prev,
                    ISroc = is.roc,
                    Scores = scores)
-    class(result) <- "simplescreenr"
+    class(result) <- "simpleScreenr"
     invisible(result)
 }
 
 
-## Function summary.simpleSreenr
+## Function getWhat.simpleScreenr
 ##
-#' \code{summary.simpleScreenr} is a summary method for \code{simpleScreenr} objects
+#' \code{getWhat.simpleScreenr} is an S3 method to extract components of
+#' \code{simpleScreenr} objects.
 #'
-#' @param object an object of class \code{simpleScreenr}.
+#' @param from the \code{simpleScreenr}-class object from which to extract
+#' the component.
 #'
-#' @param ... further arguments passed to or from other methods.
+#' @param what the (optional character) name of the component to extract. The
+#' only valid value is \verb{"isROC"}.
 #'
-#' @return Nothing.  Thresholds, specificities and sensitivities are printed as
-#' a side effect.
+#' @return The selected component is returned invisibly.
 #'
-#' @seealso \code{\link{getROC}}
+#' @details
+#' \code{getWhat} is provided to enable easy extraction of components for those
+#' who wish to perform computations that are not provided by the
+#' \code{plot}, \code{predict}, \code{print} or \code{summary} methods.
+#'
+#' The following values of \code{what} return:
+#' \describe{
+#' \item{\verb{"isROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
+#' containing the in-sample (overly optimistic) receiver-operating characteristic.}
+#' }
+#'
+#' @examples
+#' data(unicorns)
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#'                            data = unicorns)
+#' roc <- getWhat(from = toosimple, what = "isROC" )
+#' plot(roc)
+#'
 #' @export
-summary.simpleScreenr <- function(object, ...){
-    if(!("simpleScreenr" %in% class(object)))
-        stop("object not a simpleScreenr object")
-    cat("Call:\n")
-    print(object$Call)
-    cat("\nPrevalence (In-sample prevalence of condition):\n")
-    print(object$Prevalence)
-    cat("\nReceiver Operating Characteristics:\n")
-    auc <- round(as.numeric(object$ISroc$auc), digits = 4)
-    cat(paste("\nIn-sample area under the ROC curve: ",
-              auc, "\n", sep = ""))
+getWhat.simpleScreenr <- function(from = NULL, what = "isROC") {
+    if(!"simpleScreenr" %in% class(from))
+        stop("from not a simpleScreenr object")
+    if(!what %in% c("isROC"))
+        stop("Invalid what argument; must be isROC")
+    if(what == "isROC") what <- "ISroc"
+    res <- from[[what]]
+    invisible(res)
 }
 
+
+## Function ntpp.simpleScreenr
+##
+#' \code{ntpp.simpleScreenr} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param object a \code{simpleScreenr}-class object produced by \code{simpleScreenr}.
+#'
+#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' the prevalence is obtained from \code{object}.
+#'
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{ntpp}}{the number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
+#'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
+#' @examples
+#' data(unicorns)
+#' toosimp <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6, data = unicorns)
+#' ntpp(simple)
+#'
+#' @export
+ntpp.simpleScreenr <- function(object, prev = NULL) {
+     if(!class(object) == "simpleScreenr")
+         stop("object not of class simpleScreenr")
+     if(is.null(prev)) prev <- object$Prevalence
+     ssp <- data.frame(sensitivity = object[["ISroc"]][["sensitivities"]],
+                       specificity = object[["ISroc"]][["specificities"]])
+     ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
+     names(ssp) <- c("sensitivity", "specificity", "prev")
+     result <- nnt_(ssp)
+     result
+}
 
 ## Function plot.simpleScreenr
 ##
@@ -133,8 +191,8 @@ summary.simpleScreenr <- function(object, ...){
 #' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
 #'
-#' @param print_ci logical indicator for returning a dataframe of
-#' numerical values (default = \verb{TRUE}).
+#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
+#' (default = \verb{TRUE}).
 #'
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals.
@@ -164,22 +222,22 @@ summary.simpleScreenr <- function(object, ...){
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
 #'                           data = unicorns)
-#' plot(toosimple, type = "S")
+#' plot(toosimple)
 #' @importFrom graphics plot
 #' @export
-plot.simpleScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
+plot.simpleScreenr <- function(x, plot_ci = TRUE, print = TRUE,
                                conf_level = 0.95, bootreps = 2000,...){
     if(!class(x) == "simpleScreenr") stop("x is not a simpleScreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
-    if(plot_ci | print_ci){
+    if(plot_ci | print){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
         }
-    if(print_ci){
+    if(print){
         threshold <- as.numeric(rownames(ciplt$sensitivity)) + 0.5
         citable <- data.frame(cbind(threshold, ciplt$sensitivity,
                                     ciplt$specificity))
@@ -188,7 +246,7 @@ plot.simpleScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
         row.names(citable)  <- 1:length(threshold)
     }
     if(plot_ci) plot(ciplt)
-    if(print_ci) return(citable)
+    if(print) return(citable)
 }
 
 
@@ -203,24 +261,12 @@ plot.simpleScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
 #'
-#' @details
-#' Plots an ROC curve.
+#' @examples
+#' data(unicorns)
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#'                           data = unicorns)
+#' print(toosimple)
 #'
-#' @references
-#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
-#' 27(8):861-874.
-#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
-#'
-#' Linden A. Measuring diagnostic and predictive accuracy in disease
-#' management: an introduction to receiver operating characteristic (ROC) analysis.
-#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
-#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
-#'
-#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
-#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
-#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
-#'
-#' @seealso \code{\link{getROC}} and \code{\link{plot.simpleScreenr}}
 #' @export
 print.simpleScreenr <- function(x, ...){
     if(!("simpleScreenr" %in% class(x))) stop("x not a simpleScreenr object")
@@ -229,5 +275,37 @@ print.simpleScreenr <- function(x, ...){
     df_["threshold"] <- df_["threshold"] + 0.5
     print(df_)
 }
+
+
+## Function summary.simpleSreenr
+##
+#' \code{summary.simpleScreenr} is a summary method for \code{simpleScreenr} objects
+#'
+#' @param object an object of class \code{simpleScreenr}.
+#'
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @return Nothing.  Thresholds, specificities and sensitivities are printed as
+#' a side effect.
+#'
+#' @examples
+#' data(unicorns)
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#'                           data = unicorns)
+#' summary(toosimple)
+#' @export
+summary.simpleScreenr <- function(object, ...){
+    if(!("simpleScreenr" %in% class(object)))
+        stop("object not a simpleScreenr object")
+    cat("Call:\n")
+    print(object$Call)
+    cat("\nPrevalence (In-sample prevalence of condition):\n")
+    print(object$Prevalence)
+    cat("\nReceiver Operating Characteristics:\n")
+    auc <- round(as.numeric(object$ISroc$auc), digits = 4)
+    cat(paste("\nIn-sample area under the ROC curve: ",
+              auc, "\n", sep = ""))
+}
+
 
 ################################   END of FILE   ################################

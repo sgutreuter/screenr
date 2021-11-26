@@ -79,19 +79,12 @@
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
 #'
 #' @examples
-#' ## Evaluate the performance of screening thresholds based on a logistic regressionW
-#' ## regression regularizer
 #' data(unicorns)
 #' help(unicorns)
-#' uniobj <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-#'                           data = unicorns, Nfolds = 10, seed = 123)
-#' summary(uniobj)
-#' ## Examine the coeffients for the models that minimized AIC and BIC:
-#' coef(uniobj)
-#' ## Examine all but the intercept coefficient on the odds-ratio scale:
-#' coef(uniobj, or = TRUE, intercept = FALSE)
-#' ## Plot receiver-operating characteristics for the model that minimized AIC
-#' plot(uniobj, model = "minAIC")
+#' uniobj1 <- glmpathScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#'                             data = unicorns, link = "logit", Nfolds = 5L)
+#' summary(uniobj1)
+#'
 #' @import pROC
 #' @import glmpath
 #' @export
@@ -203,11 +196,10 @@ glmpathScreenr <- function(formula, data = NULL, Nfolds = 20,
 #' and BIC-best logistic regression models.
 #'
 #' @examples
-#' load(uniobj)
-#' ## Examine the logit-scale coefficients, including the intercept:
+#' load(uniobj1)
+#' class(uniobj1)
 #' coef(uniobj)
-#' ## Examine all but the intercept coefficient on the odds-ratio scale:
-#' coef(uniobj, or = TRUE, intercept = FALSE)
+#'
 #' @export
 coef.glmpathScreenr <- function(object, intercept = TRUE, or = FALSE){
     if(!("glmpathScreenr" %in% class(object)))
@@ -226,16 +218,16 @@ coef.glmpathScreenr <- function(object, intercept = TRUE, or = FALSE){
 #' \code{getWhat.glmpathScreenr} is an S3 method to extract components of
 #' \code{glmpathScreenr} objects.
 #'
+#' @param from the \code{glmpathScreenr}-class object from which to extract
+#' the component.
+#'
 #' @param what the (character) name of the component to extract. Valid values are
 #' \verb{"glmpathObj"}, \verb{"cvROC"} and \verb{"isROC"}.
 #'
 #' @param model the (character) name of the model for which the component is
 #' desired.  Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
 #'
-#' @param object the \code{glmpathScreenr}-class object from which to extract
-#' the component.
-#'
-#' @return the selected component.
+#' @return The selected component is returned invisibly.
 #'
 #' @details
 #' \code{getWhat} is provided to enable easy extraction of components for those
@@ -252,24 +244,84 @@ coef.glmpathScreenr <- function(object, intercept = TRUE, or = FALSE){
 #' containing the in-sample (overly optimistic) receiver-operating characteristic.}
 #' }
 #'
+#' @examples
+#' pathobj <- getWhat(from = uniobj1, what = "glmpathObj", model = "minAIC")
+#' plot(pathobj)
+#' cvROC <- getWhat(from = uniobj1,  what = "cvROC", model = "minBIC")
+#' plot(cvROC)
+#'
 #' @export
-getWhat.glmpathScreenr <- function(what = NULL, model = NULL, object){
-    if(!"glmpathScreenr" %in% class(x))
+getWhat.glmpathScreenr <- function(from = NULL, what = NULL, model = NULL){
+    if(!"glmpathScreenr" %in% class(from))
         stop("Object not glmpathScreenr class")
     if(!what %in% c("glmpathObj", "cvROC", "isROC"))
         stop("Invalid what argument; must be one of 'glmpathObj', 'cvROC' or 'isROC'")
     if(!model %in% c("minAIC", "minBIC"))
         stop("Invalid model argument; must be one of 'minAIC' or 'minBIC'" )
     if(what == "glmpathObj") {
-        res <- obj[[what]]
+        res <- from[[what]]
     } else {
         if(what == "cvROC") {
-            res <- obj[["cvResults"]][[model]][["ROC"]]
+            res <- from[["cvResults"]][[model]][["ROC"]]
         } else {
-            if(what == "isROC") res <- obj[["isResults"]][["ROC"]]
+            if(what == "isROC") res <- from[["isResults"]][["ROC"]]
         }
     }
     invisible(res)
+}
+
+
+## Function ntpp.glmpathScreenr
+##
+#' \code{ntpp.glmpathScreenr} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param object a \code{glmpathScreenr}-class object produced by \code{glmpathScreenr}.
+#'
+#' @param model (character) select either the model which produced the
+#' minimum AIC (\verb{"minAIC"}, the default) or minimum BIC (\verb{"minBIC"}).
+#'
+#' @param type (character) one of \verb{"cvResults"} (the default) or
+#' \verb{"isResults"} to specify \emph{k}-fold cross-validated or in-sample
+#' receiver-operating characteristics, respectively.
+#'
+#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' the prevalence is obtained from \code{object}.
+#'
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{ntpp}}{the number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
+#'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
+#' @examples
+#' load(uniobj1)
+#' class(uniobj1)
+#' testCounts(uniobj1)
+#'
+#' @export
+ntpp.glmpathScreenr <- function(object, model = "minAIC", type = "cvResults",
+                                prev = NULL) {
+     if(!class(object) == "glmpathScreenr")
+         stop("object not of class glmpathScreenr")
+     if(!type %in% c("cvResults", "isResults"))
+         stop("type must be 'cvResults' or 'isResults'" )
+     if(is.null(prev)) prev <- object$Prevalence
+     ssp <- data.frame(sensitivity = object[[type]][[model]][["ROC"]][["sensitivities"]],
+                       specificity = object[[type]][[model]][["ROC"]][["specificities"]])
+     ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
+     names(ssp) <- c("sensitivity", "specificity", "prev")
+     result <- nnt_(ssp)
+     result
 }
 
 
@@ -279,8 +331,8 @@ getWhat.glmpathScreenr <- function(what = NULL, model = NULL, object){
 #' objects.
 #' @param x an object of class \code{glmpathScreenr}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
-#' @param print_ci (logical) print a table of confidence intervals if
-#' \verb{TRUE}.
+#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
+#' (default = \verb{TRUE}).
 #' @param model (character) select either the model which produced the
 #' minimum AIC (\verb{"minAIC"}) or minimum BIC (\verb{"minBIC"}).
 #' @param conf_level confidence level
@@ -318,13 +370,13 @@ getWhat.glmpathScreenr <- function(what = NULL, model = NULL, object){
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #' @examples
-#' load(uniobj)
-#' ## Plot receiver-operating characteristics for the model that minimized AIC
-#' plot(uniobj, model = "minAIC")
+#' load(uniobj1)
+#' class(uniobj1)
+#' plot(uniobj1)
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.glmpathScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
+plot.glmpathScreenr <- function(x, plot_ci = TRUE, print = TRUE,
                                  model = "minAIC",
                                  conf_level = 0.95, bootreps = 2000,
                                  se.min = 0.8, ...){
@@ -337,14 +389,14 @@ plot.glmpathScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     isROC <- x$isResults[[model]][["ROC"]]
 
     pROC::plot.roc(cvROC, print.auc = TRUE, ci = FALSE, ...)
-    if(plot_ci | print_ci){
+    if(plot_ci | print){
         ciplt <- pROC::ci.thresholds(cvROC,
                                      boot.n = bootreps,
                                      progress = "text",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
     }
-    if(print_ci){
+    if(print){
         threshold <- attr(ciplt, "thresholds")
         citable <- data.frame(cbind(threshold, ciplt$sensitivity,
                                     ciplt$specificity))
@@ -358,7 +410,7 @@ plot.glmpathScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     pROC::lines.roc(isROC, lty = 3)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
-    if(print_ci) return(citable)
+    if(print) return(citable)
 }
 
 
@@ -381,13 +433,15 @@ plot.glmpathScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 #'
 #' @import glmpath
 #' @examples
-#' load(uniobj)
+#' load(uniobj1)
+#' class(uniobj1)
 #' ## Get some new observations
 #' new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
-#'                         testresult = c(NA, NA), Q1 = c(0, 0),
-#'                         Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0), Q5 = c(0, 1))
+#'                         testresult = c(NA, NA),
+#'                         Q1 = c(0, 0), Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0),
+#'                         Q5 = c(0, 1), Q6 = c(1, 1))
 #' ## Predict the probabilities of testing positive for the new subjects
-#' (new_preds <- predict(uniobj, new_corns ))
+#' predict(uniobj, new_corns)
 #' @export
 predict.glmpathScreenr <- function(object =  NULL, newdata = NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
@@ -420,6 +474,10 @@ predict.glmpathScreenr <- function(object =  NULL, newdata = NULL){
 #'
 #' @param object an object of class \code{glmpathScreenr}
 #'
+#' @examples
+#' load(uniobj1)
+#' class(uniobj1)
+#' print(uniobj1)
 #' @export
 print.glmpathScreenr <- function(object){
     if(!("glmpathScreenr" %in% class(object)))
@@ -445,8 +503,9 @@ print.glmpathScreenr <- function(object){
 #' @details This is essentially a wrapper for \code{glmpath::summary.glmpath}
 #' provided for \code{glmpathScreenr} objects.
 #' @examples
-#' load(uniobj)
-#' print(uniobj)
+#' load(uniobj1)
+#' class(uniobj1)
+#' summary(uniobj1)
 #' @export
 summary.glmpathScreenr <- function(object){
     if(!("glmpathScreenr" %in% class(object)))

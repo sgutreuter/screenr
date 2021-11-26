@@ -3,13 +3,13 @@
 ##
 ##        PROJECT: screenr Package
 ##
-##    DESCRIPTION: Testing sandbox for binomialScreening
+##    DESCRIPTION: Testing sandbox for glmpathScreenr
 ##
 ##     WRITTEN BY: Steve Gutreuter
 ##                 E-mail:  sgutreuter@gmail.gov
 #################################################################################
 library(stringr)
-library(glmpath )
+library(glmpath)
 #################################################################################
 ## Set paths and working directory
 codepath <- file.path(Sys.getenv("DEVEL"), "screenr/R")
@@ -23,27 +23,53 @@ setwd(workpath)
 source(file.path(codepath, "glmpathScreening.R"))
 source(file.path(codepath, "helperFunctions.R"))
 load(file.path(datapath, "unicorns.rda"))
-load(file.path(datapath, "uniobj.Rdata"))
+## uniobj1 <- readRDS(file.path(datapath, "uniobj1.Rdata"))
+
+#################################################################################
+## Create and save a glmpathScreenr object
+#################################################################################
+uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+                          data = unicorns, Nfolds = 10, seed = 123)
+##saveRDS(uniobj1, file.path(datapath, "uniobj1.Rdata"))
+str(uniobj1)
 
 #################################################################################
 ## Create new data for prediction
 #################################################################################
 new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
-                        testresult = c(NA, NA), Q1 = c(0, 0),
-                        Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0), Q5 = c(0, 1))
-
+                        testresult = c(NA, NA),
+                        Q1 = c(0, 0), Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0),
+                        Q5 = c(0, 1), Q6 = c(1, 1))
 
 #################################################################################
-## glmpathScreener testing
+## Methods testing
 #################################################################################
-uniobj <- glmpathScreener(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
-                          data = unicorns, Nfolds = 2, seed = 123)
-saveRDS(uniobj, file.path(datapath, "uniobj.rds" ))
-print(uniobj)
-summary(uniobj )
-plot(uniobj, model =  "minAIC")
-coef(uniobj, or = FALSE, intercept = FALSE)
-coef(uniobj, or = TRUE, intercept = TRUE)
-(new_preds <- predict(uniobj, new_corns ))
+
+## coef
+coef(uniobj1)
+coef(uniobj1, or = TRUE, intercept = FALSE)
+
+## getWhat
+pathobj <- getWhat(from = uniobj1, what = "glmpathObj", model = "minAIC")
+plot(pathobj)
+cvROC <- getWhat(from = uniobj1,  what = "cvROC", model = "minBIC")
+plot(cvROC)
+
+## ntpp
+ntpp(uniobj1)
+
+## plot
+plot(uniobj1)
+plot(uniobj1, print_ci = FALSE )
+
+## predict
+predict(uniobj1, newdata = new_corns)
+
+## print
+print(uniobj1)
+
+## summary
+summary(uniobj1)
+
 
 #################################  End of File  #################################

@@ -2,7 +2,7 @@
 #'
 #' A preliminary study was conducted in which a random sample of 5,000 properly
 #' consented unicorns were recruited from 20 clinics.  Each unicorn was asked
-#' five questions about their behavior and health.  Unicorns responded by
+#' six questions about their behavior and health.  Unicorns responded by
 #' stomping a hoof once to indicate "no", and twice to indicate "yes".  A
 #' sample of venous blood was drawn from each, and was subsequently tested
 #' for the presence of antibodies to Unicorn Immunodeficiency Virus (UIV) using
@@ -16,6 +16,7 @@
 #' \item{\code{Q3}}{Response to screening question 3 (0 = "no", 1 = "yes")}
 #' \item{\code{Q4}}{Response to screening question 4 (0 = "no", 1 = "yes")}
 #' \item{\code{Q5}}{Response to screening question 5 (0 = "no", 1 = "yes")}
+#' \item{\code{Q6}}{Response to screening question 6 (0 = "no", 1 = "yes")}
 #' \item{\code{testresult}}{UIV status, where 0 and 1 denote negative and positive test results, repectively.}
 #' }
 #' @examples
@@ -23,3 +24,25 @@
 #' unicorns
 #' }
 "unicorns"
+
+#' A \code{glmpathScreenr object}
+#'
+#' The result of \code{uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 +
+#' Q4 + Q5, data = unicorns, Nfolds = 10, seed = 123)}
+#'
+#' @examples
+#' \dontrun{
+#' summary(uniobj1)
+#'}
+"uniobj1"
+
+#' A \code{logisticScreenr object}
+#'
+#' The result of \code{uniobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 +
+#' Q4 + Q5, data = unicorns, Nfolds = 10, seed = 123)}
+#'
+#' @examples
+#' \dontrun{
+#' summary(uniobj2)
+#'}
+"uniobj2"

@@ -66,7 +66,6 @@
 #' The receiver operating characteristics are computed using the \code{pROC}
 #' package. See References and package documentation for additional details.
 #'
-#'
 #' @seealso \code{\link[stats]{glm}}
 #'
 #' @references
@@ -76,37 +75,11 @@
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
 #'
 #' @examples
-#' ## Evaluate the performance of screening thresholds based on a logisitc model
-#'
 #' data(unicorns)
 #' help(unicorns)
-#' uniobj2 <- logisticScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5,
+#' uniobj2 <- logisticScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
 #'                              data = unicorns, link = "logit", Nfolds = 5L)
 #' summary(uniobj2)
-#' plot(uniobj2)
-#' \dontrun{testCounts(uniobj2)}
-#'
-#' ## Example implementation of screening based on those results:
-#' ## Suppose there are new observations (excluding testing) from two previously
-#' ## untested unicorns:
-#'
-#' new <- data.frame(ID = c('"Bernie P."', '"Alice D."'), Q1 = c(0, 0), Q2 = c(0, 0),
-#'                    Q3 = c(1, 0), Q4 = c(0, 0), Q5 = c(1, 0))
-#' print(new)
-#'
-#' ## Compute point estimates of their predicted probabilities testing positive:
-#' inverseLink(as.matrix(cbind(rep(1, nrow(new)), new[, 2:6])) %*%
-#'                            as.matrix(uniobj2$ParamEst, ncol = 1), "logit")
-#' ## or, more simply,
-#' predict(uniobj$ModelFit, newdata = new, type = "response")
-#'
-#' ## If p.threshold = 0.025 is chosen as the screening threshold
-#' ## (sensitivity and specificity 77\% and 69\%, respectively) then "Bernie P."
-#' ## would be offered testing and "Alice D." would not.
-#'
-#' ## In practice, the computation of the probabilities of positive test results
-#' ## among newly observed individuals might be coded outside of R using, say, a
-#' ## spreadsheet.
 #'
 #' @alias{binomialScreenr}
 #' @import pROC
@@ -171,20 +144,29 @@ logisticScreenr <- function(formula,
 #'
 #' @param x an object of class \code{logisticScreenr}
 #'
-#' @param Intercept (logical) retain (\code{TRUE}, default) or drop
+#' @param intercept (logical) retain (\code{TRUE}, default) or drop
 #' (\code{FALSE}) the intercept coefficients.
 #'
-#' @param OR return odds ratios if \verb{TRUE}; logit-scale coefficients
+#' @param or return odds ratios if \verb{TRUE}; logit-scale coefficients
 #' are the default.
+#'
+#' @details
+#' Extracts the estimated coefficients from \code{logisticScreenr} objects.
 #'
 #' @return A numeric vector containing the estimated coefficients on the logit
 #' scale.
+#'
+#' @examples
+#' load(uniobj2)
+#' class(uniobj2)
+#' coef(uniobj2)
+#'
 #' @export
-coef.logisticScreenr <- function(x, Intercept =  TRUE, OR = FALSE){
+coef.logisticScreenr <- function(x, intercept =  TRUE, or = FALSE){
     stopifnot(class(x) == "logisticScreenr")
     res <- x[["ModelFit"]][["coefficients"]]
-    if(Intercept == FALSE) res <- res[-1]
-    if(OR == TRUE ) res <- exp(res)
+    if(intercept == FALSE) res <- res[-1]
+    if(or == TRUE ) res <- exp(res)
     res
 }
 
@@ -194,13 +176,13 @@ coef.logisticScreenr <- function(x, Intercept =  TRUE, OR = FALSE){
 #' \code{getWhat.logisticScreenr} is an S3 method to extract components of
 #' \code{logisticScreenr} objects.
 #'
+#' @param from the \code{logisticScreenr}-class object from which to extract
+#' the component.
+#'
 #' @param what the (character) name of the component to extract. Valid values are
 #' \verb{"ModelFit"}, \verb{"cvROC"} and \verb{"isROC"}.
 #'
-#' @param object the \code{logisticScreenr}-class object from which to extract
-#' the component.
-#'
-#' @return the selected component.
+#' @return The selected component is returned invisibly.
 #'
 #' @details
 #' \code{getWhat} is provided to enable easy extraction of components for those
@@ -217,22 +199,83 @@ coef.logisticScreenr <- function(x, Intercept =  TRUE, OR = FALSE){
 #' containing the in-sample (overly optimistic) receiver-operating characteristic.}
 #' }
 #'
+#' @examples
+#' load(uniobj2)
+#' class(uniobj2)
+#' mfit <- getWhat(from = uniobj2, what = "ModelFit")
+#' mfit$coefs
+#'
 #' @export
-getWhat.logisticScreenr <- function(what = NULL, object ) {
-    if(!"logisticScreenr" %in% class(x))
-        stop("Object not logisticScreenr class")
+getWhat.logisticScreenr <- function(from = NULL, what = NULL) {
+    if(!"logisticScreenr" %in% class(from))
+        stop("from not a logisticScreenr object")
     if(!what %in% c("ModelFit", "cvROC", "isROC"))
         stop("Invalid what argument; must be one of 'ModelFit', 'cvROC' or 'isROC")
     if(what == "ModelFit") {
-        res <- obj[[what]]
+        res <- from[[what]]
     } else {
         if(what == "cvROC") {
-            res <- obj[["CVroc"]]
+            res <- from[["CVroc"]]
         } else {
-            if(what == "isROC") res <- obj[["isROC"]]
+            if(what == "isROC") res <- from[["isROC"]]
         }
     }
     invisible(res)
+}
+
+
+## Function ntpp.logisticScreenr
+##
+#' \code{ntpp.logisticScreenr} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param object a \code{logisticScreenr}-class object produced by \code{logisticScreenr}.
+#'
+#' @param type (character) one of \verb{"cvResults"} (the default) or
+#' \verb{"isResults"} to specify \emph{k}-fold cross-validated or in-sample
+#' receiver-operating characteristics, respectively.
+#'
+#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' the prevalence is obtained from \code{object}.
+#'
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{ntpp}}{the number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
+#'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
+#' @examples
+#' load(uniobj2)
+#' class(uniobj2)
+#' ntpp(uniobj2)
+#'
+#' @export
+ntpp.logisticScreenr <- function(object, type = "cvResults",
+                                prev = NULL) {
+     if(!class(object) == "logisticScreenr")
+         stop("object not of class logisticScreenr")
+     if(!type %in% c("cvResults", "isResults"))
+         stop("type must be 'cvResults' or 'isResults'" )
+     if(is.null(prev )) prev <- object$Prevalence
+     if(type == "cvResults") {
+         x <- "CVroc"
+     } else {
+         x <- "ISroc"
+     }
+     ssp <- data.frame(sensitivity = object[[x]][["sensitivities"]],
+                       specificity = object[[x]][["specificities"]],
+                       prev = prev)
+     result <- nnt_(ssp)
+     result
 }
 
 
@@ -246,8 +289,8 @@ getWhat.logisticScreenr <- function(what = NULL, object ) {
 #' intervals at the locally maximum subset of coordinates for
 #' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
-#' @param print_ci logical indicator to return a dataframe of numerical values,
-#' intervals  (default = \verb{TRUE}).
+#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
+#' (default = \verb{TRUE}).
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals
 #' @param bootreps number of bootstrap replications for estimation of confidence
@@ -274,21 +317,27 @@ getWhat.logisticScreenr <- function(what = NULL, object ) {
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#'
+#' @examples
+#' load(uniobj2)
+#' class(uniobj2)
+#' plot(uniobj2)
+#'
 #' @importFrom graphics legend plot
 #' @export
-plot.logisticScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
+plot.logisticScreenr <- function(x, plot_ci = TRUE, print = TRUE,
                               conf_level = 0.95, bootreps = 2000, ...){
     if(!class(x) == "logisticScreenr") stop("x is not a logisticScreenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
     plot(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
-    if(plot_ci | print_ci){
+    if(plot_ci | print){
         ciplt <- pROC::ci.thresholds(x$CVroc,
                                      boot.n = bootreps,
                                      progress = "text",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
     }
-    if(print_ci){
+    if(print){
         threshold <- attr(ciplt, "thresholds")
         citable <- data.frame(cbind(threshold, ciplt$sensitivity,
                                     ciplt$specificity))
@@ -300,7 +349,7 @@ plot.logisticScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
     pROC::lines.roc(x$ISroc, lty = 3)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
-    if(print_ci) return(citable)
+    if(print) return(citable)
 }
 
 
@@ -308,35 +357,39 @@ plot.logisticScreenr <- function(x, plot_ci = TRUE, print_ci = TRUE,
 ##
 #' \code{predict.logisticScreenr} is an S3 prediction method for objects of class \code{logisticScreenr}
 #'
-#' @param object an object of class \code{logisticScreenr} produced by \code{\link[screenr]{logisticScreenr}}.
-#' @param newdata new dataframe from which predicted probabilities of positive test results are desired.
-#' The dataframe must contain values of the same response variables and covariates that were used
-#' to obtain \code{obj}.
+#' @param object an object of class \code{logisticScreenr} produced by
+#' \code{\link[screenr]{logisticScreenr}}.
 #'
-#' @return \code{predict.glmpathScreenr} returns (invisibly) a dataframe augmenting the complete cases
-#' in \code{newdata} with the predicted probabilities of positive test results \code{phat_minAIC} and
-#' \code{phat_minBIC} from the models that produced the minimum AIC and BIC, respectively.
+#' @param newdata new dataframe from which predicted probabilities of positive test results are
+#' desired. The dataframe must contain values of the same response variables and covariates that
+#' were used to obtain \code{object}.
+#'
+#' @return \code{predict.logisticScreenr} returns (invisibly) a dataframe augmenting
+#' \code{newdata} with the predicted probabilities of positive test results \code{phat}.
 #'
 #' @details This method is a convenience wrapper for \code{link[stats]{predict.glm}}.
 #'
 #' @examples
 #' load(uniobj2)
+#' class(uniobj2)
 #' ## Get some new observations
 #' new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
-#'                         testresult = c(NA, NA), Q1 = c(0, 0),
-#'                         Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0), Q5 = c(0, 1))
+#'                         testresult = c(NA, NA), Q1 = c(0, 0), Q2 = c(0, 0),
+#'                         Q3 = c(0, 0), Q4 = c(0, 0), Q5 = c(0, 1), Q6 = c(0, 1 ))
 #' ## Predict the probabilities of testing positive for the new subjects
-#' (new_preds <- predict(uniobj2, new_corns ))
+#' predict(uniobj2, newdata = new_corns)
 #' @export
 #'
 #'
 predict.logisticScreenr <- function(object = NULL, newdata = NULL, ...){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
-    if(!("logisitcScreenr" %in% class(object))) stop("object not a logisticScreenr object")
+    if(!("logisticScreenr" %in% class(object))) stop("object not a logisticScreenr object")
+    form <- object$formula
+    rname <- as.character(form[[2]])
     nd <- newdata
     nd[is.na(nd[[rname]]), rname] <- 0
-    res <- stats::predict.glm(object$ModelFit, nd )
-
+    res <- stats::predict.glm(object$ModelFit, newdata = nd, type = "response")
+    res <- data.frame(newdata, data.frame(phat = res))
     invisible(res)
 }
 
@@ -369,7 +422,11 @@ predict.logisticScreenr <- function(object = NULL, newdata = NULL, ...){
 #' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #'
-#' @seealso \code{\link{getROC}}
+#' @examples
+#' load(uniobj2)
+#' class(uniobj2)
+#' print(uniobj2)
+#'
 #' @export
 print.logisticScreenr <- function(x, quote = FALSE, ...){
     if(!("logisticScreenr" %in% class(x))) stop("x not logisticScreenr class")
@@ -395,6 +452,11 @@ print.logisticScreenr <- function(x, quote = FALSE, ...){
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @return Nothing.  Summaries are printed as a side effect.
+#'
+#' @examples
+#' load(uniobj2)
+#' class(uniobj2)
+#' summary(uniobj2)
 #' @export
 summary.logisticScreenr <- function(object, diagnostics = FALSE, ...){
     if(!("logisticScreenr" %in% class(object))) stop("object not logisticScreenr class")
