@@ -217,16 +217,21 @@ keepfirst <- function(x, colnames, data = NULL){
 ## Function rescale_to_int
 ##
 #' \code{rescale_to_int} rescales all non-zero elements of a non-negative
-#' numeric vector to integers from 1 to \verb{max}
+#' numeric matrix or vector to integers from 1 to \verb{max}
 #'
-#' @param x numeric vector of positive real numbers.
+#' @param x numeric matrix or vector of positive real numbers.
 #'
 #' @param max the value of largest element in the rescaled integer-valued
 #' vector.
 #'
-#' @return A vector of integers corresponding to \code{x} in which smallest
-#' \emph{non-zero} element is 1 and the largest element is \code{max}. Any
-#' elements having value zero are unchanged.
+#' @param colwise (logical) rescale the matrix by column if \verb{TRUE} (the default) or
+#' by row if \verb{FALSE}.
+#'
+#' @return A matrix of integers corresponding to \code{x} in which smallest
+#' \emph{non-zero} element in each column/row is 1 and the largest element is \code{max}. Any
+#' elements having value zero are unchanged. If \code{x} is a vector then the result is
+#' a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
+#' the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}
 #'
 #' @note Any values of 0 in \code{x} are not rescaled, and are preserved in
 #' the result.
@@ -236,15 +241,21 @@ keepfirst <- function(x, colnames, data = NULL){
 #' @examples
 #' x <- c(0.5, 1.2, 0.9, 0, 0.1)
 #' rescale_to_int(x, max = 5)
-#' @import scales
+#' @importFrom scales rescale
 #' @export
-rescale_to_int <- function(x, max){
-    if(any(x < 0) | max <= 0) stop("Elements of x must be non-negative" )
-    x_ <- x
+rescale_to_int <- function(x, max, colwise = TRUE){
+    if(any(x < 0) | max <= 0) stop("Elements of x must be non-negative")
+    if(!(is.vector(x) | is.matrix(x))) stop("x must be a vector or matrix")
+    if(is.matrix(x)) {
+        x_ <- x
+    } else {
+        x_ <- as.matrix(x, ncol = 1 )
+    }
     i0 <- which(x_ == 0)
     min <- x_[which.min(replace(x_, x_ == 0, NA))]
     x_[i0] <- min
-    y <- round(scales::rescale(x_, to = c(1, max)))
+    d_ <- ifelse(colwise, 2, 1)
+    y <- apply(x_, d_, function(x_) round(scales::rescale(x_, to = c(1, max))))
     y[i0] <- 0
     y
 }

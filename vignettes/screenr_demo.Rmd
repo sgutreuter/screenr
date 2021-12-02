@@ -1,0 +1,145 @@
+---
+title: "screenr Demonstration"
+author:
+- name: Steve Gutreuter
+  email: sgutreuter@gmail.com
+output: rmarkdown::html_vignette
+bibliograpy: screenr_refs.bib
+csl: vancouver-brackets.csl
+vignette: >
+  %\VignetteIndexEntry{screenr Demonstration}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(screenr)
+```
+# Introduction {-}
+
+The screenr package enables easy development and validation of test
+diagnostic screening tools of the sort reviewed by Clemens et al
+[@Clemens+al2020].  This vignette demonstrates the development and
+validation of a test-screening tool using lasso-like *L*1 regularization
+[@Hastie+al2009] of logistic regression, as implemented in the glmpath
+package [@Park+Hastie2007]. The screenr package also supports
+maximum-likelihood estimation of logistic regression parameters, but
+the regularization approach is simpler to use, prevents overfitting
+and handles separation in logistic regression.
+
+# Training Data {-}
+
+A sample of 5,000 properly consented unicorns were enrolled in a study
+aimed at improving the efficiency of testing for Unicorn
+Immunodeficiency Virus (UIV). There is currently no cure for UIV, but
+highly effective antiretrovial therapy has the potential to both block
+forward transmission and to avert death from opportunistic infections
+associate with UIV infection.  Therefore is critically important that
+UIV infection is detected and that infected individuals are enrolled
+in treatment.  is The subjects were administered a questionnaire
+idenfying the presence or absense of putative risk factors for UIV
+infection. The prevalence of UIV is low, and therefore universal
+testing was deemed impractical. The challenge then is to identify
+unicorns who should be prioritized for testing. Because UIV is
+transmissible and fatal if untreated, it is important that the
+screening tool have an acceptably high sensitivity. The screenr
+package enables development and validation of such screening tools.
+
+The screening questionnaire included six questions, which were
+selected based on pubished information on infection risk. The data
+consist of the responses to the screening questions, coded as 1 for an
+affirmative (yes) response and 0 for a negative response, and the test
+result, again coded 0 and 1 for negative and positive results,
+respectively.  The unicorn data are accessed using the following code:
+
+```{r}
+data(unicorns)
+head(unicorns)
+```
+It is critically important that all of the putative risk factors have
+a non-negative association with the outcome (testresult in the
+unicorns data). That is, the questionnaire was designed so that
+affirmative (yes) reponses are hypthesized to indicate an *increased*
+risk of UIV infection.
+
+# Tool Development {-}
+
+## Estimation {-}
+
+The first step is estimation of the logistic-regression parameters
+from the training data. The function glmpathScreenr provides easy
+integrated access to the glmpath and pROC packages using a convenient
+formula interface.
+
+```{r}
+uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+                            data = unicorns, Nfolds = 10)
+class(uniobj1)
+```
+
+The resulting glmpathScreer-class object includes the results from
+regularization and receiver-operating characteristics (ROCs) from the
+fits to all of the data, and from *k*-fold cross validation.  In the
+above call, out-of-sample performance was estimated using 10 folds
+(partitions of the data).  The resulting object, uniobj1, contains all
+of the information need to develop and validate a screening tool for
+diagnostic tests.
+
+The GLM path-following algorithm [@Park+Hastie2007] computes the
+logit-scale coefficients along the entire regularization path, and has
+the effect of selecting covariates based on penalization of *L*1-norm
+of their coefficients, similar to the lasso [@Hastie+al2009]. Unlike
+the lasso, the Park-Hastie algorithm also imposes a very small penalty
+on the *L*2-norm, which eliminates adverse effects of any strong
+correlations among the predictors and provides useful estimates even
+if the response variable is separable by the predictors. Two important
+solutions along the path are given special status in glmpathScreenr
+objects.  The solutions which yielded the smallest AIC and BIC are
+denoted "minAIC" and "minBIC", respectively.  Those are likely the
+most useful solutions in nearly all settings. The logit-scale
+coefficients for those solutions are obtained using the following
+code:
+
+```{r}
+coef(uniobj)
+```
+Note that the coefficient for Q3 has been shrunk to zero in both the
+AIC- and BIC-best models which, in this case, happen to coincide. In
+effect, Q3 has been eliminated from both of those models. Q3 was not
+an important predictor of the test result.
+
+One can also obtain the odds ratios and/or omit the intercept. For
+example, the adjusted odds ratios for the predictors can be obtained
+using:
+
+```{r}
+coef(uniobj1, or = TRUE, intercept = FALSE)
+```
+One can also examine the coefficients everywhere the active set
+changed along the regularization path:
+
+```{r}
+pathobj <- getWhat(from = uniobj1, what = "glmpathObj", model = "minAIC")
+plot(pathobj)
+```
+
+## Performance evaluation {-}
+
+The next step is selection of a screening threshold based on the
+ROC. The ROC from the solution which minimized AIC is obtained using,
+
+```{r}
+plot(uniobj1, print = TRUE)
+```
+which plots the overly-optimistic in-sample ROC and the
+cross-validated estimate of out-of-sample performance, and optionally
+returns a dataframe containing thresholds and sensitivities and
+specificities along with their bootstrap confidence intervals. The
+cross-validated ROC provides options for selection of screening thresholds.

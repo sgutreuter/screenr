@@ -6,3 +6,4 @@
 tmp*
 obsolete
 .Rdata
+inst/doc

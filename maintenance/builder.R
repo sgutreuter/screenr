@@ -1,11 +1,19 @@
-#################################################################################
-## screenr Package-building sandbox
-#################################################################################
-
+################################################################################
+##      R PROGRAM: builder.R
+##
+##    DESCRIPTION: Code for building the screenr package
+##
+##     WRITTEN BY: Steve Gutreuter
+##                 E-mail:  sgutreuter@gmail.gov
+################################################################################
 library(devtools)
 library(roxygen2)
-workpath <- file.path(Sys.getenv("DEVEL"), "screenr")
-setwd(workpath)
+
+pkgpath <- file.path(Sys.getenv("DEVEL"), "screenr" )
+codepath <- file.path(pkgpath, "R")
+workpath <- file.path(pkgpath, "maintenance")
+datapath <- file.path(pkgpath, "data")
+setwd(pkgpath)
 
 #################################################################################
 ## Always (re)generate documentation, and then check package from source tree

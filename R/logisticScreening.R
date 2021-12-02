@@ -30,7 +30,7 @@
 #' \verb{"probit"}.
 #'
 #' @param Nfolds number of folds used for \emph{k}-fold cross
-#' validation (default = 40).
+#' validation (default = 10, minimum = 2, maximum = 100).
 #'
 #' @param ... additional arguments passsed to or from other \code{stats::glm}
 #' or \code{pROC::roc}.
@@ -39,12 +39,10 @@
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{formula}}{The formula object.}
-#' \item{\code{ModelFit}}{An object of class "glm" (See \code{\link{glm}})
-#' containing the results of the model fit.}
 #' \item{\code{Prevalence}}{Prevalence (proportion) of the test condition in the
 #' training sample.}
-#' \item{\code{ParamEst}}{A vector containing the logistic regression parameter
-#' estimates.}
+#' \item{\code{ModelFit}}{An object of class \verb{glm} (See \code{\link{glm}})
+#' containing the results of the model fit.}
 #' \item{\code{ISroc}}{An object of class \code{\link[pROC]{roc}} containing
 #' the "in-sample" (overly-optimistic) receiver operating characteristics,
 #' and additional functions for use with this object are available in the
@@ -55,6 +53,8 @@
 #' the \emph{k}-fold cross-validated "out-of-sample" receiver operating
 #' characteristics, and additional functions for use with this object are
 #' available in the \code{pROC} package.}
+#' \item{code{CVcoef}}{the estimated coefficients from cross-validation}
+#' \item{code{X_ho}}{{the matrix of held-out predictors for each cross-validation fold}}
 #' }
 #'
 #' @details
@@ -65,6 +65,9 @@
 #'
 #' The receiver operating characteristics are computed using the \code{pROC}
 #' package. See References and package documentation for additional details.
+#'
+#' For a gentle but python-centric introduction to \emph{k}-fold cross-validation,
+#' see \link{https://machinelearningmastery.com/k-fold-cross-validation/}.
 #'
 #' @seealso \code{\link[stats]{glm}}
 #'
@@ -77,8 +80,8 @@
 #' @examples
 #' data(unicorns)
 #' help(unicorns)
-#' uniobj2 <- logisticScreening(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
-#'                              data = unicorns, link = "logit", Nfolds = 5L)
+#' uniobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#'                            data = unicorns, link = "logit", Nfolds = 10)
 #' summary(uniobj2)
 #'
 #' @alias{binomialScreenr}
@@ -86,10 +89,11 @@
 #' @importFrom stats binomial predict model.response
 #' @export
 logisticScreenr <- function(formula,
-                              data = NULL,
-                              link = "logit",
-                              Nfolds = 40L,
-                              ...){
+                            data = NULL,
+                            link = "logit",
+                            Nfolds = 10,
+                            seed = Sys.time(),
+                            ...){
     if(!inherits(formula, "formula")) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
@@ -97,6 +101,8 @@ logisticScreenr <- function(formula,
     m <- match(c("formula", "data"), names(call), 0L)
     mf <- call[c(1L, m)]
     mf[[1L]] <- quote(stats::model.frame)
+    mfx <- model.frame(formula, data)
+    x <- as.matrix(mfx[, -1])
     dat <- eval(mf, parent.frame())
     dat <- dat[complete.cases(dat), ]
     if(Nfolds > 0.20*dim(dat)[1])
@@ -105,11 +111,20 @@ logisticScreenr <- function(formula,
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
     prev <- mean(y, na.rm = TRUE)
     lrfit <- stats::glm(formula, data = dat, family = binomial(link = link))
+    parmEst <- lrfit$coeff[-1]
+    if(any(parmEst < 0))
+        warning("Some coefficient(s) < 0; associations should be positive.")
     is.roc <- pROC::roc(lrfit$y, lrfit$fitted.values)
     N <- nrow(dat)
     holdouts <- split(sample(1:N), 1:Nfolds)
     cv.results <- data.frame(NULL)
+    cv.coef <- data.frame(NULL)
+    X_ho <- data.frame(NULL)
+    set.seed(seed)
     for(i in 1:Nfolds){
+        xhoj <- data.frame(fold = rep(i, length(holdouts[[i]])),
+                           x[holdouts[[i]],])
+        X_ho <- rbind(X_ho, xhoj)
         res <- stats::glm(formula, data = dat[-holdouts[[i]], ],
                           family = binomial(link = link))
         pred.prob <- inverseLink(stats::predict(res,
@@ -119,20 +134,26 @@ logisticScreenr <- function(formula,
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
                                              y = y,
-                                             data = dat[holdouts[[i]],],
                                              cv.pred.prob = pred.prob)))
+        coef_ <- t(as.matrix(res$coefficients))
+        colnames(coef_)[1] <- "Intercept"
+        coef_ <- data.frame(fold = i, coef_)
+        cv.coef <- rbind(cv.coef, coef_)
     }
+    attr(X_ho, "Description") <- "Hold-out predictors"
     cv.roc <- pROC::roc(cv.results$y, cv.results$cv.pred.prob,
                         auc = TRUE)
     class(cv.results) <-  c("cv.predictions", "data.frame")
     result <- list(Call = call,
                    formula = formula,
-                   ModelFit = lrfit,
                    Prevalence = prev,
-                   ParamEst = lrfit$coeff,
+                   ModelFit = lrfit,
                    ISroc = is.roc,
+                   Nfolds = Nfolds,
                    CVpreds = cv.results,
-                   CVroc = cv.roc)
+                   CVroc = cv.roc,
+                   CVcoef = cv.coef,
+                   X_ho = X_ho)
     class(result) <- "logisticScreenr"
     invisible(result)
 }
@@ -164,10 +185,10 @@ logisticScreenr <- function(formula,
 #' @export
 coef.logisticScreenr <- function(x, intercept =  TRUE, or = FALSE){
     stopifnot(class(x) == "logisticScreenr")
-    res <- x[["ModelFit"]][["coefficients"]]
-    if(intercept == FALSE) res <- res[-1]
-    if(or == TRUE ) res <- exp(res)
-    res
+    coef_ <- x[["ModelFit"]][["coefficients"]]
+    if(intercept == FALSE) coef_ <- coef_[-1]
+    if(or == TRUE ) coef_ <- exp(coef_)
+    coef_
 }
 
 

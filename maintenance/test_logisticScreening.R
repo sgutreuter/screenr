@@ -11,9 +11,10 @@
 
 #################################################################################
 ## Set paths and working directory
-codepath <- file.path(Sys.getenv("DEVEL"), "screenr/R")
-workpath <- file.path(Sys.getenv("DEVEL"), "screenr/maintenance")
-datapath <- file.path(Sys.getenv("DEVEL"), "screenr/data")
+pkgpath <- file.path(Sys.getenv("DEVEL"), "screenr" )
+codepath <- file.path(pkgpath, "R")
+workpath <- file.path(pkgpath, "maintenance")
+datapath <- file.path(pkgpath, "data")
 setwd(workpath)
 
 #################################################################################
@@ -27,6 +28,7 @@ load(file.path(datapath, "unicorns.rda"))
 #################################################################################
 ## Create and save a logisticScreenr object
 #################################################################################
+debugonce(logisticScreenr )
 uniobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
                           data = unicorns, link = "logit", Nfolds = 10)
 ##saveRDS(uniobj2, file.path(datapath, "uniobj2.Rdata"))

@@ -28,6 +28,7 @@ load(file.path(datapath, "unicorns.rda"))
 #################################################################################
 ## Create and save a glmpathScreenr object
 #################################################################################
+
 uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
                           data = unicorns, Nfolds = 10, seed = 123)
 ##saveRDS(uniobj1, file.path(datapath, "uniobj1.Rdata"))
@@ -70,6 +71,10 @@ print(uniobj1)
 
 ## summary
 summary(uniobj1)
+
+#################################################################################
+## Experimentation
+#################################################################################
 
 
 #################################  End of File  #################################
