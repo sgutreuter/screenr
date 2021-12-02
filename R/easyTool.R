@@ -34,7 +34,7 @@
 #' \describe{
 #' \item{\code{QuestionWeights}}{Weights for the screening questions obtained
 #' by rescaling the non-zero-valued logistic regression coefficients to whole
-#' numbers ranging from 1 to \code{max}}
+#' numbers ranging from 1 to \code{max}.}
 #' \item{\code{Type}}{The type of test performance evaluaion ("cross-validated"
 #' or "in-sample").}
 #' \item{\code{Scores}}{A data frame containing the testing outcomes
@@ -46,7 +46,7 @@
 #'
 #' @details
 #' The estimates of the coefficients for the screening questions are rescaled to
-#' whole numbers ranging from 1 to \code{max} (\code{QuestionWeights). Those are
+#' whole numbers ranging from 1 to \code{max} (\code{QuestionWeights}). Those are
 #' used as weights for each screening question.  The cross-validation results
 #' are then converted to questionnaire scores, where the score for each subject
 #' is the sum of the weighted responses to each question.
@@ -72,7 +72,7 @@
 #' and base the final choice on the trade-off between ease of manual scoring and
 #' the desired combination of sensitivity and specificity.
 #'
-#' \code{coef}, \code{ntpp}, \code{plot}, \code{print} and \print{summary}
+#' \code{coef}, \code{ntpp}, \code{plot}, \code{print} and \code{print(summary)}
 #' methods are available for \code{easyTool}-class objects.
 #'
 #' @seealso

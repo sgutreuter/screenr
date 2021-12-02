@@ -36,14 +36,14 @@ and handles separation in logistic regression.
 
 # Training Data {-}
 
-A sample of 5,000 properly consented unicorns were enrolled in a study
+A sample of 6,000 properly consented unicorns were enrolled in a study
 aimed at improving the efficiency of testing for Unicorn
-Immunodeficiency Virus (UIV). There is currently no cure for UIV, but
+Immunodeficiency Virus (UIV). There is currently no cure for UIV infection, but
 highly effective antiretrovial therapy has the potential to both block
 forward transmission and to avert death from opportunistic infections
-associate with UIV infection.  Therefore is critically important that
+associated with UIV infection.  Therefore is critically important that
 UIV infection is detected and that infected individuals are enrolled
-in treatment.  is The subjects were administered a questionnaire
+in treatment.  The subjects were administered a questionnaire
 idenfying the presence or absense of putative risk factors for UIV
 infection. The prevalence of UIV is low, and therefore universal
 testing was deemed impractical. The challenge then is to identify
@@ -60,7 +60,7 @@ result, again coded 0 and 1 for negative and positive results,
 respectively.  The unicorn data are accessed using the following code:
 
 ```{r}
-data(unicorns)
+attach(unicorns)
 head(unicorns)
 ```
 It is critically important that all of the putative risk factors have
@@ -108,7 +108,7 @@ coefficients for those solutions are obtained using the following
 code:
 
 ```{r}
-coef(uniobj)
+coef(uniobj1)
 ```
 Note that the coefficient for Q3 has been shrunk to zero in both the
 AIC- and BIC-best models which, in this case, happen to coincide. In

@@ -16,6 +16,12 @@ datapath <- file.path(pkgpath, "data")
 setwd(pkgpath)
 
 #################################################################################
+## Compile the vignette
+#################################################################################
+demo <- file.path(pkgpath, "vignettes/screenr_demo.Rmd")
+rmarkdown::render(input = demo)
+
+#################################################################################
 ## Always (re)generate documentation, and then check package from source tree
 #################################################################################
 devtools::document()

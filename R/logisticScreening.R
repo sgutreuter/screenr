@@ -84,7 +84,7 @@
 #'                            data = unicorns, link = "logit", Nfolds = 10)
 #' summary(uniobj2)
 #'
-#' @alias{binomialScreenr}
+#' @aliases{binomialScreenr}
 #' @import pROC
 #' @importFrom stats binomial predict model.response
 #' @export

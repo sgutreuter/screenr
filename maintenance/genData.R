@@ -40,11 +40,11 @@ unimaker <- function(N, parms = parms, seed = Sys.time( )){
 parms1 <- c(-4.5, 2.0, 1.5, 0.0, 1.0, 1.5, 2.8)
 unicorns <- unimaker(N = 6000, parms =  parms1, seed = 321)
 mean(unicorns$testresult)
-save(unicorns, file = file.path(datapath, "unicorns.rda"))
+save(unicorns, file = file.path(datapath, "unicorns.Rdata"))
 #################################################################################
 ## Generate and insert validation data
 #################################################################################
 parms2 <- c(-4.5, 2.01, 1.499, 0.0, 1.001, 1.501, 2.798)
 val_data <- unimaker(N = 3000, parms = parms2, seed = 137)
 mean(val_data$testresult )
-save(val_data, file = file.path(datapath, "val_data.rda"))
+save(val_data, file = file.path(datapath, "val_data.Rdata"))

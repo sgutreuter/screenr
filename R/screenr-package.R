@@ -32,7 +32,7 @@
 #' }
 #'
 #' There are \code{plot}, \code{print} \code{summary}, \code{predict},
-#' \code{getWhat}, and \code(ntpp) methods for the objects produced by
+#' \code{getWhat}, and \code{ntpp} methods for the objects produced by
 #' \code{glmpathScreenr}, \code{logisticScreenr}, \code{simpleScreenr}
 #' and \code{easyTool}. In addition, there is a \code{coef} method for
 #' \code{glmpathScreenr} and \code{logisticScreenr} objects.

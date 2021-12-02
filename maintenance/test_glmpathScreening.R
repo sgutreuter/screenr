@@ -22,7 +22,7 @@ setwd(workpath)
 #################################################################################
 source(file.path(codepath, "glmpathScreening.R"))
 source(file.path(codepath, "helperFunctions.R"))
-load(file.path(datapath, "unicorns.rda"))
+load(file.path(datapath, "unicorns.Rdata"))
 ## uniobj1 <- readRDS(file.path(datapath, "uniobj1.Rdata"))
 
 #################################################################################
@@ -31,7 +31,7 @@ load(file.path(datapath, "unicorns.rda"))
 
 uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
                           data = unicorns, Nfolds = 10, seed = 123)
-##saveRDS(uniobj1, file.path(datapath, "uniobj1.Rdata"))
+##save(uniobj1, file = file.path(datapath, "uniobj1.Rdata"))
 str(uniobj1)
 
 #################################################################################

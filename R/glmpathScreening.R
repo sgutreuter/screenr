@@ -20,7 +20,7 @@
 #' @param formula an object of class \code{\link[stats]{formula}} defining the
 #' testing outcome and predictor covariates
 #' @param data a dataframe containing the variables defined in \verb{formula}
-#' @param Nfolds the number of foldes used for \emph{k}-fold cross
+#' @param Nfolds the number of folds used for \emph{k}-fold cross
 #' validation (default = 10, minimum = 2, maximum = 100).
 #' @param criterion information criterion (IC) used to select the best model
 #' (\verb{"AIC"} or \verb{"BIC"})
@@ -44,7 +44,7 @@
 #' characteristic (ROC) of class \code{roc}).}
 #' \item{\code{cvResults}}{A list structure containing the results of \emph{k}-
 #' fold cross-validation estimation of out-of-sample performance.  The list
-#' elements are:
+#' elements are:}
 #' \describe{
 #' \item{\code{Nfolds}}{the number folds \emph{k}}
 #' \item{\code{X_ho}}{the matrix of held-out predictors for each cross-validation fold}
@@ -71,7 +71,7 @@
 #'
 #' The \emph{L}1 path regularizer of Park and Hastie (2007) is similar
 #' to the more familiar lasso and elastic net. It differs from the
-#' lasso with the inclusion of a small fixed \emph{L} penalty, and
+#' lasso with the inclusion of a small fixed \emph{L}2 penalty, and
 #' differs from the elastic net in that the \emph{L}2 penalty is
 #' fixed.  Like the elastic net, the Park-Hastie \emph{L}1 path
 #' regularization is robust to highly correlated predictors.

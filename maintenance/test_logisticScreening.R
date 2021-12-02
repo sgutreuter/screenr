@@ -31,7 +31,7 @@ load(file.path(datapath, "unicorns.rda"))
 debugonce(logisticScreenr )
 uniobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
                           data = unicorns, link = "logit", Nfolds = 10)
-##saveRDS(uniobj2, file.path(datapath, "uniobj2.Rdata"))
+##save(uniobj2, file = file.path(datapath, "uniobj2.Rdata"))
 str(uniobj2)
 
 #################################################################################
