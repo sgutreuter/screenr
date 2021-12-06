@@ -1,0 +1,208 @@
+################################################################################
+##     R Script: ntpp.R
+##
+##      Package: screenr
+##
+##  Description: S3 methods for number of tests per positive result
+################################################################################
+
+
+## Generic function ntpp
+##
+#' \code{ntpp} is an S3 generic function that computes the anticipated number of
+#' tests per positive test result and prevalence among the subjects who would be
+#' screened out of testing)
+#'
+#' @usage \code{getWhat(object, ...)}
+#
+#' @seealso \code{link[screenr]{ntpp.glmpathScreenr}}
+#' @seealso \code{link[screenr]{ntpp.logisticScreenr}}
+#' @seealso \code{link[screenr]{ntpp.data.frame}}
+#' @seealso \code{link[screenr]{ntpp.simpleScreenr}}
+#'
+#' @export
+ntpp <- function(object, ... ) {
+    UseMethod("ntpp", object)
+}
+
+
+## Function ntpp.glmpathScreenr
+##
+#' \code{ntpp.glmpathScreenr} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param object a \code{glmpathScreenr}-class object produced by \code{glmpathScreenr}.
+#'
+#' @param model (character) select the model which produced the
+#' minimum AIC (\verb{"minAIC"}, the default) or minimum BIC (\verb{"minBIC"}).
+#'
+#' @param type (character) one of \verb{"cvResults"} (the default) or
+#' \verb{"isResults"} to specify \emph{k}-fold cross-validated or in-sample
+#' receiver-operating characteristics, respectively.
+#'
+#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' the prevalence is obtained from \code{object}.
+#'
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{ntpp}}{the number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
+#'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
+#' @examples
+#' attach(uniobj1)
+#' ntpp(uniobj1)
+#'
+#' @export
+ntpp.glmpathScreenr <- function(object, model = "minAIC", type = "cvResults",
+                                prev = NULL) {
+     if(!class(object) == "glmpathScreenr")
+         stop("object not of class glmpathScreenr")
+     if(!type %in% c("cvResults", "isResults"))
+         stop("type must be 'cvResults' or 'isResults'" )
+     if(is.null(prev)) prev <- object$Prevalence
+     ssp <- data.frame(sensitivity = object[[type]][[model]][["ROC"]][["sensitivities"]],
+                       specificity = object[[type]][[model]][["ROC"]][["specificities"]])
+     ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
+     names(ssp) <- c("sensitivity", "specificity", "prev")
+     result <- nnt_(ssp)
+     result
+}
+
+
+## Function ntpp.logisticScreenr
+##
+#' \code{ntpp.logisticScreenr} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param object a \code{logisticScreenr}-class object produced by \code{logisticScreenr}.
+#'
+#' @param type (character) one of \verb{"cvResults"} (the default) or
+#' \verb{"isResults"} to specify \emph{k}-fold cross-validated or in-sample
+#' receiver-operating characteristics, respectively.
+#'
+#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' the prevalence is obtained from \code{object}.
+#'
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{ntpp}}{the number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
+#'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
+#' @examples
+#' load(uniobj2)
+#' class(uniobj2)
+#' ntpp(uniobj2)
+#'
+#' @export
+ntpp.logisticScreenr <- function(object, type = "cvResults",
+                                prev = NULL) {
+     if(!class(object) == "logisticScreenr")
+         stop("object not of class logisticScreenr")
+     if(!type %in% c("cvResults", "isResults"))
+         stop("type must be 'cvResults' or 'isResults'" )
+     if(is.null(prev )) prev <- object$Prevalence
+     if(type == "cvResults") {
+         x <- "CVroc"
+     } else {
+         x <- "ISroc"
+     }
+     ssp <- data.frame(sensitivity = object[[x]][["sensitivities"]],
+                       specificity = object[[x]][["specificities"]],
+                       prev = prev)
+     result <- nnt_(ssp)
+     result
+}
+
+
+## Function ntpp.data.frame
+##
+#' \code{ntpp.data.frame} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param dframe a one-row dataframe containing columns \code{sensitivity},
+#' \code{specificity} and \code{prev}.
+#'
+#' @return a data frame containing the following columns:
+#' \describe{
+#' \item{\code{sensitivity}}{the sensitivity (proportion)}
+#' \item{\code{specificity}}{the specificity (proportion)}
+#' \item{\code{prev}}{prevalence proportion of the test condition}
+#' \item{\code{ntpp}}{anticipated total tests required per positive result}
+#' \item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
+#'}
+#' @export
+ntpp.data.frame <- function(dframe){
+    if(!is.data.frame(dframe)) stop("dframe not a data frame")
+    if(!"sensitivity" %in% names(dframe))
+        stop("dframe does not include sensitivity")
+    if(!"specificity" %in% names(dframe))
+        stop("dframe does not include specificity")
+    if(!"prev" %in% names(dframe))
+        stop("dframe does not include prev")
+    result <- nnt_(dframe)
+    result
+}
+
+
+## Function ntpp.simpleScreenr
+##
+#' \code{ntpp.simpleScreenr} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param object a \code{simpleScreenr}-class object produced by \code{simpleScreenr}.
+#'
+#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' the prevalence is obtained from \code{object}.
+#'
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{ntpp}}{the number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
+#'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
+#' @examples
+#' data(unicorns)
+#' toosimp <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6, data = unicorns)
+#' ntpp(simple)
+#'
+#' @export
+ntpp.simpleScreenr <- function(object, prev = NULL) {
+     if(!class(object) == "simpleScreenr")
+         stop("object not of class simpleScreenr")
+     if(is.null(prev)) prev <- object$Prevalence
+     ssp <- data.frame(sensitivity = object[["ISroc"]][["sensitivities"]],
+                       specificity = object[["ISroc"]][["specificities"]])
+     ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
+     names(ssp) <- c("sensitivity", "specificity", "prev")
+     result <- nnt_(ssp)
+     result
+}

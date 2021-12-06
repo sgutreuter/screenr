@@ -1,13 +1,16 @@
 ################################################################################
-##      R PROGRAM: builder.R
+##     R Script: builder.R
 ##
-##    DESCRIPTION: Code for building the screenr package
+##      Package: screenr
 ##
-##     WRITTEN BY: Steve Gutreuter
-##                 E-mail:  sgutreuter@gmail.gov
+##  Description: Code for building the screenr package
+##
+##       Author: Steve Gutreuter
+##               E-mail:  sgutreuter@gmail.gov
 ################################################################################
 library(devtools)
 library(roxygen2)
+library(rmarkdown)
 
 pkgpath <- file.path(Sys.getenv("DEVEL"), "screenr" )
 codepath <- file.path(pkgpath, "R")
@@ -16,16 +19,31 @@ datapath <- file.path(pkgpath, "data")
 setwd(pkgpath)
 
 #################################################################################
+## Simulate package loading
+#################################################################################
+load_all(pkgpath)
+
+#################################################################################
 ## Compile the vignette
 #################################################################################
+library(bibtex)
 demo <- file.path(pkgpath, "vignettes/screenr_demo.Rmd")
+refs <- read.bib(file.path(pkgpath, "vignettes/screenr_refs.bib")
+keys <- names(refs)
 rmarkdown::render(input = demo)
 
 #################################################################################
 ## Always (re)generate documentation, and then check package from source tree
 #################################################################################
+
 devtools::document()
 devtools::check()
+
+#################################################################################
+## Build the package manual (pdf)
+#################################################################################
+build_manual(as.package(pkgpath))   ## Fails:  debugonce(build_manual)
+
 
 #################################################################################
 ## Install screenr from the source tree
@@ -39,6 +57,11 @@ devtools::install_github("sgutreuter/screenr", ref = "master")
 devtools::install_github("sgutreuter/screenr", ref = "testing")
 
 #################################################################################
+## Reload screenr (if needed)
+#################################################################################
+reload("screenr")
+
+#################################################################################
 ## Remove screenr package
 #################################################################################
-remove.packages("screenr")
+##remove.packages("screenr")

@@ -1,45 +1,13 @@
 #################################################################################
-##       R PROGRAM: helperFunctions.R
+##     R Script: helperFunctions.R
 ##
-##         PROJECT: R functions for HIV screening tool development
+##      Package: screenr
 ##
-##      WRITTEN BY: Steve Gutreuter
-##                  E-mail:  sgutreuter@gmail.com
+##  Description: Miscellaneous helper functions
 ##
+##       Author: Steve Gutreuter
+##               sgutreuter@gmail.com
 #################################################################################
-
-
-## Generic function getWhat
-##
-#' \code{getWhat} is an S3 generic function to extract components of objects
-#' produced by functions in the \code{screenr} package
-#'
-#' @usage \code{getWhat(object, ...)}
-#'
-#' @seealso \code{link[screenr]{getWhat.glmpathScreenr}}
-#' @seealso \code{link[screenr]{getWhat.logisticScreenr}}
-#' @export
-getWhat <- function(from, ...) {
-    UseMethod("getWhat", from)
-}
-
-
-## Generic function ntpp
-##
-#' \code{ntpp} is an S3 generic function that computes the anticipated number of
-#' tests per positive test result and prevalence among the subjects who would be
-#' screened out of testing)
-#'
-#' @usage \code{getWhat(object, ...)}
-#
-#' @seealso \code{link[screenr]{ntpp.glmpathScreenr}}
-#' @seealso \code{link[screenr]{ntpp.logisticScreenr}}
-#' @seealso \code{link[screenr]{ntpp.data.frame}}
-#'
-#' @export
-ntpp <- function(object, ... ) {
-    UseMethod("ntpp", object)
-}
 
 
 ## Function sens_spec
@@ -126,35 +94,6 @@ inverseLink <- function(lp = NULL, link =  NULL){
     p
 }
 
-
-## Function ntpp.data.frame
-##
-#' \code{ntpp.data.frame} is a method for computation of the anticipated
-#' number of tests per positive test result
-#'
-#' @param dframe a one-row dataframe containing columns \code{sensitivity},
-#' \code{specificity} and \code{prev}.
-#'
-#' @return a data frame containing the following columns:
-#' \describe{
-#' \item{\code{sensitivity}}{the sensitivity (proportion)}
-#' \item{\code{specificity}}{the specificity (proportion)}
-#' \item{\code{prev}}{prevalence proportion of the test condition}
-#' \item{\code{ntpp}}{anticipated total tests required per positive result}
-#' \item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
-#'}
-#' @export
-ntpp.data.frame <- function(dframe){
-    if(!is.data.frame(dframe)) stop("dframe not a data frame")
-    if(!"sensitivity" %in% names(dframe))
-        stop("dframe does not include sensitivity")
-    if(!"specificity" %in% names(dframe))
-        stop("dframe does not include specificity")
-    if(!"prev" %in% names(dframe))
-        stop("dframe does not include prev")
-    result <- nnt_(dframe)
-    result
-}
 
 
 ## Function nnt_

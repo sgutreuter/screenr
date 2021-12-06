@@ -7,3 +7,4 @@ tmp*
 obsolete
 .Rdata
 inst/doc
+^auto
