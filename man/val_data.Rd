@@ -14,11 +14,12 @@ A data frame with eight columns:
 \item{\code{Q4}}{Response to screening question 4 (0 = "no", 1 = "yes")}
 \item{\code{Q5}}{Response to screening question 5 (0 = "no", 1 = "yes")}
 \item{\code{Q6}}{Response to screening question 6 (0 = "no", 1 = "yes")}
+\item{\code{Q7}}{Response to screening question 7 (0 = "no", 1 = "yes")}
 \item{\code{testresult}}{UIV status, where 0 and 1 denote negative and positive test results, repectively.}
 }
 }
 \usage{
-data(val_data)
+val_data
 }
 \description{
 A follow-up  study was conducted in which a random sample of 3,000 properly

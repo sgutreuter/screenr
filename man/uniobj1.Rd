@@ -8,11 +8,11 @@
 An object of class \code{glmpathScreenr}
 }
 \usage{
-class(uniobj1)
+uniobj1
 }
 \description{
 The result of \code{uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 +
-Q4 + Q5 + Q6, data = unicorns, Nfolds = 10, seed = 123)}
+Q4 + Q5 + Q6 + Q7, data = unicorns, Nfolds = 10, seed = 123)}
 }
 \examples{
 \dontrun{

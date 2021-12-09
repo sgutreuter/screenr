@@ -8,6 +8,9 @@
 ##       Author: Steve Gutreuter
 ##               E-mail:  sgutreuter@gmail.gov
 ################################################################################
+rm(list =  ls())
+detach("package:screenr")
+
 library(devtools)
 library(roxygen2)
 library(rmarkdown)
@@ -21,16 +24,17 @@ setwd(pkgpath)
 #################################################################################
 ## Simulate package loading
 #################################################################################
-load_all(pkgpath)
+##load_all(pkgpath)
 
 #################################################################################
 ## Compile the vignette
 #################################################################################
-library(bibtex)
-demo <- file.path(pkgpath, "vignettes/screenr_demo.Rmd")
-refs <- read.bib(file.path(pkgpath, "vignettes/screenr_refs.bib")
-keys <- names(refs)
-rmarkdown::render(input = demo)
+## library(bibtex)
+## demo <- file.path(pkgpath, "vignettes/screenr_demo.Rmd")
+## refs <- read.bib(file.path(pkgpath, "vignettes/screenr_refs.bib")
+## keys <- names(refs)
+## rmarkdown::render(input = demo)
+
 
 #################################################################################
 ## Always (re)generate documentation, and then check package from source tree
@@ -38,6 +42,11 @@ rmarkdown::render(input = demo)
 
 devtools::document()
 devtools::check()
+
+#################################################################################
+## Build vignette
+#################################################################################
+devtools::build_vignettes( )
 
 #################################################################################
 ## Build the package manual (pdf)

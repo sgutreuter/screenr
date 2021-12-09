@@ -10,11 +10,40 @@
 ################################################################################
 
 
+## Function summary.easyTool
+##
+#' \code{summary.easyTool} returns a summary of the receiver-operating
+#' characteristic produced by \code{easyTool}
+#'
+#' @param object an \code{easyTool} object.
+#'
+#' @param ... optional arguments passed to \code{summary} methods.
+#'
+#' @return a dataframe containing the summary, including the Df, Deviance,
+#' AIC and BIC for each step along the GLM path for which the active set
+#' changed.
+#'
+#' @details This is essentially a wrapper for \code{glmpath::summary.glmpath}
+#' provided for \code{glmpathScreenr} objects.
+#' @examples
+#' attach(uniobj1)
+#' summary(uniobj1)
+#' @import pROC
+#' @export
+summary.easyTool <- function(object, ...){
+    if(!("easyTool" %in% class(object)))
+        stop("object not easyTool class")
+    print(object$ROC)
+}
+
+
 ## Function summary.glmpathScreenr
 ##
 #' \code{summary.glmpathScreenr} returns a summary of the GLM path regularizer
 #'
 #' @param object a glmpathScreenr object
+#'
+#' @param ... optional arguments passed to \code{summary} methods.
 #'
 #' @return a dataframe containing the summary, including the Df, Deviance,
 #' AIC and BIC for each step along the GLM path for which the active set
@@ -26,7 +55,7 @@
 #' attach(uniobj1)
 #' summary(uniobj1)
 #' @export
-summary.glmpathScreenr <- function(object){
+summary.glmpathScreenr <- function(object, ...){
     if(!("glmpathScreenr" %in% class(object)))
         stop("object not glmpathScreenr class")
     res <- object$Summary
@@ -44,16 +73,15 @@ summary.glmpathScreenr <- function(object){
 #'
 #' @param diagnostics a logical value; plot model diagnostics if \verb{TRUE}.
 #'
-#' @param ... further arguments passed to or from other methods.
+#' @param ... optional arguments passed to \code{summary} methods.
 #'
 #' @return Nothing.  Summaries are printed as a side effect.
 #'
 #' @examples
-#' load(uniobj2)
-#' class(uniobj2)
+#' attach(uniobj2)
 #' summary(uniobj2)
 #' @export
-summary.logisticScreenr <- function(object, diagnostics = FALSE, ...){
+summary.logisticScreenr <- function(object, ..., diagnostics = FALSE){
     if(!("logisticScreenr" %in% class(object))) stop("object not logisticScreenr class")
     cat("Call:\n")
     print(object$Call)
@@ -78,7 +106,7 @@ summary.logisticScreenr <- function(object, diagnostics = FALSE, ...){
 #'
 #' @param object an object of class \code{simpleScreenr}.
 #'
-#' @param ... further arguments passed to or from other methods.
+#' @param ... optional arguments passed to \code{summary} methods.
 #'
 #' @return Nothing.  Thresholds, specificities and sensitivities are printed as
 #' a side effect.

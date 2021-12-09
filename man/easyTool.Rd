@@ -5,7 +5,7 @@
 \title{\code{easyTool} creates the components of an easy-to-use screening tool based
 on the results of either \code{glmpathScreenr} or \code{logisticScreenr}.}
 \usage{
-easyTool(object, max = 3, model = "minAIC", crossval = TRUE)
+easyTool(object, max = 3, model = "minAIC", crossval = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{glmpathScreenr} or
@@ -19,6 +19,9 @@ model. Valid options are \verb{"minAIC"} (the default) and \verb{"minBIC"}.}
 
 \item{crossval}{a (logical) indicator for cross-validated (\verb{TRUE}) or
 in-sample (\verb{FALSE}) performance evaluation.}
+
+\item{...}{additional arguments passed to \code{coef.glmpathScreenr} or
+\code{coef.logisticScreenr}}
 }
 \value{
 \code{easyTool} returns (invisibly) an object of class \code{easyTool}
@@ -33,7 +36,7 @@ or "in-sample").}
 (\code{response}) and cross-validated scores obtained as the sums of the
 weighted responses to the set of screening questions (\code{score}).}
 \item{\code{ROC}}{An object of class \verb{roc} containing the
-receiver-operating characteristic produced by \code{\link[pROC]{roc}}.}
+receiver-operating characteristic produced by \code{`pROC::roc`}.}
 }
 }
 \description{
@@ -68,7 +71,7 @@ compare the ROCs from a few values of \code{max} with the ROC from the model
 and base the final choice on the trade-off between ease of manual scoring and
 the desired combination of sensitivity and specificity.
 
-\code{coef}, \code{ntpp}, \code{plot}, \code{print} and \print{summary}
+\code{coef}, \code{ntpp}, \code{plot}, \code{print} and \code{summary}
 methods are available for \code{easyTool}-class objects.
 }
 \examples{
@@ -77,9 +80,6 @@ tool <- easyTool(uniobj1, max = 3)
 class(tool)
 }
 \seealso{
-\code{\link[screenr]{rescale_to_int}}
-
-\code{\link[screenr]{coef.easyTool}},\code{\link[screenr]{ntpp.easyTool}},
-\code{\link[screenr]{plot.easyTool}}, \code{\link[screenr]{print.easyTool}}
-and \code{\link[screenr]{summary.easyTool}}
+\code{`rescale_to_int`}, \code{`coef.easyTool`}, \code{ntpp.easyTool},
+\code{`plot.easyTool`}, \code{`print.easyTool`} and \code{`summary.easyTool`}
 }

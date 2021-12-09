@@ -14,6 +14,7 @@
 #'
 #' @param formula an object of class \code{\link[stats]{formula}} defining the
 #' testing outcome and predictor covariates.
+#'
 #' @param data the "training" sample; a data frame containing the testing outcome
 #' and predictive covariates to be used for testing screening.  The testing
 #' outcome must be binary (0,1) indicating negative and positive test results,
@@ -56,13 +57,13 @@
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                            data = unicorns)
 #' summary(toosimple)
 #'
 #' @seealso \code{\link{glmpathScreenr}}, \code{\link{logisticScreenr}}
 #' @import pROC
-#' @importFrom stats model.response complete.cases
+#' @importFrom stats model.response
 #' @export
 simpleScreenr <- function(formula, data){
     warning("WARNING! WARNING! WARNING! simpleScreenr is suboptimal and is provided only for comparison with other methods." )
@@ -72,8 +73,8 @@ simpleScreenr <- function(formula, data){
     mf <- mf[c(1L, m)]
     mf[[1L]] <- quote(stats::model.frame)
     mf <- eval(mf, parent.frame())
-    dat <- data[complete.cases(data[, names(mf), ]), ]
-    y <- model.response(mf, "numeric")
+    dat <- data[stats::complete.cases(data[, names(mf), ]), ]
+    y <- stats::model.response(mf, "numeric")
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
     prev <- mean(y, na.rm = TRUE)
     preds <- mf[, -1]

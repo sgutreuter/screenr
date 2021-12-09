@@ -10,6 +10,90 @@
 ################################################################################
 
 
+## Function plot.easyTool
+##
+#' \code{plot.easyTool} is a plotting method for \code{easyTool}
+#' objects.
+#' @param x an object of class \code{easyTool}.
+#' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
+#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
+#' (default = \verb{TRUE}).
+#' @param conf_level confidence level
+#' @param bootreps the number of bootstrap replications for estimation of
+#' confidence intervals.
+#' @param se.min minimum value of sensitivity printed in (optional) table.
+#' @param ... any additional arguments passed to \code{pROC::plot.roc} or
+#' \code{pROC::lines.roc}.
+#'
+#' @importFrom graphics legend plot
+#'
+#' @return This function produces a plot as a side effect and (optionally)
+#' returns a dataframe containing sensitivities, specificities and their
+#' lower and upper confidence limits for threshold values of Pr(response = 1).
+#'
+#' @details \code{plot.easyTool} is an enhanced convenience wrapper for
+#' \code{`pROC::plot.roc`}.  The table is useful for identifying the
+#' minimum predicted response probabilities associated with particular
+#' sensitivities.  The sensitivities and specificities are the coordinates at
+#' change points in the cross-validated ROC curve, and the values of Threshold_Pr
+#' are the values of lower bound of the predicted probability that acheives those
+#' sensitivities and specificities.  For example, if Threshold_P = 0.002, then
+#' classifiction as positive of all those subjects for whom the predicted response
+#' probability is greater than or equal to 0.002 will achieve the corresponding
+#' sensitivity and specificity at the prescribed confidence level in new
+#' data drawn from the same distribution as the training sample.
+#'
+#' @references
+#' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
+#' 27(8):861-874.
+#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
+#'
+#' Linden A. Measuring diagnostic and predictive accuracy in disease
+#' management: an introduction to receiver operating characteristic (ROC) analysis.
+#' Journal of Evaluation in Clinical Practice. 2006; 12(2):132-139.
+#' \url{https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2753.2005.00598.x}
+#'
+#' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C, Muller M.
+#' pROC: an open-source package for R and S+ to analyze and compare ROC curves.
+#' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
+#'
+#' @examples
+#' attach(uniobj1)
+#' tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
+#' plot(tool)
+#' @importFrom graphics legend plot lines
+#' @import pROC
+#' @export
+plot.easyTool <- function(x, ..., plot_ci = TRUE, print = TRUE,
+                                 conf_level = 0.95, bootreps = 2000,
+                                 se.min = 0.8){
+    if(!("easyTool" %in% class(x)))
+            stop("Object not easyTool class")
+    stopifnot(conf_level > 0 & conf_level < 1)
+    roc_  <- x$ROC
+    pROC::plot.roc(roc_, print.auc = TRUE, ci = FALSE, ...)
+    if(plot_ci | print){
+        ciplt <- pROC::ci.thresholds(roc_,
+                                     boot.n = bootreps,
+                                     progress = "text",
+                                     conf.level = conf_level,
+                                     thresholds = "local maximas")
+    }
+    if(print){
+        threshold <- attr(ciplt, "thresholds")
+        citable <- data.frame(cbind(threshold, ciplt$sensitivity,
+                                    ciplt$specificity))
+        names(citable) <- c("Threshold_Pr", "se.lcl", "Sensitivity",
+                            "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
+        row.names(citable) <- 1:(dim(ciplt$sensitivity)[1])
+        citable <- citable[citable$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
+        citable[is.infinite(citable[,1]), 1] <- 0
+    }
+    if(plot_ci) plot(ciplt)
+    if(print) return(citable)
+}
+
+
 ## Function plot.glmpathScreenr
 ##
 #' \code{plot.glmpathScreenr} is a plotting method for \code{glmpathScreenr}
@@ -33,7 +117,7 @@
 #' lower and upper confidence limits for threshold values of Pr(response = 1).
 #'
 #' @details \code{plot.glmpathScreenr} is an enhanced convenience wrapper for
-#' \link{\code{pROC::plot.roc}}.  The table is useful for identifying the
+#' \code{`pROC::plot.roc`}.  The table is useful for identifying the
 #' minimum predicted response probabilities associated with particular
 #' sensitivities.  The sensitivities and specificities are the coordinates at
 #' change points in the cross-validated ROC curve, and the values of Threshold_Pr
@@ -64,10 +148,10 @@
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.glmpathScreenr <- function(x, plot_ci = TRUE, print = TRUE,
+plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, print = TRUE,
                                  model = "minAIC",
                                  conf_level = 0.95, bootreps = 2000,
-                                 se.min = 0.8, ...){
+                                 se.min = 0.8){
     if(!("glmpathScreenr" %in% class(x)))
             stop("Object not glmpathScreenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
@@ -106,7 +190,6 @@ plot.glmpathScreenr <- function(x, plot_ci = TRUE, print = TRUE,
 ##
 #' \code{plot.logisticScreenr} is an S3 plot method for \code{logisticScreenr} objects,
 #'
-
 #' @param x an object of class \code{logisticScreenr}.
 #' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
@@ -142,14 +225,13 @@ plot.glmpathScreenr <- function(x, plot_ci = TRUE, print = TRUE,
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #'
 #' @examples
-#' load(uniobj2)
-#' class(uniobj2)
+#' attach(uniobj2)
 #' plot(uniobj2)
 #'
 #' @importFrom graphics legend plot
 #' @export
-plot.logisticScreenr <- function(x, plot_ci = TRUE, print = TRUE,
-                              conf_level = 0.95, bootreps = 2000, ...){
+plot.logisticScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
+                              conf_level = 0.95, bootreps = 2000){
     if(!class(x) == "logisticScreenr") stop("x is not a logisticScreenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
     plot(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
@@ -200,7 +282,7 @@ plot.logisticScreenr <- function(x, plot_ci = TRUE, print = TRUE,
 #' @param bootreps numeric-valued number of bootstrap replication for estimation
 #' of 95\% confidence intervals.
 #'
-#' @param ... additional arguments for base \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.
+#' @param ... additional arguments for \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect, and (optionally)
 #' returns a dataframe dataframe containing medians and
@@ -227,8 +309,8 @@ plot.logisticScreenr <- function(x, plot_ci = TRUE, print = TRUE,
 #' plot(toosimple)
 #' @importFrom graphics plot
 #' @export
-plot.simpleScreenr <- function(x, plot_ci = TRUE, print = TRUE,
-                               conf_level = 0.95, bootreps = 2000,...){
+plot.simpleScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
+                               conf_level = 0.95, bootreps = 2000){
     if(!class(x) == "simpleScreenr") stop("x is not a simpleScreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci | print){

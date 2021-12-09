@@ -1,8 +1,9 @@
 #' UIV Testing Training Data on Unicorns
 #'
-#' A preliminary study was conducted in which a random sample of 5,000 properly
-#' consented unicorns were recruited from 20 clinics.  Each unicorn was asked
-#' six questions about their behavior and health.  Unicorns responded by
+#' A preliminary study was conducted in which a random sample of 6,000 properly
+#' consented [unicorns](https://www.britannica.com/topic/unicorn) were recruited
+#' from 20 clinics.  Each unicorn was asked
+#' seven questions about their behavior and health.  Unicorns responded by
 #' stomping a hoof once to indicate "no", and twice to indicate "yes".  A
 #' sample of venous blood was drawn from each, and was subsequently tested
 #' for the presence of antibodies to Unicorn Immunodeficiency Virus (UIV) using
@@ -24,8 +25,14 @@
 #' \item{\code{Q4}}{Response to screening question 4 (0 = "no", 1 = "yes")}
 #' \item{\code{Q5}}{Response to screening question 5 (0 = "no", 1 = "yes")}
 #' \item{\code{Q6}}{Response to screening question 6 (0 = "no", 1 = "yes")}
+#' \item{\code{Q7}}{Response to screening question 7 (0 = "no", 1 = "yes")}
 #' \item{\code{testresult}}{UIV status, where 0 and 1 denote negative and positive test results, repectively.}
 #' }
+#'
+#' @note
+#' In reality, the question responses and test results were generated using
+#' Bernoulli random-number generators.
+#'
 #' @examples
 #' \dontrun{
 #' head(unicorns)

@@ -13,17 +13,22 @@
 ## Function glmpathScreenr
 ##
 #' \code{glmpathScreenr} is a used to develop test-screening tools based on \emph{L}1
-#' regularization of logistic regression based on \code{\link[glmpath]{glmpath}}.
+#' regularization of logistic regression based on \code{`glmpath::glmpath`}.
 #'
-#' @param formula an object of class \code{\link[stats]{formula}} defining the
-#' testing outcome and predictor covariates
-#' @param data a dataframe containing the variables defined in \verb{formula}
+#' @param formula an object of class \code{`stats::formula`} defining the
+#' testing outcome and predictor covariates.
+#'
+#' @param data a dataframe containing the variables defined in \verb{formula}.
+#'
 #' @param Nfolds the number of folds used for \emph{k}-fold cross
 #' validation (default = 10, minimum = 2, maximum = 100).
-#' @param criterion information criterion (IC) used to select the best model
-#' (\verb{"AIC"} or \verb{"BIC"})
-#' @param seed RNG seed for cross-validation data splitting
-#' @param ... additional arguments passed to glmpath::glmpath or pROC::roc
+#'
+#' @param L2 (logical) switch controlling penalization using the \emph{L}2 norm of the
+#' parameters (default = \verb{TRUE}).
+#'
+#' @param seed random number generator seed for cross-validation data splitting.
+#'
+#' @param ... additional arguments passed to glmpath::glmpath or pROC::roc.
 #'
 #' @return Return (invisibly) an object of class \code{glmpathScreenr} containing
 #' the elements:
@@ -69,15 +74,19 @@
 #'
 #' The \emph{L}1 path regularizer of Park and Hastie (2007) is similar
 #' to the more familiar lasso and elastic net. It differs from the
-#' lasso with the inclusion of a small fixed \emph{L}2 penalty, and
+#' lasso with the inclusion of a small fixed (\verb{1e-5}) penalty on the
+#' \emph{L}2 norm of the parameters, and
 #' differs from the elastic net in that the \emph{L}2 penalty is
 #' fixed.  Like the elastic net, the Park-Hastie \emph{L}1 path
 #' regularization is robust to highly correlated predictors.
 #'
-#' For a gentle but Python-centric introduction to \emph{k}-fold cross-validation,
-#' see \link{https://machinelearningmastery.com/k-fold-cross-validation/}.
+#' The \emph{L}2 penalization can be turned off (\code{L2 = FALSE}), in which case
+#' the regularization is similar to the lasso.
 #'
-#' @seealso \code{\link[glmpath]{glmpath}}, \code{link[pROC]{roc}}
+#' For a gentle but Python-centric introduction to \emph{k}-fold cross-validation,
+#' see \url{https://machinelearningmastery.com/k-fold-cross-validation/}.
+#'
+#' @seealso \code{`glmpath::glmpath`}, \code{`pROC::roc`}
 #'
 #' @references
 #' Park MY, Hastie T. \emph{L}1-regularization path algorithm for generalized linear
@@ -92,14 +101,16 @@
 #' @examples
 #' data(unicorns)
 #' help(unicorns)
-#' uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
-#'                             data = unicorns, Nfolds = 10)
+#' uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+#'                           data = unicorns, Nfolds = 10)
 #' summary(uniobj1)
 #'
 #' @import pROC
+#' @import stats
 #' @import glmpath
+#' @importFrom stringr str_split
 #' @export
-glmpathScreenr <- function(formula, data = NULL, Nfolds = 10,
+glmpathScreenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
                            seed = Sys.time(), ... ){
     if(!inherits(formula, "formula")) stop("Specify a model formula")
     if(!is.data.frame(data)) stop("Specify a dataframe")
@@ -108,13 +119,19 @@ glmpathScreenr <- function(formula, data = NULL, Nfolds = 10,
     if(Nfolds < 5)
         warning("Nfolds < 5 is not recommended; consider this testing mode.")
     call <- match.call()
-    mf <- model.frame(formula, data)
+    mf <- stats::model.frame(formula, data)
     y <- mf[, 1]
     x <- as.matrix(mf[, -1])
     N <- nrow(x)
     prev <- mean(y)
-    res <- glmpath::glmpath(x, y, standardize = FALSE, family = "binomial")
+    lam2 <- ifelse(L2 == TRUE, 0, 1e-5)
+    res <- glmpath::glmpath(x, y,
+                            standardize = FALSE,
+                            family = "binomial",
+                            lambda2 = lam2, ...)
     sumry <- summary(res)
+    minAIC <- data.frame(NULL)
+    minBIC <- data.frame(NULL)
     for(i in c("AIC", "BIC")){
         minIC <- min(sumry[[i]])
         row <- rownames(sumry[sumry[[i]] == minIC, ])
@@ -130,7 +147,7 @@ glmpathScreenr <- function(formula, data = NULL, Nfolds = 10,
         isPreds <- data.frame(y = y, pred_prob = as.vector(phat, mode = "numeric"))
         attr(isPreds, "Description") <- "In-sample predicted probabilities"
         isROC <- pROC::roc(isPreds$y, isPreds$pred_prob, auc = TRUE)
-        assign(paste0("min", i   ), list(Coefficients = parmEst,
+        assign(paste0("min", i), list(Coefficients = parmEst,
                                       Preds = isPreds,
                                       ROC = isROC))
     }
@@ -149,7 +166,8 @@ glmpathScreenr <- function(formula, data = NULL, Nfolds = 10,
                            x[holdouts[[j]],])
         rescv <- glmpath::glmpath(x[-holdouts[[j]], ], yj,
                                   standardize = FALSE,
-                                  family = "binomial")
+                                  family = "binomial",
+                                  lambda2 = lam2, ...)
         sumryj <- summary(rescv)
         for(i in c("AIC", "BIC")){
             minIC <- min(sumryj[[i]])

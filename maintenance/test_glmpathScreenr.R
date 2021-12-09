@@ -24,20 +24,23 @@ source(file.path(codepath, "glmpathScreenr.R"))
 source(file.path(codepath, "coef.R"))
 source(file.path(codepath, "print.R"))
 source(file.path(codepath, "summary.R"))
+source(file.path(codepath, "getWhat.R"))
 source(file.path(codepath, "helperFunctions.R"))
-load(file.path(datapath, "unicorns.Rdata"))
-## uniobj1 <- readRDS(file.path(datapath, "uniobj1.Rdata"))
+load(file.path(datapath, "unicorns.rda"))
 
 #################################################################################
 ## Create and save a glmpathScreenr object
 #################################################################################
 
-uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                           data = unicorns, Nfolds = 10, seed = 123)
-##save(uniobj1, file = file.path(datapath, "uniobj1.Rdata"))
+##save(uniobj1, file = file.path(datapath, "uniobj1.rda"), compress = "xz")
 coef(uniobj1)
 print(uniobj1)
 summary(uniobj1)
+wtf <- getWhat(from = uniobj1, what = "glmpathObj")
+plot(wtf)
+rm(wtf)
 
 #################################################################################
 ## Create new data for prediction
@@ -45,7 +48,7 @@ summary(uniobj1)
 new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         testresult = c(NA, NA),
                         Q1 = c(0, 0), Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0),
-                        Q5 = c(0, 1), Q6 = c(1, 1))
+                        Q5 = c(0, 1), Q6 = c(0, 1), Q7 = c(0, 1))
 
 #################################################################################
 ## Methods testing

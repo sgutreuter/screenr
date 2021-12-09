@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
   comment = "#>"
   )
 library(screenr)
-attach(unicorns )
 ```
 
 # Introduction {-}
@@ -31,11 +30,11 @@ package [3].  The screenr package also supports
 maximum-likelihood estimation of logistic regression parameters, but
 the regularization approach is simpler to use, prevents overfitting
 and handles separation in logistic regression.  Model performance is evaluating using the
-receiver-operating characteristics [3,4].
+receiver-operating characteristics [4,5].
 
-# Training Data {-}
+## Training Data {-}
 
-A sample of `r dim(unicorns)[1]` properly consented unicorns were enrolled in a study
+A sample of `r dim(unicorns)[1]` properly consented [unicorns](https://www.britannica.com/topic/unicorn) were enrolled in a study
 aimed at improving testing for Unicorn
 Immunodeficiency Virus (UIV).  There is currently no cure for UIV infection, but
 highly effective antiretrovial therapy has the potential to both block
@@ -51,26 +50,34 @@ transmissible and fatal if untreated, it is important that the
 screening tool have an acceptably high sensitivity.  The screenr
 package enables development and validation of such screening tools.
 
-The screening questionnaire included six questions, which were
+The screening questionnaire included seven questions, which were
 selected based on pubished information on infection risk.  The data
 consist of the responses to the screening questions, coded as 1 for an
 affirmative (yes) response and 0 for a negative response, and the test
 result, again coded 0 and 1 for negative and positive results,
-respectively.  The unicorn data are accessed using the following code:
+respectively.
 
-<!-- ```{r} -->
-<!-- attach(unicorns) -->
-<!-- head(unicorns) -->
-<!-- ``` -->
+```{r}
+## The first six lines of the unicorns data:
+head(unicorns)
+```
 It is critically important that all of the putative risk factors have
-a non-negative association with the outcome (testresult in the
-unicorns data).  That is, the questionnaire was designed so that
+a positive association with the outcome (testresult in the
+unicorns data).  That is, the questionnaire must be designed so that
 affirmative (yes) reponses are hypthesized to indicate an *increased*
 risk of UIV infection.
 
-# Tool Development {-}
+# Screening Tool Development {-}
 
-## Estimation {-}
+Tool development consists of as many as four steps:
+\describe{
+\item Model fitting
+\item Assessment of model performance based on the training data
+\item Validation on new data
+\item Evaluation of simplified implementation.
+}
+
+## Model fitting
 
 The first step is estimation of the logistic-regression parameters
 from the training data.  The function glmpathScreenr provides easy
@@ -153,17 +160,17 @@ meta-analysis. The Pediatric Infectious Disease Journal. 2020;
 2. Hastie T, Tibshirani R, Friedman R. The Elements of Statistical
    Learning. Springer, New York. 2009.  DOI: 10.1007/b94608.
 
-3. Linden A. Measuring diagnostic and predictive accuracy in disease
+3. Park MY, Hastie T. *L*1-regularization path algorithm for
+   generalized linear models. Journal of the Royal Statistical Society
+   Series B. 2007; 69(4):659-677.
+
+4. Linden A. Measuring diagnostic and predictive accuracy in disease
    management: an introduction to receiver operating characteristic
    (ROC) analysis. Journal of Evaluation in Clinical Practice. 2006;
    12(2):132-139. DOI: 10.1111/j.1365-2753.2005.00598.x
 
-4. Fawcett T. An introduction to ROC analysis.  Pattern Recognition
+5. Fawcett T. An introduction to ROC analysis.  Pattern Recognition
    Letters. 2006; 27(8):861-874. DOI: 10.1016/j.patrec.2005.10.010.
-
-5. Park MY, Hastie T. *L*1-regularization path algorithm for
-   generalized linear models. Journal of the Royal Statistical Society
-   Series B. 2007; 69(4):659-677.
 
 6. Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
    Müller M. pROC: an open-source package for R and S+ to analyze and

@@ -13,16 +13,65 @@
 #' tests per positive test result and prevalence among the subjects who would be
 #' screened out of testing)
 #'
-#' @usage \code{getWhat(object, ...)}
-#
+#' @param object an object from which to compute the number of tests
+#' per test positive test results.
+#'
+#' @param ... additional arguments.
+#'
 #' @seealso \code{link[screenr]{ntpp.glmpathScreenr}}
 #' @seealso \code{link[screenr]{ntpp.logisticScreenr}}
 #' @seealso \code{link[screenr]{ntpp.data.frame}}
 #' @seealso \code{link[screenr]{ntpp.simpleScreenr}}
 #'
 #' @export
-ntpp <- function(object, ... ) {
-    UseMethod("ntpp", object)
+ntpp <- function(object, ...) {
+    UseMethod("ntpp")
+}
+
+
+## Function ntpp.easyTool
+##
+#' \code{ntpp.easyTool} is a method for computation of the anticipated
+#' number of tests per positive test result
+#'
+#' @param object an \code{easyTool}-class object produced by \code{easyTool}.
+#'
+#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' the prevalence is obtained from \code{object}.
+#'
+#' @param ... optional arguments to \code{ntpp} methods.
+#'
+#' @return A data frame containing the following columns:
+#' \describe{
+#' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+#' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
+#' \item{\verb{ntpp}}{the number of tests required to discover
+#' a single positive test result.}
+#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' condition among those who are screened out of testing.}
+#' }
+#'
+#' @details
+#' The anticipated number of tests needed to observe a single positive test
+#' result is a function of sensitivity, specificity and the prevalence proportion
+#' of the condition being tested.
+#'
+#' @examples
+#' attach(uniobj1)
+#' tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
+#' ntpp(tool)
+#'
+#' @export
+ntpp.easyTool <- function(object, ..., prev = NULL) {
+     if(!class(object) == "easyTool")
+         stop("object not of class easyTool")
+     if(is.null(prev)) prev <- mean(object$Scores$response, na.rm = TRUE)
+     ssp <- data.frame(sensitivity = object$ROC$sensitivities,
+                       specificity = object$ROC$specificities)
+     ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
+     names(ssp) <- c("sensitivity", "specificity", "prev")
+     result <- nnt_(ssp)
+     result
 }
 
 
@@ -42,6 +91,8 @@ ntpp <- function(object, ... ) {
 #'
 #' @param prev an optional prevalence proportion for the test outcome; if missing
 #' the prevalence is obtained from \code{object}.
+#'
+#' @param ... optional arguments to \code{ntpp} methods.
 #'
 #' @return A data frame containing the following columns:
 #' \describe{
@@ -63,7 +114,7 @@ ntpp <- function(object, ... ) {
 #' ntpp(uniobj1)
 #'
 #' @export
-ntpp.glmpathScreenr <- function(object, model = "minAIC", type = "cvResults",
+ntpp.glmpathScreenr <- function(object, ..., model = "minAIC", type = "cvResults",
                                 prev = NULL) {
      if(!class(object) == "glmpathScreenr")
          stop("object not of class glmpathScreenr")
@@ -93,6 +144,8 @@ ntpp.glmpathScreenr <- function(object, model = "minAIC", type = "cvResults",
 #' @param prev an optional prevalence proportion for the test outcome; if missing
 #' the prevalence is obtained from \code{object}.
 #'
+#' @param ... optional arguments to \code{ntpp} methods.
+#'
 #' @return A data frame containing the following columns:
 #' \describe{
 #' \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
@@ -109,12 +162,11 @@ ntpp.glmpathScreenr <- function(object, model = "minAIC", type = "cvResults",
 #' of the condition being tested.
 #'
 #' @examples
-#' load(uniobj2)
-#' class(uniobj2)
+#' attach(uniobj2)
 #' ntpp(uniobj2)
 #'
 #' @export
-ntpp.logisticScreenr <- function(object, type = "cvResults",
+ntpp.logisticScreenr <- function(object, ..., type = "cvResults",
                                 prev = NULL) {
      if(!class(object) == "logisticScreenr")
          stop("object not of class logisticScreenr")
@@ -139,8 +191,10 @@ ntpp.logisticScreenr <- function(object, type = "cvResults",
 #' \code{ntpp.data.frame} is a method for computation of the anticipated
 #' number of tests per positive test result
 #'
-#' @param dframe a one-row dataframe containing columns \code{sensitivity},
+#' @param object a one-row dataframe containing columns \code{sensitivity},
 #' \code{specificity} and \code{prev}.
+#'
+#' @param ... optional arguments to \code{ntpp} methods.
 #'
 #' @return a data frame containing the following columns:
 #' \describe{
@@ -151,15 +205,15 @@ ntpp.logisticScreenr <- function(object, type = "cvResults",
 #' \item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
 #'}
 #' @export
-ntpp.data.frame <- function(dframe){
-    if(!is.data.frame(dframe)) stop("dframe not a data frame")
-    if(!"sensitivity" %in% names(dframe))
-        stop("dframe does not include sensitivity")
-    if(!"specificity" %in% names(dframe))
-        stop("dframe does not include specificity")
-    if(!"prev" %in% names(dframe))
-        stop("dframe does not include prev")
-    result <- nnt_(dframe)
+ntpp.data.frame <- function(object, ...){
+    if(!is.data.frame(object)) stop("object not a data frame")
+    if(!"sensitivity" %in% names(object))
+        stop("object does not include sensitivity")
+    if(!"specificity" %in% names(object))
+        stop("object does not include specificity")
+    if(!"prev" %in% names(object))
+        stop("object does not include prev")
+    result <- nnt_(object)
     result
 }
 
@@ -173,6 +227,8 @@ ntpp.data.frame <- function(dframe){
 #'
 #' @param prev an optional prevalence proportion for the test outcome; if missing
 #' the prevalence is obtained from \code{object}.
+#'
+#' @param ... optional arguments to \code{ntpp} methods.
 #'
 #' @return A data frame containing the following columns:
 #' \describe{
@@ -191,11 +247,12 @@ ntpp.data.frame <- function(dframe){
 #'
 #' @examples
 #' data(unicorns)
-#' toosimp <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6, data = unicorns)
-#' ntpp(simple)
+#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+#'                            data = unicorns)
+#' ntpp(toosimple)
 #'
 #' @export
-ntpp.simpleScreenr <- function(object, prev = NULL) {
+ntpp.simpleScreenr <- function(object, ..., prev = NULL) {
      if(!class(object) == "simpleScreenr")
          stop("object not of class simpleScreenr")
      if(is.null(prev)) prev <- object$Prevalence

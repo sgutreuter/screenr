@@ -10,24 +10,50 @@
 ################################################################################
 
 
-## Function print.glmpathScreenr
+## Function print.easyTool
 ##
-#' code{print.glmpathScreenr} is a print method for \code{glmpathScreenr} objects
+#' \code{print.easyTool} is a print method for \code{easyTool} objects
 #'
-#' @param object an object of class \code{glmpathScreenr}
+#' @param x an object of class \code{easyTool}
+#'
+#' @param ... optional arguments to \code{print} methods.
 #'
 #' @examples
 #' attach(uniobj1)
 #' print(uniobj1)
 #' @export
-print.glmpathScreenr <- function(object){
-    if(!("glmpathScreenr" %in% class(object)))
-        stop("object not glmpathScreenr class")
+print.easyTool <- function(x, ...){
+    if(!("easyTool" %in% class(x)))
+        stop("x not easyTool class")
     cat("Function call:\n")
-    print(object$Call)
-    cat("\nglmpath object:\n")
-    glmpath::print.glmpath(object$glmpathObj)
-    cat("\nPrevalence:", object$Prevalence, "\n")
+    print(x$Call)
+    cat("\nType:\n")
+    print(x$Type )
+    cat("\nQuestion weights:\n")
+    print(x$QuestionWeights )
+}
+
+
+## Function print.glmpathScreenr
+##
+#' code{print.glmpathScreenr} is a print method for \code{glmpathScreenr} objects
+#'
+#' @param x an object of class \code{glmpathScreenr}
+#'
+#' @param ... optional arguments to \code{print} methods.
+#'
+#' @examples
+#' attach(uniobj1)
+#' print(uniobj1)
+#' @export
+print.glmpathScreenr <- function(x, ...){
+    if(!("glmpathScreenr" %in% class(x)))
+        stop("x not glmpathScreenr class")
+    cat("Function call:\n")
+    print(x$Call)
+    cat("\nglmpath x:\n")
+    glmpath::print.glmpath(x$glmpathObj)
+    cat("\nPrevalence:", x$Prevalence, "\n")
 }
 
 
@@ -39,10 +65,10 @@ print.glmpathScreenr <- function(object){
 #'
 #' @param quote logical indicator for whether or not strings should be printed.
 #'
-#' @param ... further arguments passed to or from other methods.
-#' with surrounding quotes.
+#' @param ... optional arguments to \code{print} methods.
 #'
-#' @return Nothing. Thresholds, specificities and sensitivities are printed as a
+#' @return
+#' Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
 #'
 #' @references
@@ -60,12 +86,11 @@ print.glmpathScreenr <- function(object){
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #'
 #' @examples
-#' load(uniobj2)
-#' class(uniobj2)
+#' attach(uniobj2)
 #' print(uniobj2)
 #'
 #' @export
-print.logisticScreenr <- function(x, quote = FALSE, ...){
+print.logisticScreenr <- function(x, ..., quote = FALSE){
     if(!("logisticScreenr" %in% class(x))) stop("x not logisticScreenr class")
     cat("Out-of-sample sensitivity and specificity at outcome thresholds:\n")
     df_ <- data.frame(threshold = x$CVroc$thresholds,
@@ -81,7 +106,7 @@ print.logisticScreenr <- function(x, quote = FALSE, ...){
 #'
 #' @param x an object of class \code{simplescreenr}.
 #'
-#' @param ... further arguments passed to or from other methods.
+#' @param ... optional arguments to \code{print} methods.
 #'
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.

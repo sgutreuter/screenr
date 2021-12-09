@@ -32,7 +32,7 @@ Any values of 0 in \code{x} are not rescaled, and are preserved in
 the result.
 }
 \examples{
-x <- c(0.5, 1.2, 0.9, 0, 0.1)
+x <- c(0.55, 1.21, 0.94, 0, 0.13)
 rescale_to_int(x, max = 5)
 }
 \seealso{

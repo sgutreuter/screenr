@@ -20,7 +20,7 @@ setwd(workpath)
 #################################################################################
 ## Source the screenr R code for experimentation and testing
 #################################################################################
-source(file.path(codepath, "logisticScreening.R"))
+source(file.path(codepath, "logisticScreenr.R"))
 source(file.path(codepath, "helperFunctions.R"))
 load(file.path(datapath, "unicorns.rda"))
 ##uniobj2 <- readRDS(file.path(datapath, "uniobj2.Rdata") )
@@ -28,11 +28,10 @@ load(file.path(datapath, "unicorns.rda"))
 #################################################################################
 ## Create and save a logisticScreenr object
 #################################################################################
-debugonce(logisticScreenr )
-uniobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+uniobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                           data = unicorns, link = "logit", Nfolds = 10)
-##save(uniobj2, file = file.path(datapath, "uniobj2.Rdata"))
-str(uniobj2)
+##save(uniobj2, file = file.path(datapath, "uniobj2.rda"), compress = "xz")
+coef(uniobj2)
 
 #################################################################################
 ## Create new data for prediction

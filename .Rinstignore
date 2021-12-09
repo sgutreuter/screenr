@@ -1,5 +1,5 @@
 ^test*\\.R$
-^TODO*$
+^TODO*
 ^issues$
 ^\\.git$
 ^\\.gitignore$
@@ -7,3 +7,4 @@
 ^README\\.md$
 ^maintenance
 ^auto
+^vignettes
