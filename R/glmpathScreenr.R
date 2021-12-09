@@ -106,7 +106,7 @@
 #' summary(uniobj1)
 #'
 #' @import pROC
-#' @import stats
+#' @importFrom stats model.frame
 #' @import glmpath
 #' @importFrom stringr str_split
 #' @export

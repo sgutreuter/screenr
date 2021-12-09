@@ -89,7 +89,7 @@
 #'
 #' @aliases{binomialScreenr}
 #' @import pROC
-#' @import stats
+#' @importFrom stats model.frame complete.cases model.response glm binomial
 #' @export
 logisticScreenr <- function(formula,
                             data = NULL,
