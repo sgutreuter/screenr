@@ -1,14 +1,12 @@
 TODO LIST
+=========
 
 Date
 completed    To Do
 ----------   --------------------------------------------------------------
-2021-11-26   Finish getWhat methods for logisticScreenr and simpleScreenr
-               objects (generic getWhat in helperFunctions.R).
-2021-11-25   Write a predict method for logisticScreener objects.
-*            Include a warning in logisticScreenr and glmpathScreenr
-               for any coeficients that are less than zero.
-2021-11-22   Include a glmpathScreener object in Data.
-2021-11-26   Update and expand Examples.
-*            Develop a tutorial vignette for glmpathScreenr
-*            Rebuild package and test everything, repeat as needed.
+             Move the print citable functionality from plot to getWhat.
+             Fix links to package functions.
+             Finish vignette.
+
+
+             Rebuild package and test everything, repeat as needed.

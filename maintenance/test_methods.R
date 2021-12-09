@@ -1,15 +1,16 @@
 #################################################################################
-##      R PROGRAM: test_glmpathScreenr.R
+##      R PROGRAM: test_methods.R
 ##
 ##        PROJECT: screenr Package
 ##
-##    DESCRIPTION: Testing sandbox for glmpathScreenr
+##    DESCRIPTION: Testing sandbox for methods
 ##
 ##     WRITTEN BY: Steve Gutreuter
 ##                 E-mail:  sgutreuter@gmail.gov
 #################################################################################
 library(stringr)
 library(glmpath)
+library(pROC )
 #################################################################################
 ## Set paths and working directory
 codepath <- file.path(Sys.getenv("DEVEL"), "screenr/R")
@@ -20,69 +21,60 @@ setwd(workpath)
 #################################################################################
 ## Source the screenr R code and load the unicorns data
 #################################################################################
+source(file.path(codepath, "easyTool.R"))
 source(file.path(codepath, "glmpathScreenr.R"))
+source(file.path(codepath, "plot.R"))
 source(file.path(codepath, "coef.R"))
 source(file.path(codepath, "print.R"))
+source(file.path(codepath, "predict.R"))
 source(file.path(codepath, "summary.R"))
 source(file.path(codepath, "getWhat.R"))
+source(file.path(codepath, "ntpp.R"))
+source(file.path(codepath, "simpleScreenr.R"))
 source(file.path(codepath, "helperFunctions.R"))
 load(file.path(datapath, "unicorns.rda"))
+load(file.path(datapath, "uniobj1.rda"))
+load(file.path(datapath, "uniobj2.rda"))
 
 #################################################################################
-## Create and save a glmpathScreenr object
+## plot methods
 #################################################################################
+## plot.easyTool
+tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
+plot(tool)
 
-uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
-                          data = unicorns, Nfolds = 10, seed = 123)
-##save(uniobj1, file = file.path(datapath, "uniobj1.rda"), compress = "xz")
-coef(uniobj1)
-print(uniobj1)
-summary(uniobj1)
-wtf <- getWhat(from = uniobj1, what = "glmpathObj")
-plot(wtf)
-rm(wtf)
+## plot.glmpathScreenr
+plot(uniobj1, model = "minAIC")
 
-#################################################################################
-## Create new data for prediction
-#################################################################################
-new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
-                        testresult = c(NA, NA),
-                        Q1 = c(0, 0), Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0),
-                        Q5 = c(0, 1), Q6 = c(0, 1), Q7 = c(0, 1))
+## plot.logisticScreenr
+plot(uniobj2)
+
+## plot.simpleScreenr
+too_simple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+                          data = unicorns)
+plot(too_simple)
 
 #################################################################################
-## Methods testing
+## getWhat methods
 #################################################################################
+## getWhat.easyTool
+tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
+ROCci <- getWhat(from = tool, what = "ROCci")
+print(ROCci)
+## TODO: Fix threshold variable name and round up values
 
-## coef
-coef(uniobj1)
-coef(uniobj1, or = TRUE, intercept = FALSE)
-
-## getWhat
+## getWhat.glmpathScreenr methods
 pathobj <- getWhat(from = uniobj1, what = "glmpathObj", model = "minAIC")
 plot(pathobj)
-cvROC <- getWhat(from = uniobj1,  what = "cvROC", model = "minBIC")
-plot(cvROC)
+cvROCci <- getWhat(from = uniobj1,  what = "ROCci", model = "minBIC")
+print(cvROCci)
 
-## ntpp
-ntpp(uniobj1)
+## getWhat.logisticScreenr
+myROCci <- getWhat(from = uniobj2, what = "ROCci")
+print(myROCci)
 
-## plot
-plot(uniobj1)
-plot(uniobj1, print_ci = FALSE )
-
-## predict
-predict(uniobj1, newdata = new_corns)
-
-## print
-print(uniobj1)
-
-## summary
-summary(uniobj1)
-
-#################################################################################
-## Experimentation
-#################################################################################
-
-
-#################################  End of File  #################################
+## getWhat.simpleScreenr
+too_simple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+                            data = unicorns)
+myroc <- getWhat(from = too_simple, what = "ROCci" )
+print(myroc)

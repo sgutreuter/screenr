@@ -16,18 +16,17 @@
 #' objects.
 #' @param x an object of class \code{easyTool}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
-#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
-#' (default = \verb{TRUE}).
 #' @param conf_level confidence level
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals.
-#' @param se.min minimum value of sensitivity printed in (optional) table.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
 #'
 #' @importFrom graphics legend plot
 #'
-#' @return This function produces a plot as a side effect and (optionally)
+#' @return
+#'
+#' This function produces a plot as a side effect and (optionally)
 #' returns a dataframe containing sensitivities, specificities and their
 #' lower and upper confidence limits for threshold values of Pr(response = 1).
 #'
@@ -64,33 +63,21 @@
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.easyTool <- function(x, ..., plot_ci = TRUE, print = TRUE,
-                                 conf_level = 0.95, bootreps = 2000,
-                                 se.min = 0.8){
+plot.easyTool <- function(x, ..., plot_ci = TRUE,
+                                 conf_level = 0.95, bootreps = 2000){
     if(!("easyTool" %in% class(x)))
             stop("Object not easyTool class")
     stopifnot(conf_level > 0 & conf_level < 1)
     roc_  <- x$ROC
     pROC::plot.roc(roc_, print.auc = TRUE, ci = FALSE, ...)
-    if(plot_ci | print){
+    if(plot_ci){
         ciplt <- pROC::ci.thresholds(roc_,
                                      boot.n = bootreps,
                                      progress = "text",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
     }
-    if(print){
-        threshold <- attr(ciplt, "thresholds")
-        citable <- data.frame(cbind(threshold, ciplt$sensitivity,
-                                    ciplt$specificity))
-        names(citable) <- c("Threshold_Pr", "se.lcl", "Sensitivity",
-                            "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-        row.names(citable) <- 1:(dim(ciplt$sensitivity)[1])
-        citable <- citable[citable$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
-        citable[is.infinite(citable[,1]), 1] <- 0
-    }
     if(plot_ci) plot(ciplt)
-    if(print) return(citable)
 }
 
 
@@ -101,20 +88,15 @@ plot.easyTool <- function(x, ..., plot_ci = TRUE, print = TRUE,
 #'
 #' @param x an object of class \code{glmpathScreenr}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
-#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
-#' (default = \verb{TRUE}).
 #' @param model (character) select either the model which produced the
 #' minimum AIC (\verb{"minAIC"}) or minimum BIC (\verb{"minBIC"}).
 #' @param conf_level confidence level
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals.
-#' @param se.min minimum value of sensitivity printed in (optional) table.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
 #'
-#' @return This function produces a plot as a side effect and (optionally)
-#' returns a dataframe containing sensitivities, specificities and their
-#' lower and upper confidence limits for threshold values of Pr(response = 1).
+#' @return This function produces a plot as a side effect.
 #'
 #' @details \code{plot.glmpathScreenr} is an enhanced convenience wrapper for
 #' \code{`pROC::plot.roc`}.  The table is useful for identifying the
@@ -148,10 +130,8 @@ plot.easyTool <- function(x, ..., plot_ci = TRUE, print = TRUE,
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, print = TRUE,
-                                 model = "minAIC",
-                                 conf_level = 0.95, bootreps = 2000,
-                                 se.min = 0.8){
+plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
+                                conf_level = 0.95, bootreps = 2000){
     if(!("glmpathScreenr" %in% class(x)))
             stop("Object not glmpathScreenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
@@ -161,28 +141,17 @@ plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, print = TRUE,
     isROC <- x$isResults[[model]][["ROC"]]
 
     pROC::plot.roc(cvROC, print.auc = TRUE, ci = FALSE, ...)
-    if(plot_ci | print){
+    if(plot_ci){
         ciplt <- pROC::ci.thresholds(cvROC,
                                      boot.n = bootreps,
                                      progress = "text",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
     }
-    if(print){
-        threshold <- attr(ciplt, "thresholds")
-        citable <- data.frame(cbind(threshold, ciplt$sensitivity,
-                                    ciplt$specificity))
-        names(citable) <- c("Threshold_Pr", "se.lcl", "Sensitivity",
-                            "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-        row.names(citable) <- 1:(dim(ciplt$sensitivity)[1])
-        citable <- citable[citable$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
-        citable[is.infinite(citable[,1]), 1] <- 0
-    }
     if(plot_ci) plot(ciplt)
     pROC::lines.roc(isROC, lty = 3)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
-    if(print) return(citable)
 }
 
 
@@ -195,16 +164,13 @@ plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, print = TRUE,
 #' intervals at the locally maximum subset of coordinates for
 #' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
-#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
-#' (default = \verb{TRUE}).
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals
 #' @param bootreps number of bootstrap replications for estimation of confidence
 #' (default = 2000).
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
 #'
-#' @return This function produces a plot as a side effect and (optionally)
-#' returns a dataframe dataframe containing numerical values.
+#' @return This function produces a plot as a side effect.
 #'
 #' @details
 #' Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
@@ -242,19 +208,10 @@ plot.logisticScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
     }
-    if(print){
-        threshold <- attr(ciplt, "thresholds")
-        citable <- data.frame(cbind(threshold, ciplt$sensitivity,
-                                    ciplt$specificity))
-        names(citable) <- c("threshold", "se.low", "se.median",
-                            "se.high", "sp.low", "sp.median", "sp.high")
-        row.names(citable) <- 1:(dim(ciplt$sensitivity)[1])
-    }
     if(plot_ci) plot(ciplt)
     pROC::lines.roc(x$ISroc, lty = 3)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
-    if(print) return(citable)
 }
 
 
@@ -272,9 +229,6 @@ plot.logisticScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
 #' intervals at the locally maximum subset of coordinates for
 #' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
-#'
-#' @param print logical indicator to return a dataframe of plot points if \verb{TRUE}
-#' (default = \verb{TRUE}).
 #'
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals.
@@ -304,29 +258,20 @@ plot.logisticScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#' too_simple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                           data = unicorns)
-#' plot(toosimple)
+#' plot(too_simple)
 #' @importFrom graphics plot
 #' @export
-plot.simpleScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
-                               conf_level = 0.95, bootreps = 2000){
+plot.simpleScreenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
+                               bootreps = 2000){
     if(!class(x) == "simpleScreenr") stop("x is not a simpleScreenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
-    if(plot_ci | print){
+    if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",
                                      conf.level = conf_level,
                                      thresholds = "local maximas")
         }
-    if(print){
-        threshold <- as.numeric(rownames(ciplt$sensitivity)) + 0.5
-        citable <- data.frame(cbind(threshold, ciplt$sensitivity,
-                                    ciplt$specificity))
-        names(citable) <- c("threshold", "se.low", "se.median",
-                            "se.high", "sp.low", "sp.median", "sp.high")
-        row.names(citable)  <- 1:length(threshold)
-    }
     if(plot_ci) plot(ciplt)
-    if(print) return(citable)
 }
