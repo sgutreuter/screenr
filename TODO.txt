@@ -4,7 +4,10 @@ TODO LIST
 Date
 completed    To Do
 ----------   --------------------------------------------------------------
-             Move the print citable functionality from plot to getWhat.
+2021-12-09   Move the print citable functionality from plot to
+                getWhat.
+             Consider renaming glmpathScreenr, logisticScreenr,
+	        simpleScreenr and methods.
              Fix links to package functions.
              Finish vignette.
 
