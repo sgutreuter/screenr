@@ -10,11 +10,11 @@
 ################################################################################
 
 
-## Function coef.glmpathScreenr
+## Function coef.lasso_screenr
 ##
-#' A method to extract the estimated coefficients from \code{glmpathScreenr} objects.
+#' A method to extract the estimated coefficients from \code{lasso_screenr} objects.
 #'
-#' @param object an object of class \code{glmpathScreenr}.
+#' @param object an object of class \code{lasso_screenr}.
 #'
 #' @param intercept (logical) retain (\code{TRUE}, default) or drop
 #' (\code{FALSE}) the intercept coefficients.
@@ -32,9 +32,9 @@
 #' coef(uniobj1)
 #' @importFrom stats coef
 #' @export
-coef.glmpathScreenr <- function(object, ..., intercept = TRUE, or = FALSE){
-    if(!("glmpathScreenr" %in% class(object)))
-        stop("object not glmpathScreenr class")
+coef.lasso_screenr <- function(object, ..., intercept = TRUE, or = FALSE){
+    if(!("lasso_screenr" %in% class(object)))
+        stop("object not lasso_screenr class")
     coef_ <- data.frame(rbind(object$isResults$minAIC$Coefficients,
                               object$isResults$minBIC$Coefficients))
     rownames(coef_) <- c("AIC-best model", "BIC-best model")
@@ -45,11 +45,11 @@ coef.glmpathScreenr <- function(object, ..., intercept = TRUE, or = FALSE){
 }
 
 
-## Function coef.logisticScreenr
+## Function coef.logreg_screenr
 ##
-#' \code{coef.logisticScreenr} is an S3 coef method for \code{logisticScreenr} objects.
+#' \code{coef.logreg_screenr} is an S3 coef method for \code{logreg_screenr} objects.
 #'
-#' @param object an object of class \code{logisticScreenr}
+#' @param object an object of class \code{logreg_screenr}
 #'
 #' @param intercept (logical) retain (\code{TRUE}, default) or drop
 #' (\code{FALSE}) the intercept coefficients.
@@ -60,7 +60,7 @@ coef.glmpathScreenr <- function(object, ..., intercept = TRUE, or = FALSE){
 #' @param ... optional arguments passed to \code{predict} methods.
 #'
 #' @details
-#' Extracts the estimated coefficients from \code{logisticScreenr} objects.
+#' Extracts the estimated coefficients from \code{logreg_screenr} objects.
 #'
 #' @return A numeric vector containing the estimated coefficients on the logit
 #' scale.
@@ -72,8 +72,8 @@ coef.glmpathScreenr <- function(object, ..., intercept = TRUE, or = FALSE){
 #'
 #' @importFrom stats coef
 #' @export
-coef.logisticScreenr <- function(object, ..., intercept =  TRUE, or = FALSE){
-    stopifnot(class(object) == "logisticScreenr")
+coef.logreg_screenr <- function(object, ..., intercept =  TRUE, or = FALSE){
+    stopifnot(class(object) == "logreg_screenr")
     coef_ <- object[["ModelFit"]][["coefficients"]]
     if(intercept == FALSE) coef_ <- coef_[-1]
     if(or == TRUE ) coef_ <- exp(coef_)

@@ -3,15 +3,15 @@
 \docType{data}
 \name{uniobj1}
 \alias{uniobj1}
-\title{A \code{glmpathScreenr object}}
+\title{A \code{lasso_screenr object}}
 \format{
-An object of class \code{glmpathScreenr}
+An object of class \code{lasso_screenr}
 }
 \usage{
 uniobj1
 }
 \description{
-The result of \code{uniobj1 <- glmpathScreenr(testresult ~ Q1 + Q2 + Q3 +
+The result of \code{uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 +
 Q4 + Q5 + Q6 + Q7, data = unicorns, Nfolds = 10, seed = 123)}
 }
 \examples{
@@ -19,4 +19,5 @@ Q4 + Q5 + Q6 + Q7, data = unicorns, Nfolds = 10, seed = 123)}
 summary(uniobj1)
 }
 }
-\keyword{glmpathScreenr}
+\keyword{lasso}
+\keyword{screenr}

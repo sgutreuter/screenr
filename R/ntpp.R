@@ -18,10 +18,10 @@
 #'
 #' @param ... additional arguments.
 #'
-#' @seealso \code{link[screenr]{ntpp.glmpathScreenr}}
-#' @seealso \code{link[screenr]{ntpp.logisticScreenr}}
+#' @seealso \code{link[screenr]{ntpp.lasso_screenr}}
+#' @seealso \code{link[screenr]{ntpp.logreg_screenr}}
 #' @seealso \code{link[screenr]{ntpp.data.frame}}
-#' @seealso \code{link[screenr]{ntpp.simpleScreenr}}
+#' @seealso \code{link[screenr]{ntpp.simple_screenr}}
 #'
 #' @export
 ntpp <- function(object, ...) {
@@ -29,12 +29,12 @@ ntpp <- function(object, ...) {
 }
 
 
-## Function ntpp.easyTool
+## Function ntpp.easy_tool
 ##
-#' \code{ntpp.easyTool} is a method for computation of the anticipated
+#' \code{ntpp.easy_tool} is a method for computation of the anticipated
 #' number of tests per positive test result
 #'
-#' @param object an \code{easyTool}-class object produced by \code{easyTool}.
+#' @param object an \code{easy_tool}-class object produced by \code{easy_tool}.
 #'
 #' @param prev an optional prevalence proportion for the test outcome; if missing
 #' the prevalence is obtained from \code{object}.
@@ -58,13 +58,13 @@ ntpp <- function(object, ...) {
 #'
 #' @examples
 #' attach(uniobj1)
-#' tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
+#' tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
 #' ntpp(tool)
 #'
 #' @export
-ntpp.easyTool <- function(object, ..., prev = NULL) {
-     if(!class(object) == "easyTool")
-         stop("object not of class easyTool")
+ntpp.easy_tool <- function(object, ..., prev = NULL) {
+     if(!class(object) == "easy_tool")
+         stop("object not of class easy_tool")
      if(is.null(prev)) prev <- mean(object$Scores$response, na.rm = TRUE)
      ssp <- data.frame(sensitivity = object$ROC$sensitivities,
                        specificity = object$ROC$specificities)
@@ -75,12 +75,12 @@ ntpp.easyTool <- function(object, ..., prev = NULL) {
 }
 
 
-## Function ntpp.glmpathScreenr
+## Function ntpp.lasso_screenr
 ##
-#' \code{ntpp.glmpathScreenr} is a method for computation of the anticipated
+#' \code{ntpp.lasso_screenr} is a method for computation of the anticipated
 #' number of tests per positive test result
 #'
-#' @param object a \code{glmpathScreenr}-class object produced by \code{glmpathScreenr}.
+#' @param object a \code{lasso_screenr}-class object produced by \code{lasso_screenr}.
 #'
 #' @param model (character) select the model which produced the
 #' minimum AIC (\verb{"minAIC"}, the default) or minimum BIC (\verb{"minBIC"}).
@@ -114,10 +114,10 @@ ntpp.easyTool <- function(object, ..., prev = NULL) {
 #' ntpp(uniobj1)
 #'
 #' @export
-ntpp.glmpathScreenr <- function(object, ..., model = "minAIC", type = "cvResults",
+ntpp.lasso_screenr <- function(object, ..., model = "minAIC", type = "cvResults",
                                 prev = NULL) {
-     if(!class(object) == "glmpathScreenr")
-         stop("object not of class glmpathScreenr")
+     if(!class(object) == "lasso_screenr")
+         stop("object not of class lasso_screenr")
      if(!type %in% c("cvResults", "isResults"))
          stop("type must be 'cvResults' or 'isResults'" )
      if(is.null(prev)) prev <- object$Prevalence
@@ -130,12 +130,12 @@ ntpp.glmpathScreenr <- function(object, ..., model = "minAIC", type = "cvResults
 }
 
 
-## Function ntpp.logisticScreenr
+## Function ntpp.logreg_screenr
 ##
-#' \code{ntpp.logisticScreenr} is a method for computation of the anticipated
+#' \code{ntpp.logreg_screenr} is a method for computation of the anticipated
 #' number of tests per positive test result
 #'
-#' @param object a \code{logisticScreenr}-class object produced by \code{logisticScreenr}.
+#' @param object a \code{logreg_screenr}-class object produced by \code{logreg_screenr}.
 #'
 #' @param type (character) one of \verb{"cvResults"} (the default) or
 #' \verb{"isResults"} to specify \emph{k}-fold cross-validated or in-sample
@@ -166,10 +166,10 @@ ntpp.glmpathScreenr <- function(object, ..., model = "minAIC", type = "cvResults
 #' ntpp(uniobj2)
 #'
 #' @export
-ntpp.logisticScreenr <- function(object, ..., type = "cvResults",
+ntpp.logreg_screenr <- function(object, ..., type = "cvResults",
                                 prev = NULL) {
-     if(!class(object) == "logisticScreenr")
-         stop("object not of class logisticScreenr")
+     if(!class(object) == "logreg_screenr")
+         stop("object not of class logreg_screenr")
      if(!type %in% c("cvResults", "isResults"))
          stop("type must be 'cvResults' or 'isResults'" )
      if(is.null(prev )) prev <- object$Prevalence
@@ -218,12 +218,12 @@ ntpp.data.frame <- function(object, ...){
 }
 
 
-## Function ntpp.simpleScreenr
+## Function ntpp.simple_screenr
 ##
-#' \code{ntpp.simpleScreenr} is a method for computation of the anticipated
+#' \code{ntpp.simple_screenr} is a method for computation of the anticipated
 #' number of tests per positive test result
 #'
-#' @param object a \code{simpleScreenr}-class object produced by \code{simpleScreenr}.
+#' @param object a \code{simple_screenr}-class object produced by \code{simple_screenr}.
 #'
 #' @param prev an optional prevalence proportion for the test outcome; if missing
 #' the prevalence is obtained from \code{object}.
@@ -247,14 +247,14 @@ ntpp.data.frame <- function(object, ...){
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+#' toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                            data = unicorns)
 #' ntpp(toosimple)
 #'
 #' @export
-ntpp.simpleScreenr <- function(object, ..., prev = NULL) {
-     if(!class(object) == "simpleScreenr")
-         stop("object not of class simpleScreenr")
+ntpp.simple_screenr <- function(object, ..., prev = NULL) {
+     if(!class(object) == "simple_screenr")
+         stop("object not of class simple_screenr")
      if(is.null(prev)) prev <- object$Prevalence
      ssp <- data.frame(sensitivity = object[["ISroc"]][["sensitivities"]],
                        specificity = object[["ISroc"]][["specificities"]])

@@ -10,11 +10,11 @@
 ################################################################################
 
 
-## Function print.easyTool
+## Function print.easy_tool
 ##
-#' \code{print.easyTool} is a print method for \code{easyTool} objects
+#' \code{print.easy_tool} is a print method for \code{easy_tool} objects
 #'
-#' @param x an object of class \code{easyTool}
+#' @param x an object of class \code{easy_tool}
 #'
 #' @param ... optional arguments to \code{print} methods.
 #'
@@ -22,9 +22,9 @@
 #' attach(uniobj1)
 #' print(uniobj1)
 #' @export
-print.easyTool <- function(x, ...){
-    if(!("easyTool" %in% class(x)))
-        stop("x not easyTool class")
+print.easy_tool <- function(x, ...){
+    if(!("easy_tool" %in% class(x)))
+        stop("x not easy_tool class")
     cat("Function call:\n")
     print(x$Call)
     cat("\nType:\n")
@@ -34,11 +34,11 @@ print.easyTool <- function(x, ...){
 }
 
 
-## Function print.glmpathScreenr
+## Function print.lasso_screenr
 ##
-#' code{print.glmpathScreenr} is a print method for \code{glmpathScreenr} objects
+#' code{print.lasso_screenr} is a print method for \code{lasso_screenr} objects
 #'
-#' @param x an object of class \code{glmpathScreenr}
+#' @param x an object of class \code{lasso_screenr}
 #'
 #' @param ... optional arguments to \code{print} methods.
 #'
@@ -46,9 +46,9 @@ print.easyTool <- function(x, ...){
 #' attach(uniobj1)
 #' print(uniobj1)
 #' @export
-print.glmpathScreenr <- function(x, ...){
-    if(!("glmpathScreenr" %in% class(x)))
-        stop("x not glmpathScreenr class")
+print.lasso_screenr <- function(x, ...){
+    if(!("lasso_screenr" %in% class(x)))
+        stop("x not lasso_screenr class")
     cat("Function call:\n")
     print(x$Call)
     cat("\nglmpath x:\n")
@@ -57,11 +57,11 @@ print.glmpathScreenr <- function(x, ...){
 }
 
 
-## Function print.logisticScreenr
+## Function print.logreg_screenr
 ##
-#' \code{print.logisticScreenr} is an S3 print method for \code{logisticScreenr} objects.
+#' \code{print.logreg_screenr} is an S3 print method for \code{logreg_screenr} objects.
 #'
-#' @param x an object of class \code{logisticScreenr}.
+#' @param x an object of class \code{logreg_screenr}.
 #'
 #' @param quote logical indicator for whether or not strings should be printed.
 #'
@@ -90,8 +90,8 @@ print.glmpathScreenr <- function(x, ...){
 #' print(uniobj2)
 #'
 #' @export
-print.logisticScreenr <- function(x, ..., quote = FALSE){
-    if(!("logisticScreenr" %in% class(x))) stop("x not logisticScreenr class")
+print.logreg_screenr <- function(x, ..., quote = FALSE){
+    if(!("logreg_screenr" %in% class(x))) stop("x not logreg_screenr class")
     cat("Out-of-sample sensitivity and specificity at outcome thresholds:\n")
     df_ <- data.frame(threshold = x$CVroc$thresholds,
                       sensitivity = x$CVroc$sensitivities,
@@ -100,9 +100,9 @@ print.logisticScreenr <- function(x, ..., quote = FALSE){
 }
 
 
-## Function print.simpleScreenr
+## Function print.simple_screenr
 ##
-#' \code{print.simpleScreenr} is an S3 print method for \code{simpleScreenr} objects.
+#' \code{print.simple_screenr} is an S3 print method for \code{simple_screenr} objects.
 #'
 #' @param x an object of class \code{simplescreenr}.
 #'
@@ -113,13 +113,13 @@ print.logisticScreenr <- function(x, ..., quote = FALSE){
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#' toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
 #'                           data = unicorns)
 #' print(toosimple)
 #'
 #' @export
-print.simpleScreenr <- function(x, ...){
-    if(!("simpleScreenr" %in% class(x))) stop("x not a simpleScreenr object")
+print.simple_screenr <- function(x, ...){
+    if(!("simple_screenr" %in% class(x))) stop("x not a simple_screenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
     df_ <- pROC::coords(x$ISroc, transpose = FALSE)
     df_["threshold"] <- df_["threshold"] + 0.5

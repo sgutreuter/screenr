@@ -26,22 +26,22 @@ of application-specific tradeoffs between sensitivity and specificity.
 
 The high-level functions in the \code{screenr} package are:
 \describe{
-\item{\code{\link{glmpathScreenr}}}{Test-screening based on GLM path regularization
+\item{\code{\link{lasso_screenr}}}{Test-screening based on GLM path regularization
 of logistic regression models}
-\item{\code{\link{logisticScreenr}}}{Test-screening based maximum-likelhood estimation
+\item{\code{\link{logreg_screenr}}}{Test-screening based maximum-likelhood estimation
 of logistic regression models}
-\item{\code{\link{easyTool}}}{Easy implementation of test-screening tools}
-\item{\code{\link{simpleScreenr}}}{Simple un-optimized test-screening}
+\item{\code{\link{easy_tool}}}{Easy implementation of test-screening tools}
+\item{\code{\link{simple_screenr}}}{Simple un-optimized test-screening}
 \item{\code{link{rescale_to_Int}}}{Rescale a strictly positive vector of real numbers
 to integers}
 \item{\code{\link{sens_spec}}}{Sensitivity and specificity from a 2 x 2 table}
 }
 
 There are \code{plot}, \code{print} \code{summary}, \code{predict},
-\code{getWhat}, and \code{ntpp} methods for the objects produced by
-\code{glmpathScreenr}, \code{logisticScreenr}, \code{simpleScreenr}
-and \code{easyTool}. In addition, there is a \code{coef} method for
-\code{glmpathScreenr} and \code{logisticScreenr} objects.
+\code{get_what}, and \code{ntpp} methods for the objects produced by
+\code{lasso_screenr}, \code{logreg_screenr}, \code{simple_screenr}
+and \code{easy_tool}. In addition, there is a \code{coef} method for
+\code{lasso_screenr} and \code{logreg_screenr} objects.
 }
 \note{
 The canonical source for \code{screenr} is

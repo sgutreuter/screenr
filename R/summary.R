@@ -10,12 +10,12 @@
 ################################################################################
 
 
-## Function summary.easyTool
+## Function summary.easy_tool
 ##
-#' \code{summary.easyTool} returns a summary of the receiver-operating
-#' characteristic produced by \code{easyTool}
+#' \code{summary.easy_tool} returns a summary of the receiver-operating
+#' characteristic produced by \code{easy_tool}
 #'
-#' @param object an \code{easyTool} object.
+#' @param object an \code{easy_tool} object.
 #'
 #' @param ... optional arguments passed to \code{summary} methods.
 #'
@@ -24,24 +24,24 @@
 #' changed.
 #'
 #' @details This is essentially a wrapper for \code{glmpath::summary.glmpath}
-#' provided for \code{glmpathScreenr} objects.
+#' provided for \code{lasso_screenr} objects.
 #' @examples
 #' attach(uniobj1)
 #' summary(uniobj1)
 #' @import pROC
 #' @export
-summary.easyTool <- function(object, ...){
-    if(!("easyTool" %in% class(object)))
-        stop("object not easyTool class")
+summary.easy_tool <- function(object, ...){
+    if(!("easy_tool" %in% class(object)))
+        stop("object not easy_tool class")
     print(object$ROC)
 }
 
 
-## Function summary.glmpathScreenr
+## Function summary.lasso_screenr
 ##
-#' \code{summary.glmpathScreenr} returns a summary of the GLM path regularizer
+#' \code{summary.lasso_screenr} returns a summary of the GLM path regularizer
 #'
-#' @param object a glmpathScreenr object
+#' @param object a lasso_screenr object
 #'
 #' @param ... optional arguments passed to \code{summary} methods.
 #'
@@ -50,26 +50,26 @@ summary.easyTool <- function(object, ...){
 #' changed.
 #'
 #' @details This is essentially a wrapper for \code{glmpath::summary.glmpath}
-#' provided for \code{glmpathScreenr} objects.
+#' provided for \code{lasso_screenr} objects.
 #' @examples
 #' attach(uniobj1)
 #' summary(uniobj1)
 #' @export
-summary.glmpathScreenr <- function(object, ...){
-    if(!("glmpathScreenr" %in% class(object)))
-        stop("object not glmpathScreenr class")
+summary.lasso_screenr <- function(object, ...){
+    if(!("lasso_screenr" %in% class(object)))
+        stop("object not lasso_screenr class")
     res <- object$Summary
     res
 }
 
 
-## Function summary.logisticScreenr
+## Function summary.logreg_screenr
 ##
-#' \code{summary.logisticScreenr} is an S3 print method for \code{logisticScreenr}
+#' \code{summary.logreg_screenr} is an S3 print method for \code{logreg_screenr}
 #' objects.
 #'
-#' @param object an object of class \code{logisticScreenr} produced by function
-#' \code{logisticScreenr}.
+#' @param object an object of class \code{logreg_screenr} produced by function
+#' \code{logreg_screenr}.
 #'
 #' @param diagnostics a logical value; plot model diagnostics if \verb{TRUE}.
 #'
@@ -81,8 +81,8 @@ summary.glmpathScreenr <- function(object, ...){
 #' attach(uniobj2)
 #' summary(uniobj2)
 #' @export
-summary.logisticScreenr <- function(object, ..., diagnostics = FALSE){
-    if(!("logisticScreenr" %in% class(object))) stop("object not logisticScreenr class")
+summary.logreg_screenr <- function(object, ..., diagnostics = FALSE){
+    if(!("logreg_screenr" %in% class(object))) stop("object not logreg_screenr class")
     cat("Call:\n")
     print(object$Call)
     cat("\n\nLogistic regression model summary:\n")
@@ -102,9 +102,9 @@ summary.logisticScreenr <- function(object, ..., diagnostics = FALSE){
 
 ## Function summary.simpleSreenr
 ##
-#' \code{summary.simpleScreenr} is a summary method for \code{simpleScreenr} objects
+#' \code{summary.simple_screenr} is a summary method for \code{simple_screenr} objects
 #'
-#' @param object an object of class \code{simpleScreenr}.
+#' @param object an object of class \code{simple_screenr}.
 #'
 #' @param ... optional arguments passed to \code{summary} methods.
 #'
@@ -113,13 +113,13 @@ summary.logisticScreenr <- function(object, ..., diagnostics = FALSE){
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
+#' toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
 #'                           data = unicorns)
 #' summary(toosimple)
 #' @export
-summary.simpleScreenr <- function(object, ...){
-    if(!("simpleScreenr" %in% class(object)))
-        stop("object not a simpleScreenr object")
+summary.simple_screenr <- function(object, ...){
+    if(!("simple_screenr" %in% class(object)))
+        stop("object not a simple_screenr object")
     cat("Call:\n")
     print(object$Call)
     cat("\nPrevalence (In-sample prevalence of condition):\n")

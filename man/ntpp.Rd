@@ -20,11 +20,11 @@ tests per positive test result and prevalence among the subjects who would be
 screened out of testing)
 }
 \seealso{
-\code{link[screenr]{ntpp.glmpathScreenr}}
+\code{link[screenr]{ntpp.lasso_screenr}}
 
-\code{link[screenr]{ntpp.logisticScreenr}}
+\code{link[screenr]{ntpp.logreg_screenr}}
 
 \code{link[screenr]{ntpp.data.frame}}
 
-\code{link[screenr]{ntpp.simpleScreenr}}
+\code{link[screenr]{ntpp.simple_screenr}}
 }

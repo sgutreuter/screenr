@@ -10,12 +10,12 @@
 ################################################################################
 
 
-## Function predict.glmpathScreenr
+## Function predict.lasso_screenr
 ##
-#' \code{predict.glmpathScreenr} is a prediction method for objects of class \code{glmpathScreenr}
+#' \code{predict.lasso_screenr} is a prediction method for objects of class \code{lasso_screenr}
 #'
-#' @param object an object of class \code{glmpathScreenr} produced by
-#' \code{`glmpathScreenr`}.
+#' @param object an object of class \code{lasso_screenr} produced by
+#' \code{`lasso_screenr`}.
 #'
 #' @param newdata new dataframe from which predicted probabilities of positive test results are desired.
 #' The dataframe must contain values of the same response variables and covariates that were used
@@ -23,7 +23,7 @@
 #'
 #' @param ... optional arguments to \code{predict} methods.
 #'
-#' @return \code{predict.glmpathScreenr} returns (invisibly) a dataframe augmenting the complete cases
+#' @return \code{predict.lasso_screenr} returns (invisibly) a dataframe augmenting the complete cases
 #' in \code{newdata} with the predicted probabilities of positive test results \code{phat_minAIC} and
 #' \code{phat_minBIC} from the models that produced the minimum AIC and BIC, respectively.
 #'
@@ -41,9 +41,9 @@
 #' ## Predict the probabilities of testing positive for the new subjects
 #' predict(uniobj1, newdata = new_corns)
 #' @export
-predict.glmpathScreenr <- function(object =  NULL, ..., newdata = NULL){
+predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
-    if(!("glmpathScreenr" %in% class(object))) stop("object not a glmpathScreenr object")
+    if(!("lasso_screenr" %in% class(object))) stop("object not a lasso_screenr object")
     form  <- object$formula
     rname <- as.character(form[[2]])
     nd <- newdata
@@ -66,12 +66,12 @@ predict.glmpathScreenr <- function(object =  NULL, ..., newdata = NULL){
 }
 
 
-## Function predict.logisticScreenr
+## Function predict.logreg_screenr
 ##
-#' \code{predict.logisticScreenr} is an S3 prediction method for objects of class \code{logisticScreenr}
+#' \code{predict.logreg_screenr} is an S3 prediction method for objects of class \code{logreg_screenr}
 #'
-#' @param object an object of class \code{logisticScreenr} produced by
-#' \code{`logisticScreenr`}.
+#' @param object an object of class \code{logreg_screenr} produced by
+#' \code{`logreg_screenr`}.
 #'
 #' @param newdata new dataframe from which predicted probabilities of positive test results are
 #' desired. The dataframe must contain values of the same response variables and covariates that
@@ -79,7 +79,7 @@ predict.glmpathScreenr <- function(object =  NULL, ..., newdata = NULL){
 #'
 #' @param ... optional arguments to \code{predict} methods.
 #'
-#' @return \code{predict.logisticScreenr} returns (invisibly) a dataframe augmenting
+#' @return \code{predict.logreg_screenr} returns (invisibly) a dataframe augmenting
 #' \code{newdata} with the predicted probabilities of positive test results \code{phat}.
 #'
 #' @details This method is a convenience wrapper for \code{`stats::predict.glm`}.
@@ -97,9 +97,9 @@ predict.glmpathScreenr <- function(object =  NULL, ..., newdata = NULL){
 #' @export
 #'
 #'
-predict.logisticScreenr <- function(object = NULL, ...,  newdata = NULL){
+predict.logreg_screenr <- function(object = NULL, ...,  newdata = NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
-    if(!("logisticScreenr" %in% class(object))) stop("object not a logisticScreenr object")
+    if(!("logreg_screenr" %in% class(object))) stop("object not a logreg_screenr object")
     form <- object$formula
     rname <- as.character(form[[2]])
     nd <- newdata

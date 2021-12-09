@@ -3,15 +3,15 @@
 \docType{data}
 \name{uniobj2}
 \alias{uniobj2}
-\title{A \code{logisticScreenr object}}
+\title{A \code{logreg_screenr object}}
 \format{
-An object of class \code{logisticScreenr}
+An object of class \code{logreg_screenr}
 }
 \usage{
 uniobj2
 }
 \description{
-The result of \code{uniobj2 <- logisticScreenr(testresult ~ Q1 + Q2 + Q3 +
+The result of \code{uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 +
 Q4 + Q5 + Q6 + Q7, data = unicorns, link = "logit", Nfolds = 10, seed = 123)}
 }
 \examples{
@@ -19,4 +19,7 @@ Q4 + Q5 + Q6 + Q7, data = unicorns, link = "logit", Nfolds = 10, seed = 123)}
 summary(uniobj2)
 }
 }
-\keyword{logisticScreenr}
+\keyword{logistic}
+\keyword{ordinary}
+\keyword{regression}
+\keyword{screenr}

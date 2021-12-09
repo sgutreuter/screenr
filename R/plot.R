@@ -9,12 +9,11 @@
 ##               sgutreuter@gmail.com
 ################################################################################
 
-
-## Function plot.easyTool
+## Function plot.easy_tool
 ##
-#' \code{plot.easyTool} is a plotting method for \code{easyTool}
+#' \code{plot.easy_tool} is a plotting method for \code{easy_tool}
 #' objects.
-#' @param x an object of class \code{easyTool}.
+#' @param x an object of class \code{easy_tool}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
 #' @param conf_level confidence level
 #' @param bootreps the number of bootstrap replications for estimation of
@@ -30,7 +29,7 @@
 #' returns a dataframe containing sensitivities, specificities and their
 #' lower and upper confidence limits for threshold values of Pr(response = 1).
 #'
-#' @details \code{plot.easyTool} is an enhanced convenience wrapper for
+#' @details \code{plot.easy_tool} is an enhanced convenience wrapper for
 #' \code{`pROC::plot.roc`}.  The table is useful for identifying the
 #' minimum predicted response probabilities associated with particular
 #' sensitivities.  The sensitivities and specificities are the coordinates at
@@ -58,15 +57,15 @@
 #'
 #' @examples
 #' attach(uniobj1)
-#' tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
+#' tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
 #' plot(tool)
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.easyTool <- function(x, ..., plot_ci = TRUE,
+plot.easy_tool <- function(x, ..., plot_ci = TRUE,
                                  conf_level = 0.95, bootreps = 2000){
-    if(!("easyTool" %in% class(x)))
-            stop("Object not easyTool class")
+    if(!("easy_tool" %in% class(x)))
+            stop("Object not easy_tool class")
     stopifnot(conf_level > 0 & conf_level < 1)
     roc_  <- x$ROC
     pROC::plot.roc(roc_, print.auc = TRUE, ci = FALSE, ...)
@@ -81,12 +80,12 @@ plot.easyTool <- function(x, ..., plot_ci = TRUE,
 }
 
 
-## Function plot.glmpathScreenr
+## Function plot.lasso_screenr
 ##
-#' \code{plot.glmpathScreenr} is a plotting method for \code{glmpathScreenr}
+#' \code{plot.lasso_screenr} is a plotting method for \code{lasso_screenr}
 #' objects.
 #'
-#' @param x an object of class \code{glmpathScreenr}.
+#' @param x an object of class \code{lasso_screenr}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
 #' @param model (character) select either the model which produced the
 #' minimum AIC (\verb{"minAIC"}) or minimum BIC (\verb{"minBIC"}).
@@ -98,7 +97,7 @@ plot.easyTool <- function(x, ..., plot_ci = TRUE,
 #'
 #' @return This function produces a plot as a side effect.
 #'
-#' @details \code{plot.glmpathScreenr} is an enhanced convenience wrapper for
+#' @details \code{plot.lasso_screenr} is an enhanced convenience wrapper for
 #' \code{`pROC::plot.roc`}.  The table is useful for identifying the
 #' minimum predicted response probabilities associated with particular
 #' sensitivities.  The sensitivities and specificities are the coordinates at
@@ -130,10 +129,10 @@ plot.easyTool <- function(x, ..., plot_ci = TRUE,
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
+plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
                                 conf_level = 0.95, bootreps = 2000){
-    if(!("glmpathScreenr" %in% class(x)))
-            stop("Object not glmpathScreenr class")
+    if(!("lasso_screenr" %in% class(x)))
+            stop("Object not lasso_screenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
     if(!model %in% c("minAIC", "minBIC"))
         stop("Specify 'minAIC' or 'minBIC' for model")
@@ -155,11 +154,11 @@ plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
 }
 
 
-## Function plot.logisticScreenr
+## Function plot.logreg_screenr
 ##
-#' \code{plot.logisticScreenr} is an S3 plot method for \code{logisticScreenr} objects,
+#' \code{plot.logreg_screenr} is an S3 plot method for \code{logreg_screenr} objects,
 #'
-#' @param x an object of class \code{logisticScreenr}.
+#' @param x an object of class \code{logreg_screenr}.
 #' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
 #' on sensitivity and specificity (default = \verb{TRUE}). See also
@@ -196,12 +195,12 @@ plot.glmpathScreenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
 #'
 #' @importFrom graphics legend plot
 #' @export
-plot.logisticScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
-                              conf_level = 0.95, bootreps = 2000){
-    if(!class(x) == "logisticScreenr") stop("x is not a logisticScreenr object")
+plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
+                                bootreps = 2000){
+    if(!class(x) == "logreg_screenr") stop("x is not a logreg_screenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
     plot(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
-    if(plot_ci | print){
+    if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$CVroc,
                                      boot.n = bootreps,
                                      progress = "text",
@@ -215,15 +214,15 @@ plot.logisticScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
 }
 
 
-## Function plot.simpleScreenr
+## Function plot.simple_screenr
 ##
-#' \code{plot.simpleScreenr} is a plot method for \code{simpleScreenr} objects.
+#' \code{plot.simple_screenr} is a plot method for \code{simple_screenr} objects.
 #'
 #' Plot ROC curve with pointwise 95% confidence
 #' intevals on sensitivity and specificity and (optionally) returns a dataframe
 #' containing numerical values.
 #'
-#' @param x an object of class \code{simpleScreenr}.
+#' @param x an object of class \code{simple_screenr}.
 #'
 #' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
@@ -258,14 +257,14 @@ plot.logisticScreenr <- function(x, ..., plot_ci = TRUE, print = TRUE,
 #'
 #' @examples
 #' data(unicorns)
-#' too_simple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+#' too_simple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                           data = unicorns)
 #' plot(too_simple)
 #' @importFrom graphics plot
 #' @export
-plot.simpleScreenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
+plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                bootreps = 2000){
-    if(!class(x) == "simpleScreenr") stop("x is not a simpleScreenr object")
+    if(!class(x) == "simple_screenr") stop("x is not a simple_screenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
