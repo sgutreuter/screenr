@@ -6,8 +6,8 @@ completed    To Do
 ----------   --------------------------------------------------------------
 2021-12-09   Move the print citable functionality from plot to
                 getWhat.
-             Consider renaming glmpathScreenr, logisticScreenr,
-	        simpleScreenr and methods.
+2021-12-09   Rename glmpathScreenr, logisticScreenr, simpleScreenr,
+                getWhat, easyTool and classes and methods.
              Fix links to package functions.
              Finish vignette.
 
