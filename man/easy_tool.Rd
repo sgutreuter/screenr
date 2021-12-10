@@ -2,8 +2,7 @@
 % Please edit documentation in R/easy_tool.R
 \name{easy_tool}
 \alias{easy_tool}
-\title{\code{easy_tool} creates the components of an easy-to-use screening tool based
-on the results of either \code{lasso_screenr} or \code{logreg_screenr}.}
+\title{Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects}
 \usage{
 easy_tool(object, max = 3, model = "minAIC", crossval = TRUE, ...)
 }
@@ -40,8 +39,7 @@ receiver-operating characteristic produced by \code{`pROC::roc`}.}
 }
 }
 \description{
-\code{easy_tool} creates the components of an easy-to-use screening tool based
-on the results of either \code{lasso_screenr} or \code{logreg_screenr}.
+Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects
 }
 \details{
 The estimates of the coefficients for the screening questions are rescaled to
@@ -70,9 +68,9 @@ fit. A value of \verb{3} may be a reasonable compromise. It is prudent to
 compare the ROCs from a few values of \code{max} with the ROC from the model
 and base the final choice on the trade-off between ease of manual scoring and
 the desired combination of sensitivity and specificity.
-
-\code{coef}, \code{ntpp}, \code{plot}, \code{print} and \code{summary}
-methods are available for \code{easy_tool}-class objects.
+}
+\note{
+Execute \code{methods(class = "easy_tool")} to see available methods.
 }
 \examples{
 attach(uniobj1)
@@ -80,6 +78,6 @@ tool <- easy_tool(uniobj1, max = 3)
 class(tool)
 }
 \seealso{
-\code{`rescale_to_int`}, \code{`coef.easy_tool`}, \code{ntpp.easy_tool},
-\code{`plot.easy_tool`}, \code{`print.easy_tool`} and \code{`summary.easy_tool`}
+\code{rescale_to_int}, \code{coef.easy_tool}, \code{ntpp.easy_tool},
+\code{plot.easy_tool}, \code{print.easy_tool} and \code{summary.easy_tool}
 }

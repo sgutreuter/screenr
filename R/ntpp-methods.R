@@ -9,9 +9,7 @@
 
 ## Generic function ntpp
 ##
-#' \code{ntpp} is an S3 generic function that computes the anticipated number of
-#' tests per positive test result and prevalence among the subjects who would be
-#' screened out of testing)
+#' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
 #' @param object an object from which to compute the number of tests
 #' per test positive test results.
@@ -31,8 +29,7 @@ ntpp <- function(object, ...) {
 
 ## Function ntpp.easy_tool
 ##
-#' \code{ntpp.easy_tool} is a method for computation of the anticipated
-#' number of tests per positive test result
+#' Compute the Ratio of Total Tests to Positive Results from \code{easy_tool} Objects
 #'
 #' @param object an \code{easy_tool}-class object produced by \code{easy_tool}.
 #'
@@ -77,8 +74,7 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 
 ## Function ntpp.lasso_screenr
 ##
-#' \code{ntpp.lasso_screenr} is a method for computation of the anticipated
-#' number of tests per positive test result
+#' Compute the Ratio of Total Tests to Positive Results from \code{lasso_screenr} Objects
 #'
 #' @param object a \code{lasso_screenr}-class object produced by \code{lasso_screenr}.
 #'
@@ -132,8 +128,7 @@ ntpp.lasso_screenr <- function(object, ..., model = "minAIC", type = "cvResults"
 
 ## Function ntpp.logreg_screenr
 ##
-#' \code{ntpp.logreg_screenr} is a method for computation of the anticipated
-#' number of tests per positive test result
+#' Compute the Ratio of Total Tests to Positive Results from \code{logreg_screenr} Objects
 #'
 #' @param object a \code{logreg_screenr}-class object produced by \code{logreg_screenr}.
 #'
@@ -188,8 +183,7 @@ ntpp.logreg_screenr <- function(object, ..., type = "cvResults",
 
 ## Function ntpp.data.frame
 ##
-#' \code{ntpp.data.frame} is a method for computation of the anticipated
-#' number of tests per positive test result
+#' Compute the Ratio of Total Tests to Positive Results from a Data Frame
 #'
 #' @param object a one-row dataframe containing columns \code{sensitivity},
 #' \code{specificity} and \code{prev}.
@@ -220,8 +214,7 @@ ntpp.data.frame <- function(object, ...){
 
 ## Function ntpp.simple_screenr
 ##
-#' \code{ntpp.simple_screenr} is a method for computation of the anticipated
-#' number of tests per positive test result
+#' Compute the Ratio of Total Tests to Positive Results from \code{simple_screenr} Objects
 #'
 #' @param object a \code{simple_screenr}-class object produced by \code{simple_screenr}.
 #'

@@ -11,8 +11,7 @@
 
 ## Generic function get_what
 ##
-#' \code{get_what} is an S3 generic function to extract components of objects
-#' produced by functions in the \code{screenr} package
+#' S3 Methods for Extraction of Object Components
 #'
 #' @param from an object from which to extract \code{what}.
 #'
@@ -20,9 +19,9 @@
 #'
 #' @param ... additional arguments.
 #'
-#' @seealso \code{link[screenr]{get_what.lasso_screenr}}
-#' @seealso \code{link[screenr]{get_what.logreg_screenr}}
-#' @seealso \code{link[screenr]{get_what.simple_screenr}}
+#' @seealso \code{link{get_what.lasso_screenr}}
+#' @seealso \code{link{get_what.logreg_screenr}}
+#' @seealso \code{link{get_what.simple_screenr}}
 #' @export
 get_what <- function(from, what, ...) {
     UseMethod("get_what")
@@ -31,8 +30,7 @@ get_what <- function(from, what, ...) {
 
 ## Function get_what.easy_tool
 ##
-#' \code{get_what.easy_tool} is an S3 method to extract components of
-#' \code{easy_tool} objects.
+#' An S3 Method for Extraction of Components from \code{easy_tool} Objects
 #'
 #' @param from the \code{easy_tool}-class object from which to extract
 #' the component.
@@ -41,7 +39,7 @@ get_what <- function(from, what, ...) {
 #' \verb{"Call"}, \verb{"QuestionWeights"}, \verb{"ROCci"}, \verb{"ROC"} and
 #' \verb{"Scores"}.
 #'
-#' @param conf_level (optional) confidence level for \code{what =} \verb{ROCci}
+#' @param conf.level (optional) confidence level for \code{what =} \verb{ROCci}
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals for \code{what =} \verb{"ROCci"}.
@@ -75,13 +73,14 @@ get_what <- function(from, what, ...) {
 #' \dontrun{
 #' attach(uniobj1)
 #' tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
-#' ## Get and print sensitivities and specificities at feasible thresholds
+#' ## Get and print sensitivities and specificities at thresholds for the
+#' ##   local maxima of the ROC curve
 #' ROCci <- get_what(from = tool, what = "ROCci")
 #' print(ROCci)
 #' }
 #' @export
 get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
-                             conf_level = 0.95, se.min = 0.7){
+                             conf.level = 0.95, se.min = 0.7){
     if(!"easy_tool" %in% class(from))
         stop("Object not easy_tool class")
     if(!what %in% c("QuestionWeights", "Call", "ROC", "Scores", "ROCci"))
@@ -89,20 +88,9 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
     res <- from[[what]]
     if(what == "ROCci") {
         roc_  <- from[["ROC"]]
-        ci_ <- pROC::ci.thresholds(roc_,
-                                   boot.n = bootreps,
-                                   progress = "text",
-                                   conf.level = conf_level,
-                                   thresholds = "local maximas")
-        threshold <- attr(ci_, "thresholds")
-        res <- data.frame(cbind(threshold, ci_$sensitivity,
-                                ci_$specificity))
-        res$threshold <- round(res$threshold + 0.01)
-        names(res) <- c("Threshold_score", "se.lcl", "Sensitivity",
-                        "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-        row.names(res) <- 1:(dim(ci_$sensitivity)[1])
-        res <- res[res$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
-        res[is.infinite(res[,1]), 1] <- 0
+        res <- roc_ci(roc_, bootreps = bootreps, conf.level = conf.level,
+                      se.min = se.min)
+        res$Threshold <- round(res$Threshold + 0.01)
     }
     invisible(res)
 }
@@ -110,8 +98,7 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
 
 ## Function get_what.lasso_screenr
 ##
-#' \code{get_what.lasso_screenr} is an S3 method to extract components of
-#' \code{lasso_screenr} objects.
+#' An S3 Method for Extraction of Components from \code{lasso_screenr} Objects
 #'
 #' @param from the \code{lasso_screenr}-class object from which to extract
 #' the component.
@@ -122,7 +109,7 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
 #' @param model the (character) name of the model for which the component is
 #' desired.  Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
 #'
-#' @param conf_level (optional) confidence level for \code{what =} \verb{ROCci}
+#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals for \code{what =} \verb{"ROCci"}.
@@ -158,14 +145,14 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
 #' pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
 #' plot(pathobj)
 #' ## Get and print cross-validated sensitivities and specificities at
-#' ##   feasible thresholds
+#' ##   thresholds for the local maxima of the ROC curve
 #' cvROCci <- get_what(from = uniobj1,  what = "ROCci", model = "minBIC")
 #' print(cvROCci)
 #' }
 #'
 #' @export
 get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAIC",
-                                   conf_level = 0.95, bootreps =  2000,
+                                   conf.level = 0.95, bootreps =  2000,
                                    se.min = 0.7){
     if(!"lasso_screenr" %in% class(from))
         stop("Object not lasso_screenr class")
@@ -183,29 +170,18 @@ get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAI
                 res <- from[["isResults"]][["ROC"]]
             } else {
                 roc_  <- from[["cvResults"]][[model]][["ROC"]]
-                ci_ <- pROC::ci.thresholds(roc_,
-                                           boot.n = bootreps,
-                                           progress = "text",
-                                           conf.level = conf_level,
-                                           thresholds = "local maximas")
-                threshold <- attr(ci_, "thresholds")
-                res <- data.frame(cbind(threshold, ci_$sensitivity,
-                                        ci_$specificity))
-                names(res) <- c("Threshold_Pr", "se.lcl", "Sensitivity",
-                                "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-                row.names(res) <- 1:(dim(ci_$sensitivity)[1])
-                res <- res[res$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
-                res[is.infinite(res[,1]), 1] <- 0
+                res <- roc_ci(roc_, bootreps = bootreps,
+                              conf.level = conf.level, se.min = se.min)
             }
         }
     }
     invisible(res)
 }
 
+
 ## Function get_what.logreg_screenr
 ##
-#' \code{get_what.logreg_screenr} is an S3 method to extract components of
-#' \code{logreg_screenr} objects.
+#' An S3 Method for Extraction of Components from \code{logreg_screenr} Objects
 #'
 #' @param from the \code{logreg_screenr}-class object from which to extract
 #' the component.
@@ -213,7 +189,7 @@ get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAI
 #' @param what the (character) name of the component to extract. Valid values are
 #' \verb{"ModelFit"}, \verb{"ROCci"}, \verb{"cvROC"} and \verb{"isROC"}.
 #'
-#' @param conf_level (optional) confidence level for \code{what =} \verb{"ROCci"}
+#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals for \code{what =} \verb{"ROCci"}.
@@ -245,12 +221,14 @@ get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAI
 #' @examples
 #' \dontrun{
 #' attach(uniobj2)
+#' ## Get and print cross-validated sensitivities and specificities at
+#' ##   thresholds for the local maxima of the ROC curve
 #' myROCci <- get_what(from = uniobj2, what = "ROCci")
 #' print(myROCci)
 #' }
 #'
 #' @export
-get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf_level = 0.95,
+get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf.level = 0.95,
                                     bootreps =  2000, se.min = 0.7) {
     if(!"logreg_screenr" %in% class(from))
         stop("from not a logreg_screenr object")
@@ -266,19 +244,8 @@ get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf_level = 
                 res <- from[["isROC"]]
             } else {
                 roc_  <-  from[["CVroc"]]
-                ci_ <- pROC::ci.thresholds(roc_,
-                                           boot.n = bootreps,
-                                           progress = "text",
-                                           conf.level = conf_level,
-                                           thresholds = "local maximas")
-                threshold <- attr(ci_, "thresholds")
-                res <- data.frame(cbind(threshold, ci_$sensitivity,
-                                        ci_$specificity))
-                names(res) <- c("Threshold_Pr", "se.lcl", "Sensitivity",
-                                "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-                row.names(res) <- 1:(dim(ci_$sensitivity)[1])
-                res <- res[res$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
-                res[is.infinite(res[,1]), 1] <- 0
+                res <- roc_ci(roc_, bootreps = bootreps,
+                              conf.level = conf.level, se.min = se.min)
             }
         }
     }
@@ -288,8 +255,7 @@ get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf_level = 
 
 ## Function get_what.simple_screenr
 ##
-#' \code{get_what.simple_screenr} is an S3 method to extract components of
-#' \code{simple_screenr} objects.
+#' An S3 Method for Extraction of Components from \code{simple_screenr} Objects
 #'
 #' @param from the \code{simple_screenr}-class object from which to extract
 #' the component.
@@ -297,10 +263,13 @@ get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf_level = 
 #' @param what the (character) name of the component to extract. Valid values
 #' are \verb{"ROCci"} and \verb{"isROC"}.
 #'
-#' @param conf_level (optional) confidence level for \code{what =} \verb{"ROCci"}
+#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals for \code{what =} \verb{"ROCci"}.
+#'
+#' @param se.min minimum value of sensitivity printed for
+#' \code{what =} \verb{ROCci} (default = 0.6).
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
@@ -322,13 +291,14 @@ get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf_level = 
 #' data(unicorns)
 #' too_simple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                             data = unicorns)
-#' roc <- get_what(from = too_simple, what = "isROC" )
-#' plot(roc)
+#' too_simple_roc <- get_what(from = too_simple, what = "isROC" )
+#' plot(too_simple_roc)
 #' }
 #'
 #' @export
 get_what.simple_screenr <- function(from = NULL, what = NULL, ...,
-                                  conf_level = 0.95, bootreps =  2000) {
+                                    conf.level = 0.95, bootreps = 2000,
+                                    se.min =  0.6) {
     if(!"simple_screenr" %in% class(from))
         stop("from not a simple_screenr object")
     if(!what %in% c("ROCci", "isROC"))
@@ -336,17 +306,10 @@ get_what.simple_screenr <- function(from = NULL, what = NULL, ...,
     if(what == "isROC") what <- "ISroc"
     if(what == "ISroc"){
         res <- from[[what]]
-        } else {
-            ci_ <- pROC::ci.thresholds(from$ISroc, boot.n = bootreps,
-                                       progress = "none",
-                                       conf.level = conf_level,
-                                       thresholds = "local maximas")
-            threshold <- as.numeric(rownames(ci_$sensitivity)) + 0.5
-            res <- data.frame(cbind(threshold, ci_$sensitivity,
-                                    ci_$specificity))
-        names(res) <- c("threshold", "se.low", "se.median",
-                        "se.high", "sp.low", "sp.median", "sp.high")
-        row.names(res)  <- 1:length(threshold)
-        }
+    } else {
+        res <- roc_ci(from$ISroc, bootreps = bootreps,
+                      conf.level = conf.level, se.min = se.min)
+    }
+    res$Threshold <- round(res$Threshold + 0.01)
     invisible(res)
 }

@@ -10,38 +10,42 @@
 #################################################################################
 
 
-## Function sens_spec
+
+## Function keepfirst
 ##
-#' \code{sens_spec} Computes sensitivity and specificity of a test from a
-#' 2 x 2 table
+#' Return Data Frame Rows Having Unique Values in Selected Columns
 #'
-#' @param x a 2 x 2 table, with columns representing frequencies of
-#' gold-standard status and rows representing frequencies of status ascertained
-#' from testing.  The first row contains frequencies of negative test results
-#' and the first column contain frequencies of true negatives.
+#' @param x character-valued column name along which the dataframe is sorted.
 #'
-#' @return a list containing components sensitivity and specificity.
-#' Sensitivities and specificities are displayed as proportions rather than
-#' percentages.
+#' @param colnames a character vector of column names  to identify uniqueness.
 #'
-#' @examples
-#' Gold <- rbinom(20, 1, 0.50)
-#' Test <- Gold; Test[c(3, 9, 12, 16)] <- 1 - Test[c(3, 9, 12, 16)]
-#' sens_spec(table(Test, Gold))
-#' @export
-sens_spec <- function(x){
-    if(!class(x) == "table") stop('arg class is not "table"')
-    if(!(dim(x)[1] == 2L & dim(x)[2] == 2L)) stop("arg not a 2x2 table")
-    spec = x[1, 1] / sum(x[ , 1])
-    sens = x[2, 2] / sum(x[ , 2])
-    result = list(sensitivity = sens, specificity = spec)
-    result
+#' @param data a data frame.
+#'
+#' @details
+#' The dataframe \code{data} is sorted, and then only those rows which are unique
+#' with respect to the values of selected columns.
+#'
+#' @return A data frame consisting of the rows of \code{data} which are
+#' unique with respect to \code{colnames}
+keepfirst <- function(x, colnames, data = NULL){
+    if(!("data.frame" %in% class(data))) stop("data argument must be a dataframe" )
+    data <- data[order(data[[x]]), ]
+    res <- data[1 ,]
+    for(i in 2:(nrow(data) - 1)){
+        if(all(data[i, colnames] ==
+               data[i + 1, colnames])){
+            next
+        } else {
+            res <- rbind(res, data[i + 1, ])
+        }
+    }
+    res
 }
 
 
 ## Function inverseLink
 ##
-#' \code{inverseLink} computes inverse of logistic regression link functions
+#' Compute the Inverses of Binomial Link Functions
 #'
 #' Returns the inverse of logit, cloglog and probit link functions for a linear
 #' predictor
@@ -98,11 +102,11 @@ inverseLink <- function(lp = NULL, link =  NULL){
 
 ## Function nnt_
 ##
-#' \code{nnt_} computes the anticpated number of tests per postive from a
-#' structured dataframe
+#' Computes the Anticpated Number of Tests per Postive Result
 #'
 #' @param dframe a data frame containing columns \code{sensitivity},
 #' \code{specificity} and \code{prev}.
+#'
 #' @importFrom dplyr between
 nnt_ <- function(dframe) {
     se <- dframe$sensitivity
@@ -120,43 +124,10 @@ nnt_ <- function(dframe) {
 }
 
 
-## Function keepfirst
-##
-#' \code{keepfirst} returns only those rows of a dataframe having unique values
-#' in selected columns.
-#'
-#' @param x character-valued column name along which the dataframe is sorted.
-#'
-#' @param colnames a character vector of column names  to identify uniqueness.
-#'
-#' @param data a data frame.
-#'
-#' @details
-#' The dataframe \code{data} is sorted, and then only those rows which are unique
-#' with respect to the values of selected columns.
-#'
-#' @return A data frame consisting of the rows of \code{data} which are
-#' unique with respect to \code{colnames}
-keepfirst <- function(x, colnames, data = NULL){
-    if(!("data.frame" %in% class(data))) stop("data argument must be a dataframe" )
-    data <- data[order(data[[x]]), ]
-    res <- data[1 ,]
-    for(i in 2:(nrow(data) - 1)){
-        if(all(data[i, colnames] ==
-               data[i + 1, colnames])){
-            next
-        } else {
-            res <- rbind(res, data[i + 1, ])
-        }
-    }
-    res
-}
-
 
 ## Function rescale_to_int
 ##
-#' \code{rescale_to_int} rescales all non-zero elements of a non-negative
-#' numeric matrix or vector to integers from 1 to \verb{max}
+#' Rescale Positive Vectors or Matrices to Integers in [1, \verb{max}]
 #'
 #' @param x numeric matrix or vector of positive real numbers.
 #'
@@ -170,7 +141,7 @@ keepfirst <- function(x, colnames, data = NULL){
 #' \emph{non-zero} element in each column/row is 1 and the largest element is \code{max}. Any
 #' elements having value zero are unchanged. If \code{x} is a vector then the result is
 #' a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
-#' the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}
+#' the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}.
 #'
 #' @note Any values of 0 in \code{x} are not rescaled, and are preserved in
 #' the result.
@@ -198,5 +169,71 @@ rescale_to_int <- function(x, max, colwise = TRUE){
     y[i0] <- 0
     y
 }
+
+
+## Function roc_ci
+##
+#' Compute Cross-Validated Sensitivities, Specificities and Uncertainty Limits
+#'
+#' @param roc_ an object of class \code{roc}.
+#'
+#' @param bootreps number of bootstrap replicates.
+#'
+#' @param conf.level confidence level for uncertainty intervals.
+#'
+#' @param progress type of progress display.
+#'
+#' @param thresholds type of thresholds.
+#'
+#' @param se.min minimum value of sensitivity returned.
+#'
+#' @return a data frame containing thresholds with sensititives, specificities
+#' and uncertainy intervals.
+roc_ci <- function(roc_, bootreps, conf.level, progress = "text",
+                   thresholds = "local maximas", se.min = se.min) {
+    ci_ <- pROC::ci.thresholds(roc_,
+                               boot.n = bootreps,
+                               progress = progress,
+                               conf.level = conf.level,
+                               thresholds = thresholds)
+    threshold <- attr(ci_, "thresholds")
+    res <- data.frame(cbind(threshold, ci_$sensitivity,
+                            ci_$specificity))
+    names(res) <- c("Threshold", "se.lcl", "Sensitivity",
+                    "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
+    row.names(res) <- 1:(dim(ci_$sensitivity)[1])
+    res <- res[res$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
+    res[is.infinite(res[,1]), 1] <- 0
+    res
+}
+
+
+## Function sens_spec
+##
+#' Compute Sensitivity and Specificity from a 2 x 2 Table
+#'
+#' @param x a 2 x 2 table, with columns representing frequencies of
+#' gold-standard status and rows representing frequencies of status ascertained
+#' from testing.  The first row contains frequencies of negative test results
+#' and the first column contain frequencies of true negatives.
+#'
+#' @return a list containing components sensitivity and specificity.
+#' Sensitivities and specificities are displayed as proportions rather than
+#' percentages.
+#'
+#' @examples
+#' Gold <- rbinom(20, 1, 0.50)
+#' Test <- Gold; Test[c(3, 9, 12, 16)] <- 1 - Test[c(3, 9, 12, 16)]
+#' sens_spec(table(Test, Gold))
+#' @export
+sens_spec <- function(x){
+    if(!class(x) == "table") stop('arg class is not "table"')
+    if(!(dim(x)[1] == 2L & dim(x)[2] == 2L)) stop("arg not a 2x2 table")
+    spec = x[1, 1] / sum(x[ , 1])
+    sens = x[2, 2] / sum(x[ , 2])
+    result = list(sensitivity = sens, specificity = spec)
+    result
+}
+
 
 ################################   END of FILE   ################################

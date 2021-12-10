@@ -2,8 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{keepfirst}
 \alias{keepfirst}
-\title{\code{keepfirst} returns only those rows of a dataframe having unique values
-in selected columns.}
+\title{Return Data Frame Rows Having Unique Values in Selected Columns}
 \usage{
 keepfirst(x, colnames, data = NULL)
 }
@@ -19,8 +18,7 @@ A data frame consisting of the rows of \code{data} which are
 unique with respect to \code{colnames}
 }
 \description{
-\code{keepfirst} returns only those rows of a dataframe having unique values
-in selected columns.
+Return Data Frame Rows Having Unique Values in Selected Columns
 }
 \details{
 The dataframe \code{data} is sorted, and then only those rows which are unique

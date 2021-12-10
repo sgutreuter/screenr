@@ -12,7 +12,7 @@
 
 ## Function coef.lasso_screenr
 ##
-#' A method to extract the estimated coefficients from \code{lasso_screenr} objects.
+#' An S3 Method to Extract Coefficients from \code{lasso_screenr} Objects
 #'
 #' @param object an object of class \code{lasso_screenr}.
 #'
@@ -23,6 +23,10 @@
 #' are the default.
 #'
 #' @param ... optional arguments passed to \code{predict} methods.
+#'
+#' @details
+#' \code{coef.lasso_screenr} extracts the estimated coefficients from
+#' \code{logreg_screenr} objects.
 #'
 #' @return a \emph{p} x 2 matrix containing the estimated coefficients from the AIC-
 #' and BIC-best logistic regression models, where \emph{p} is the number of coefficients.
@@ -47,9 +51,9 @@ coef.lasso_screenr <- function(object, ..., intercept = TRUE, or = FALSE){
 
 ## Function coef.logreg_screenr
 ##
-#' \code{coef.logreg_screenr} is an S3 coef method for \code{logreg_screenr} objects.
+#' An S3 Method to Extract Coefficients from \code{logreg_screenr} Objects
 #'
-#' @param object an object of class \code{logreg_screenr}
+#' @param object an object of class \code{logreg_screenr}.
 #'
 #' @param intercept (logical) retain (\code{TRUE}, default) or drop
 #' (\code{FALSE}) the intercept coefficients.
@@ -60,7 +64,8 @@ coef.lasso_screenr <- function(object, ..., intercept = TRUE, or = FALSE){
 #' @param ... optional arguments passed to \code{predict} methods.
 #'
 #' @details
-#' Extracts the estimated coefficients from \code{logreg_screenr} objects.
+#' \code{coef.logreg_screenr} extracts the estimated coefficients from
+#' \code{logreg_screenr} objects.
 #'
 #' @return A numeric vector containing the estimated coefficients on the logit
 #' scale.

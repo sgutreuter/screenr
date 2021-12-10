@@ -2,8 +2,7 @@
 % Please edit documentation in R/lasso_screenr.R
 \name{lasso_screenr}
 \alias{lasso_screenr}
-\title{\code{lasso_screenr} is a used to develop test-screening tools based on \emph{L}1
-regularization of logistic regression based on \code{`glmpath::glmpath`}.}
+\title{Fitting Screening Tools Using Lasso-Like Regularization of Logistic Regression}
 \usage{
 lasso_screenr(
   formula,
@@ -15,7 +14,7 @@ lasso_screenr(
 )
 }
 \arguments{
-\item{formula}{an object of class \code{`stats::formula`} defining the
+\item{formula}{an object of class \code{stats::formula} defining the
 testing outcome and predictor covariates.}
 
 \item{data}{a dataframe containing the variables defined in \verb{formula}.}
@@ -28,7 +27,8 @@ parameters (default = \verb{TRUE}).}
 
 \item{seed}{random number generator seed for cross-validation data splitting.}
 
-\item{...}{additional arguments passed to glmpath::glmpath or pROC::roc.}
+\item{...}{additional arguments passed to \code{\link[glmpath]{glmpath}} or
+\code{\link[pROC]{roc}}.}
 }
 \value{
 Return (invisibly) an object of class \code{lasso_screenr} containing
@@ -46,48 +46,50 @@ results consist of \code{Coefficients} (the logit-scale parameter estimates,
 including the intercept), \code{isPreds} (the in-sample predicted
 probabilities) and \code{isROC} (the in-sample receiver-operating
 characteristic (ROC) of class \code{roc}).}
-\item{\code{cvResults}}{A list structure containing the results of \emph{k}-
-fold cross-validation estimation of out-of-sample performance.  The list
-elements are:}
-\describe{
-\item{\code{Nfolds}}{the number folds \emph{k}}
-\item{\code{X_ho}}{the matrix of held-out predictors for each cross-validation fold}
-\item{\code{minAICcvPreds}}{the held-out responses and out-of-sample predicted probabilities from
-AIC-best model selection}
-\item{\code{minAICcvROC}}{the out-of-sample ROC object
-of class \code{roc} from AIC-best model selection}
-\item{\code{minBICcvPreds}}{the held-out responses and out-of-sample predicted probabilities from
-BIC-best model selection}
-\item{\code{minBICcvROC}}{the corresponding out-of-sample predicted probabilities
-and ROC object from BIC-best model selection}
-}
 \item{\code{RNG}}{Specification of the random-number generator used for
 k-fold data splitting.}
 \item{\code{RNGseed}}{RNG seed.}
+\item{\code{cvResults}}{A list structure containing the results of \emph{k}-
+fold cross-validation estimation of out-of-sample performance.}
+}
+
+The list elements of \code{cvResutls} are:
+\describe{
+    \item{\code{Nfolds}}{the number folds \emph{k}}
+    \item{\code{X_ho}}{the matrix of held-out predictors for each cross-validation
+fold}
+    \item{\code{minAICcvPreds}}{the held-out responses and out-of-sample predicted
+probabilities from AIC-best model selection}
+    \item{\code{minAICcvROC}}{the out-of-sample ROC object
+of class \code{roc} from AIC-best model selection}
+    \item{\code{minBICcvPreds}}{the held-out responses and out-of-sample predicted probabilities from
+BIC-best model selection}
+    \item{\code{minBICcvROC}}{the corresponding out-of-sample predicted probabilities
+and ROC object from BIC-best model selection}
 }
 }
 \description{
-\code{lasso_screenr} is a used to develop test-screening tools based on \emph{L}1
-regularization of logistic regression based on \code{`glmpath::glmpath`}.
+Fitting Screening Tools Using Lasso-Like Regularization of Logistic Regression
 }
 \details{
 \code{lasso_screenr} is a convenience function which integrates
-logistic regression using GLM-path \emph{L}1 regularization, \emph{k}-fold
+logistic regression using \emph{L}1 regularization, \emph{k}-fold
 cross-validation and estimation of the receiver-operating characteristic.
 The in-sample and out-of-sample performance is estimated from the models
 which produced the minimum AIC and minimum BIC.  Execute
 \code{methods(class = "lasso_screenr")} to identify available methods.
 
-The \emph{L}1 path regularizer of Park and Hastie (2007) is similar
-to the more familiar lasso and elastic net. It differs from the
+\code{lasso_screenr} uses the \emph{L}1 path regularizer of
+Park and Hastie (2007), which is similar
+to conventional lasso and elastic net. It differs from the
 lasso with the inclusion of a small fixed (\verb{1e-5}) penalty on the
 \emph{L}2 norm of the parameters, and
 differs from the elastic net in that the \emph{L}2 penalty is
-fixed.  Like the elastic net, the Park-Hastie \emph{L}1 path
-regularization is robust to highly correlated predictors.
+fixed.  Like the elastic net, the Park-Hastie regularization is robust to
+highly correlated predictors.
 
 The \emph{L}2 penalization can be turned off (\code{L2 = FALSE}), in which case
-the regularization is similar to the lasso.
+the regularization is similar to the coventional lasso.
 
 For a gentle but Python-centric introduction to \emph{k}-fold cross-validation,
 see \url{https://machinelearningmastery.com/k-fold-cross-validation/}.
@@ -111,5 +113,5 @@ analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
 \url{http://doi.org/10.1186/1471-2105-12-77}
 }
 \seealso{
-\code{`glmpath::glmpath`}, \code{`pROC::roc`}
+\code{\link[glmpath]{glmpath}}, \code{\link[pROC]{roc}}
 }

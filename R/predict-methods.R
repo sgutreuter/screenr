@@ -12,7 +12,7 @@
 
 ## Function predict.lasso_screenr
 ##
-#' \code{predict.lasso_screenr} is a prediction method for objects of class \code{lasso_screenr}
+#' A Prediction Method for \code{lasso_screenr}-Class Objects
 #'
 #' @param object an object of class \code{lasso_screenr} produced by
 #' \code{`lasso_screenr`}.
@@ -68,7 +68,7 @@ predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
 
 ## Function predict.logreg_screenr
 ##
-#' \code{predict.logreg_screenr} is an S3 prediction method for objects of class \code{logreg_screenr}
+#' A Prediction Method for \code{logreg_screenr}-Class Objects
 #'
 #' @param object an object of class \code{logreg_screenr} produced by
 #' \code{`logreg_screenr`}.

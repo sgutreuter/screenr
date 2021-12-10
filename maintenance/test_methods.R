@@ -3,7 +3,7 @@
 ##
 ##        PROJECT: screenr Package
 ##
-##    DESCRIPTION: Testing sandbox for methods
+##    DESCRIPTION: S3 methods testing
 ##
 ##     WRITTEN BY: Steve Gutreuter
 ##                 E-mail:  sgutreuter@gmail.gov
@@ -21,17 +21,19 @@ setwd(workpath)
 #################################################################################
 ## Source the screenr R code and load the unicorns data
 #################################################################################
-source(file.path(codepath, "easyTool.R"))
-source(file.path(codepath, "glmpathScreenr.R"))
-source(file.path(codepath, "plot.R"))
-source(file.path(codepath, "coef.R"))
-source(file.path(codepath, "print.R"))
-source(file.path(codepath, "predict.R"))
-source(file.path(codepath, "summary.R"))
-source(file.path(codepath, "getWhat.R"))
-source(file.path(codepath, "ntpp.R"))
-source(file.path(codepath, "simpleScreenr.R"))
-source(file.path(codepath, "helperFunctions.R"))
+source(file.path(codepath, "lasso_screenr.R"))
+source(file.path(codepath, "logreg_screenr.R"))
+source(file.path(codepath, "simple_screenr.R"))
+source(file.path(codepath, "easy_tool.R"))
+source(file.path(codepath, "helper_functions.R"))
+source(file.path(codepath, "coef-methods.R"))
+source(file.path(codepath, "get_what-methods.R"))
+source(file.path(codepath, "ntpp-methods.R"))
+source(file.path(codepath, "predict-methods.R"))
+source(file.path(codepath, "plot-methods.R"))
+source(file.path(codepath, "print-methods.R"))
+source(file.path(codepath, "summary-methods.R"))
+
 load(file.path(datapath, "unicorns.rda"))
 load(file.path(datapath, "uniobj1.rda"))
 load(file.path(datapath, "uniobj2.rda"))
@@ -39,42 +41,41 @@ load(file.path(datapath, "uniobj2.rda"))
 #################################################################################
 ## plot methods
 #################################################################################
-## plot.easyTool
-tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
+## plot.easy_tool
+tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
 plot(tool)
 
-## plot.glmpathScreenr
+## plot.lasso_creenr
 plot(uniobj1, model = "minAIC")
 
-## plot.logisticScreenr
+## plot.logreg_screenr
 plot(uniobj2)
 
-## plot.simpleScreenr
-too_simple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
-                          data = unicorns)
+## plot.simple_screenr
+too_simple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+                             data = unicorns)
 plot(too_simple)
 
 #################################################################################
-## getWhat methods
+## get_what methods
 #################################################################################
-## getWhat.easyTool
-tool <- easyTool(uniobj1, max = 3, crossval = TRUE)
-ROCci <- getWhat(from = tool, what = "ROCci")
+## get_what.easyTool
+tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
+ROCci <- get_what(from = tool, what = "ROCci")
 print(ROCci)
-## TODO: Fix threshold variable name and round up values
 
-## getWhat.glmpathScreenr methods
-pathobj <- getWhat(from = uniobj1, what = "glmpathObj", model = "minAIC")
+## get_what.lasso_screenr methods
+pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
 plot(pathobj)
-cvROCci <- getWhat(from = uniobj1,  what = "ROCci", model = "minBIC")
+cvROCci <- get_what(from = uniobj1,  what = "ROCci", model = "minBIC")
 print(cvROCci)
 
-## getWhat.logisticScreenr
-myROCci <- getWhat(from = uniobj2, what = "ROCci")
+## getWhat.logreg_screenr
+myROCci <- get_what(from = uniobj2, what = "ROCci")
 print(myROCci)
 
-## getWhat.simpleScreenr
-too_simple <- simpleScreenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
-                            data = unicorns)
-myroc <- getWhat(from = too_simple, what = "ROCci" )
+## getWhat.simple_screenr
+too_simple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+                             data = unicorns)
+myroc <- get_what(from = too_simple, what = "ROCci" )
 print(myroc)

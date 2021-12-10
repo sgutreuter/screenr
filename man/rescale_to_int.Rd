@@ -2,8 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{rescale_to_int}
 \alias{rescale_to_int}
-\title{\code{rescale_to_int} rescales all non-zero elements of a non-negative
-numeric matrix or vector to integers from 1 to \verb{max}}
+\title{Rescale Positive Vectors or Matrices to Integers in [1, \verb{max}]}
 \usage{
 rescale_to_int(x, max, colwise = TRUE)
 }
@@ -21,11 +20,10 @@ A matrix of integers corresponding to \code{x} in which smallest
 \emph{non-zero} element in each column/row is 1 and the largest element is \code{max}. Any
 elements having value zero are unchanged. If \code{x} is a vector then the result is
 a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
-the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}
+the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}.
 }
 \description{
-\code{rescale_to_int} rescales all non-zero elements of a non-negative
-numeric matrix or vector to integers from 1 to \verb{max}
+Rescale Positive Vectors or Matrices to Integers in [1, \verb{max}]
 }
 \note{
 Any values of 0 in \code{x} are not rescaled, and are preserved in

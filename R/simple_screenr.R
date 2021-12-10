@@ -10,7 +10,7 @@
 
 ## Function simple_screenr
 ##
-#' \code{simple_screenr} is used to produce overly simple test-screening tools.
+#' An Overly Simple Approach to Test Screening
 #'
 #' @param formula an object of class \code{\link[stats]{formula}} defining the
 #' testing outcome and predictor covariates.

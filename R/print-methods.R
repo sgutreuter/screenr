@@ -12,11 +12,13 @@
 
 ## Function print.easy_tool
 ##
-#' \code{print.easy_tool} is a print method for \code{easy_tool} objects
+#' A Print Method for \code{easy_tool}-Class Objects
 #'
-#' @param x an object of class \code{easy_tool}
+#' @param x an object of class \code{easy_tool}.
 #'
 #' @param ... optional arguments to \code{print} methods.
+#'
+#' @seealso \code{get_what.easy_tool(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @examples
 #' attach(uniobj1)
@@ -36,11 +38,13 @@ print.easy_tool <- function(x, ...){
 
 ## Function print.lasso_screenr
 ##
-#' code{print.lasso_screenr} is a print method for \code{lasso_screenr} objects
+#' A Print Method for \code{lasso_screenr}-Class Objects
 #'
 #' @param x an object of class \code{lasso_screenr}
 #'
 #' @param ... optional arguments to \code{print} methods.
+#'
+#' @seealso \code{get_what.lasso_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @examples
 #' attach(uniobj1)
@@ -59,7 +63,7 @@ print.lasso_screenr <- function(x, ...){
 
 ## Function print.logreg_screenr
 ##
-#' \code{print.logreg_screenr} is an S3 print method for \code{logreg_screenr} objects.
+#' A Print Method for \code{logreg_screenr}-Class Objects
 #'
 #' @param x an object of class \code{logreg_screenr}.
 #'
@@ -70,6 +74,8 @@ print.lasso_screenr <- function(x, ...){
 #' @return
 #' Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
+#'
+#' @seealso \code{get_what.logreg_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
@@ -102,14 +108,17 @@ print.logreg_screenr <- function(x, ..., quote = FALSE){
 
 ## Function print.simple_screenr
 ##
+#' A Print Method for \code{simple_screenr}-Class Objects
 #' \code{print.simple_screenr} is an S3 print method for \code{simple_screenr} objects.
 #'
-#' @param x an object of class \code{simplescreenr}.
+#' @param x an object of class \code{simple_screenr}.
 #'
 #' @param ... optional arguments to \code{print} methods.
 #'
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
+#'
+#' @seealso \code{get_what.simple_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @examples
 #' data(unicorns)

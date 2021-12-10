@@ -12,8 +12,7 @@
 
 ## Function easy_tool
 ##
-#' \code{easy_tool} creates the components of an easy-to-use screening tool based
-#' on the results of either \code{lasso_screenr} or \code{logreg_screenr}.
+#' Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects
 #'
 #' @param object an object of class \code{lasso_screenr} or
 #' \code{logreg_screenr}.
@@ -74,12 +73,11 @@
 #' and base the final choice on the trade-off between ease of manual scoring and
 #' the desired combination of sensitivity and specificity.
 #'
-#' \code{coef}, \code{ntpp}, \code{plot}, \code{print} and \code{summary}
-#' methods are available for \code{easy_tool}-class objects.
+#' @note Execute \code{methods(class = "easy_tool")} to see available methods.
 #'
 #' @seealso
-#' \code{`rescale_to_int`}, \code{`coef.easy_tool`}, \code{ntpp.easy_tool},
-#' \code{`plot.easy_tool`}, \code{`print.easy_tool`} and \code{`summary.easy_tool`}
+#' \code{rescale_to_int}, \code{coef.easy_tool}, \code{ntpp.easy_tool},
+#' \code{plot.easy_tool}, \code{print.easy_tool} and \code{summary.easy_tool}
 #'
 #' @examples
 #' attach(uniobj1)

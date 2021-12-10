@@ -3,8 +3,7 @@
 \name{logreg_screenr}
 \alias{logreg_screenr}
 \alias{{binomialScreenr}}
-\title{\code{logreg_screenr} estimates  model parameters and cross-validated
-performance of test screening based on ordinary logistic regression.}
+\title{Fitting Screening Tools Using Ordinary Logistic Regression}
 \usage{
 logreg_screenr(
   formula,
@@ -16,7 +15,7 @@ logreg_screenr(
 )
 }
 \arguments{
-\item{formula}{an object of class \code{`stats::formula`} defining the
+\item{formula}{an object of class \code{stats::formula} defining the
 testing outcome and predictor covariates, which is passed to \code{stats::glm()}.}
 
 \item{data}{the "training" sample; a data frame containing the testing
@@ -58,13 +57,12 @@ the data and cross-validated predicted condition \code{y}.}
 the \emph{k}-fold cross-validated "out-of-sample" receiver operating
 characteristics, and additional functions for use with this object are
 available in the \code{pROC} package.}
-\item{code{CVcoef}}{the estimated coefficients from cross-validation}
-\item{code{X_ho}}{{the matrix of held-out predictors for each cross-validation fold}}
+\item{\code{CVcoef}}{the estimated coefficients from cross-validation}
+\item{\code{X_ho}}{{the matrix of held-out predictors for each cross-validation fold}}
 }
 }
 \description{
-\code{logreg_screenr} estimates  model parameters and cross-validated
-performance of test screening based on ordinary logistic regression.
+Fitting Screening Tools Using Ordinary Logistic Regression
 }
 \details{
 The results provide information from

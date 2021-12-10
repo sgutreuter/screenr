@@ -12,8 +12,7 @@
 
 ## Function summary.easy_tool
 ##
-#' \code{summary.easy_tool} returns a summary of the receiver-operating
-#' characteristic produced by \code{easy_tool}
+#' A Summary Method for \code{easy_tool}-Class Objects
 #'
 #' @param object an \code{easy_tool} object.
 #'
@@ -39,7 +38,7 @@ summary.easy_tool <- function(object, ...){
 
 ## Function summary.lasso_screenr
 ##
-#' \code{summary.lasso_screenr} returns a summary of the GLM path regularizer
+#' A Summary Method for \code{lasso_screenr}-Class Objects
 #'
 #' @param object a lasso_screenr object
 #'
@@ -65,8 +64,7 @@ summary.lasso_screenr <- function(object, ...){
 
 ## Function summary.logreg_screenr
 ##
-#' \code{summary.logreg_screenr} is an S3 print method for \code{logreg_screenr}
-#' objects.
+#' A Summary Method for \code{logreg_screenr}-Class Objects
 #'
 #' @param object an object of class \code{logreg_screenr} produced by function
 #' \code{logreg_screenr}.
@@ -102,7 +100,7 @@ summary.logreg_screenr <- function(object, ..., diagnostics = FALSE){
 
 ## Function summary.simpleSreenr
 ##
-#' \code{summary.simple_screenr} is a summary method for \code{simple_screenr} objects
+#' A Summary Method for \code{simple_screenr}-Class Objects
 #'
 #' @param object an object of class \code{simple_screenr}.
 #'
@@ -113,8 +111,8 @@ summary.logreg_screenr <- function(object, ..., diagnostics = FALSE){
 #'
 #' @examples
 #' data(unicorns)
-#' toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
-#'                           data = unicorns)
+#' toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+#'                             data = unicorns)
 #' summary(toosimple)
 #' @export
 summary.simple_screenr <- function(object, ...){

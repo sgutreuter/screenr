@@ -11,10 +11,9 @@
 
 ## Function logreg_screenr
 ##
-#' \code{logreg_screenr} estimates  model parameters and cross-validated
-#' performance of test screening based on ordinary logistic regression.
+#' Fitting Screening Tools Using Ordinary Logistic Regression
 #'
-#' @param formula an object of class \code{`stats::formula`} defining the
+#' @param formula an object of class \code{stats::formula} defining the
 #' testing outcome and predictor covariates, which is passed to \code{stats::glm()}.
 #'
 #' @param data  the "training" sample; a data frame containing the testing
@@ -55,8 +54,8 @@
 #' the \emph{k}-fold cross-validated "out-of-sample" receiver operating
 #' characteristics, and additional functions for use with this object are
 #' available in the \code{pROC} package.}
-#' \item{code{CVcoef}}{the estimated coefficients from cross-validation}
-#' \item{code{X_ho}}{{the matrix of held-out predictors for each cross-validation fold}}
+#' \item{\code{CVcoef}}{the estimated coefficients from cross-validation}
+#' \item{\code{X_ho}}{{the matrix of held-out predictors for each cross-validation fold}}
 #' }
 #'
 #' @details

@@ -2,8 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{sens_spec}
 \alias{sens_spec}
-\title{\code{sens_spec} Computes sensitivity and specificity of a test from a
-2 x 2 table}
+\title{Compute Sensitivity and Specificity from a 2 x 2 Table}
 \usage{
 sens_spec(x)
 }
@@ -19,8 +18,7 @@ Sensitivities and specificities are displayed as proportions rather than
 percentages.
 }
 \description{
-\code{sens_spec} Computes sensitivity and specificity of a test from a
-2 x 2 table
+Compute Sensitivity and Specificity from a 2 x 2 Table
 }
 \examples{
 Gold <- rbinom(20, 1, 0.50)

@@ -9,7 +9,6 @@
 ##               E-mail:  sgutreuter@gmail.gov
 ################################################################################
 rm(list =  ls())
-detach("package:screenr")
 
 library(devtools)
 library(roxygen2)
@@ -37,9 +36,12 @@ setwd(pkgpath)
 
 
 #################################################################################
-## Always (re)generate documentation, and then check package from source tree
+## Always (re)generate NAMESPACE and documentation, and then check package from
+## source tree
 #################################################################################
-
+if("package:screenr" %in% search( )) detach("package:screenr")
+if(file.exists(file.path(pkgpath, "NAMESPACE"))) {
+    file.remove(file.path(pkgpath, "NAMESPACE"))}
 devtools::document()
 devtools::check()
 

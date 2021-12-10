@@ -2,7 +2,7 @@
 % Please edit documentation in R/simple_screenr.R
 \name{simple_screenr}
 \alias{simple_screenr}
-\title{\code{simple_screenr} is used to produce overly simple test-screening tools.}
+\title{An Overly Simple Approach to Test Screening}
 \usage{
 simple_screenr(formula, data)
 }
@@ -31,7 +31,7 @@ and additional functions for use with this object are available in the
 }
 }
 \description{
-\code{simple_screenr} is used to produce overly simple test-screening tools.
+An Overly Simple Approach to Test Screening
 }
 \details{
 \code{simple_screenr} computes the in-sample (\emph{overly optimistic})

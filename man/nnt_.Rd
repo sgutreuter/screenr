@@ -2,8 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{nnt_}
 \alias{nnt_}
-\title{\code{nnt_} computes the anticpated number of tests per postive from a
-structured dataframe}
+\title{Computes the Anticpated Number of Tests per Postive Result}
 \usage{
 nnt_(dframe)
 }
@@ -12,6 +11,5 @@ nnt_(dframe)
 \code{specificity} and \code{prev}.}
 }
 \description{
-\code{nnt_} computes the anticpated number of tests per postive from a
-structured dataframe
+Computes the Anticpated Number of Tests per Postive Result
 }

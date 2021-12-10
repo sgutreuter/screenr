@@ -11,8 +11,8 @@
 
 ## Function plot.easy_tool
 ##
-#' \code{plot.easy_tool} is a plotting method for \code{easy_tool}
-#' objects.
+#' Plot ROC Curves from \code{easy_tool}-Class Objects
+#'
 #' @param x an object of class \code{easy_tool}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
 #' @param conf_level confidence level
@@ -24,7 +24,6 @@
 #' @importFrom graphics legend plot
 #'
 #' @return
-#'
 #' This function produces a plot as a side effect and (optionally)
 #' returns a dataframe containing sensitivities, specificities and their
 #' lower and upper confidence limits for threshold values of Pr(response = 1).
@@ -72,9 +71,7 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(roc_,
                                      boot.n = bootreps,
-                                     progress = "text",
-                                     conf.level = conf_level,
-                                     thresholds = "local maximas")
+                                     conf.level = conf_level)
     }
     if(plot_ci) plot(ciplt)
 }
@@ -82,8 +79,7 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 
 ## Function plot.lasso_screenr
 ##
-#' \code{plot.lasso_screenr} is a plotting method for \code{lasso_screenr}
-#' objects.
+#' Plot ROC Curves from \code{lasso_screenr}-Class Objects
 #'
 #' @param x an object of class \code{lasso_screenr}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
@@ -143,9 +139,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(cvROC,
                                      boot.n = bootreps,
-                                     progress = "text",
-                                     conf.level = conf_level,
-                                     thresholds = "local maximas")
+                                     conf.level = conf_level)
     }
     if(plot_ci) plot(ciplt)
     pROC::lines.roc(isROC, lty = 3)
@@ -156,7 +150,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
 
 ## Function plot.logreg_screenr
 ##
-#' \code{plot.logreg_screenr} is an S3 plot method for \code{logreg_screenr} objects,
+#' Plot ROC Curves from \code{logreg_screenr}-Class Objects
 #'
 #' @param x an object of class \code{logreg_screenr}.
 #' @param plot_ci logical indicator for plotting point-wise confidence
@@ -164,7 +158,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
 #' on sensitivity and specificity (default = \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
-#' producing 95\% confidence intervals
+#' producing 95\% confidence intervals.
 #' @param bootreps number of bootstrap replications for estimation of confidence
 #' (default = 2000).
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
@@ -203,9 +197,7 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$CVroc,
                                      boot.n = bootreps,
-                                     progress = "text",
-                                     conf.level = conf_level,
-                                     thresholds = "local maximas")
+                                     conf.level = conf_level)
     }
     if(plot_ci) plot(ciplt)
     pROC::lines.roc(x$ISroc, lty = 3)
@@ -216,7 +208,7 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 
 ## Function plot.simple_screenr
 ##
-#' \code{plot.simple_screenr} is a plot method for \code{simple_screenr} objects.
+#' Plot ROC Curves from \code{simple_screenr}-Class Objects
 #'
 #' Plot ROC curve with pointwise 95% confidence
 #' intevals on sensitivity and specificity and (optionally) returns a dataframe
@@ -269,8 +261,7 @@ plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",
-                                     conf.level = conf_level,
-                                     thresholds = "local maximas")
+                                     conf.level = conf_level)
         }
     if(plot_ci) plot(ciplt)
 }

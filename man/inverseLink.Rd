@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{inverseLink}
 \alias{inverseLink}
-\title{\code{inverseLink} computes inverse of logistic regression link functions}
+\title{Compute the Inverses of Binomial Link Functions}
 \usage{
 inverseLink(lp = NULL, link = NULL)
 }
