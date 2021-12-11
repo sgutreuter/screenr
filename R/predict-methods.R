@@ -14,6 +14,9 @@
 ##
 #' A Prediction Method for \code{lasso_screenr}-Class Objects
 #'
+#' @description \code{predict.lasso_screenr} computes predicted probabilities of positive
+#' test results from new data.
+#'
 #' @param object an object of class \code{lasso_screenr} produced by
 #' \code{`lasso_screenr`}.
 #'
@@ -69,6 +72,9 @@ predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
 ## Function predict.logreg_screenr
 ##
 #' A Prediction Method for \code{logreg_screenr}-Class Objects
+#'
+#' @description \code{predict.logreg_screenr} computes predicted probabilities of positive
+#' test results from new data.
 #'
 #' @param object an object of class \code{logreg_screenr} produced by
 #' \code{`logreg_screenr`}.

@@ -12,6 +12,9 @@
 ##
 #' An Overly Simple Approach to Test Screening
 #'
+#' @description \code{simple_screenr} implements the method described in
+#' Bandason et al. (2016).
+#'
 #' @param formula an object of class \code{\link[stats]{formula}} defining the
 #' testing outcome and predictor covariates.
 #'
@@ -36,11 +39,14 @@
 #'
 #' @details
 #' \code{simple_screenr} computes the in-sample (\emph{overly optimistic})
-#' performances for development of a very simple test screening tool implementing
-#' the method of Bandason et al. (2016).  \code{simpleScreener} is not optimized
-#' and is intended only for comparision with \code{lasso_screenr} or
-#' \code{logreg_screenr}, either of which will almost certainly  out-perform
-#' \code{simpleScreening}.
+#' performances for development of a very simple test screening tool based on
+#' the sums of affirmative questionnaire responses.  \code{simpleScreener} is
+#' not optimized and is intended only for comparision with \code{lasso_screenr} or
+#' \code{logreg_screenr}, either of which will almost certainly out-perform
+#' \code{simple_screenr}.
+#'
+#' @seealso \code{\link{easy_tool}} for a better approach to simplification
+#' using the results from \code{lasso_screenr} or \code{logreg_screenr}.
 #'
 #' @references
 #' Bandason T, McHugh G, Dauya E, Mungofa S, Munyati SM, Weiss HA, Mujuru H,
@@ -53,7 +59,6 @@
 #' Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
 #' analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
-#'
 #'
 #' @examples
 #' data(unicorns)

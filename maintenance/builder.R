@@ -53,13 +53,13 @@ devtools::build_vignettes( )
 #################################################################################
 ## Build the package manual (pdf)
 #################################################################################
-build_manual(as.package(pkgpath))   ## Fails:  debugonce(build_manual)
+##build_manual(as.package(pkgpath))   ## Fails:  debugonce(build_manual)
 
 
 #################################################################################
 ## Install screenr from the source tree
 #################################################################################
-install.packages(workpath, repos = NULL, type = "source")
+install.packages(pkgpath, repos = NULL, type = "source")
 
 #################################################################################
 ## Install screenr from GitHub

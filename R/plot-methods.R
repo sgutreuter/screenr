@@ -13,6 +13,11 @@
 ##
 #' Plot ROC Curves from \code{easy_tool}-Class Objects
 #'
+#' @description
+#' \code{plot.easy_tool} plots the \emph{k}-fold cross-validated
+#' receiver-operating characteristic, including confidence intervals on the
+#' combinations of the local maxima of sensitivity and specificity.
+#'
 #' @param x an object of class \code{easy_tool}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
 #' @param conf_level confidence level
@@ -29,14 +34,14 @@
 #' lower and upper confidence limits for threshold values of Pr(response = 1).
 #'
 #' @details \code{plot.easy_tool} is an enhanced convenience wrapper for
-#' \code{`pROC::plot.roc`}.  The table is useful for identifying the
+#' \code{pROC::plot.roc}.  The table is useful for identifying the
 #' minimum predicted response probabilities associated with particular
 #' sensitivities.  The sensitivities and specificities are the coordinates at
 #' change points in the cross-validated ROC curve, and the values of Threshold_Pr
-#' are the values of lower bound of the predicted probability that acheives those
-#' sensitivities and specificities.  For example, if Threshold_P = 0.002, then
+#' are the values of lower bound of the predicted probability that achieves those
+#' sensitivities and specificities.  For example, if Threshold = 3, then
 #' classifiction as positive of all those subjects for whom the predicted response
-#' probability is greater than or equal to 0.002 will achieve the corresponding
+#' probability is greater than or equal to 3 should achieve the corresponding
 #' sensitivity and specificity at the prescribed confidence level in new
 #' data drawn from the same distribution as the training sample.
 #'
@@ -81,6 +86,11 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 ##
 #' Plot ROC Curves from \code{lasso_screenr}-Class Objects
 #'
+#' @description
+#' \code{plot.lasso_screenr} plots the \emph{k}-fold cross-validated
+#' receiver-operating characteristic, including confidence intervals on the
+#' combinations of the local maxima of sensitivity and specificity.
+#'
 #' @param x an object of class \code{lasso_screenr}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
 #' @param model (character) select either the model which produced the
@@ -93,17 +103,11 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #'
 #' @return This function produces a plot as a side effect.
 #'
-#' @details \code{plot.lasso_screenr} is an enhanced convenience wrapper for
-#' \code{`pROC::plot.roc`}.  The table is useful for identifying the
-#' minimum predicted response probabilities associated with particular
-#' sensitivities.  The sensitivities and specificities are the coordinates at
-#' change points in the cross-validated ROC curve, and the values of Threshold_Pr
-#' are the values of lower bound of the predicted probability that acheives those
-#' sensitivities and specificities.  For example, if Threshold_P = 0.002, then
-#' classifiction as positive of all those subjects for whom the predicted response
-#' probability is greater than or equal to 0.002 will achieve the corresponding
-#' sensitivity and specificity at the prescribed confidence level in new
-#' data drawn from the same distribution as the training sample.
+#' @details
+#' Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
+#' intevals along with the overly optimistic in-sample ROC curve.
+#' \code{plot.lasso_screenr} is an enhanced convenience wrapper for
+#' \code{pROC::plot.roc}.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
@@ -152,6 +156,11 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
 ##
 #' Plot ROC Curves from \code{logreg_screenr}-Class Objects
 #'
+#' @description
+#' \code{plot.logreg_screenr} plots the \emph{k}-fold cross-validated
+#' receiver-operating characteristic, including confidence intervals on the
+#' combinations of the local maxima of sensitivity and specificity.
+#'
 #' @param x an object of class \code{logreg_screenr}.
 #' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
@@ -168,6 +177,8 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
 #' @details
 #' Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
 #' intevals along with the overly optimistic in-sample ROC curve.
+#' \code{plot.lasso_screenr} is an enhanced convenience wrapper for
+#' \code{pROC::plot.roc}.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
@@ -209,6 +220,11 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 ## Function plot.simple_screenr
 ##
 #' Plot ROC Curves from \code{simple_screenr}-Class Objects
+#'
+#' @description
+#' \code{plot.simple_screenr} plots the \emph{k}-fold cross-validated
+#' receiver-operating characteristic, including confidence intervals on the
+#' combinations of the local maxima of sensitivity and specificity.
 #'
 #' Plot ROC curve with pointwise 95% confidence
 #' intevals on sensitivity and specificity and (optionally) returns a dataframe

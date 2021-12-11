@@ -15,6 +15,9 @@
 ##
 #' Return Data Frame Rows Having Unique Values in Selected Columns
 #'
+#' @description \code{keepfirst} extracts those rows of a data frame which have unique
+#' values in selected columns.
+#'
 #' @param x character-valued column name along which the dataframe is sorted.
 #'
 #' @param colnames a character vector of column names  to identify uniqueness.
@@ -47,8 +50,8 @@ keepfirst <- function(x, colnames, data = NULL){
 ##
 #' Compute the Inverses of Binomial Link Functions
 #'
-#' Returns the inverse of logit, cloglog and probit link functions for a linear
-#' predictor
+#' @description \code{inverseLink} returns the inverse of logit, cloglog and
+#' probit link functions for a linear predictor
 #'
 #' @param lp numeric vector containing the estimated link.
 #'
@@ -102,7 +105,10 @@ inverseLink <- function(lp = NULL, link =  NULL){
 
 ## Function nnt_
 ##
-#' Computes the Anticpated Number of Tests per Postive Result
+#' Compute the Ratio of Total Tests Performed  Per Postive Result
+#'
+#' @description \code{nnt_} computes the anticipated average number of tests
+#' performed in order to observe a positive test result.
 #'
 #' @param dframe a data frame containing columns \code{sensitivity},
 #' \code{specificity} and \code{prev}.
@@ -127,9 +133,13 @@ nnt_ <- function(dframe) {
 
 ## Function rescale_to_int
 ##
-#' Rescale Positive Vectors or Matrices to Integers in [1, \verb{max}]
+#' Rescale Positive Vectors or Matrices to Integers
 #'
-#' @param x numeric matrix or vector of positive real numbers.
+#' @description \code{rescale_to_int} rescales the non-zero elements of
+#' real-valued numeric vectors or matrices to integers in the closed
+#' interval [1, \verb{max}]. Any zero-valued elements are left unchanged.
+#'
+#' @param x numeric matrix or vector of non-negative real numbers.
 #'
 #' @param max the value of largest element in the rescaled integer-valued
 #' vector.
@@ -142,9 +152,6 @@ nnt_ <- function(dframe) {
 #' elements having value zero are unchanged. If \code{x} is a vector then the result is
 #' a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
 #' the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}.
-#'
-#' @note Any values of 0 in \code{x} are not rescaled, and are preserved in
-#' the result.
 #'
 #' @seealso \code{\link[scales]{rescale}}
 #'
@@ -173,7 +180,10 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 
 ## Function roc_ci
 ##
-#' Compute Cross-Validated Sensitivities, Specificities and Uncertainty Limits
+#' Compute Bootstrap Confidence Limits for Sensitivities and Specificities
+#'
+#' @description \code{roc_ci} computes bootstrap confidence intervals from
+#' objects of class \code{roc}, as produced by the \code{pROC} package.
 #'
 #' @param roc_ an object of class \code{roc}.
 #'
@@ -211,6 +221,9 @@ roc_ci <- function(roc_, bootreps, conf.level, progress = "text",
 ## Function sens_spec
 ##
 #' Compute Sensitivity and Specificity from a 2 x 2 Table
+#'
+#' @description \code{sens_spec} computes sensitivity and specificity from a
+#' 2 x 2 table.
 #'
 #' @param x a 2 x 2 table, with columns representing frequencies of
 #' gold-standard status and rows representing frequencies of status ascertained

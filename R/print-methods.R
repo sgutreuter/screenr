@@ -14,6 +14,8 @@
 ##
 #' A Print Method for \code{easy_tool}-Class Objects
 #'
+#' @description \code{print.easy_tool} is a print method.
+#'
 #' @param x an object of class \code{easy_tool}.
 #'
 #' @param ... optional arguments to \code{print} methods.
@@ -40,6 +42,9 @@ print.easy_tool <- function(x, ...){
 ##
 #' A Print Method for \code{lasso_screenr}-Class Objects
 #'
+#' @description \code{print.lasso_screenr} is a print method for
+#' \code{lasso_screenr}-class objects.
+#'
 #' @param x an object of class \code{lasso_screenr}
 #'
 #' @param ... optional arguments to \code{print} methods.
@@ -64,6 +69,9 @@ print.lasso_screenr <- function(x, ...){
 ## Function print.logreg_screenr
 ##
 #' A Print Method for \code{logreg_screenr}-Class Objects
+#'
+#' @description \code{print.logreg_screenr} is a print method for
+#' \code{logreg_screenr}-class objects.
 #'
 #' @param x an object of class \code{logreg_screenr}.
 #'
@@ -109,7 +117,9 @@ print.logreg_screenr <- function(x, ..., quote = FALSE){
 ## Function print.simple_screenr
 ##
 #' A Print Method for \code{simple_screenr}-Class Objects
-#' \code{print.simple_screenr} is an S3 print method for \code{simple_screenr} objects.
+#'
+#' @description \code{print.simple_screenr} is print method for
+#' \code{simple_screenr} objects.
 #'
 #' @param x an object of class \code{simple_screenr}.
 #'

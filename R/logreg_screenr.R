@@ -13,6 +13,11 @@
 ##
 #' Fitting Screening Tools Using Ordinary Logistic Regression
 #'
+#' @description
+#' \code{logreg_screenr} is a convenience function which integrates ordinary
+#' logistic regression \emph{k}-fold  cross-validation and estimation of the
+#' receiver-operating characteristic.
+#'
 #' @param formula an object of class \code{stats::formula} defining the
 #' testing outcome and predictor covariates, which is passed to \code{stats::glm()}.
 #'

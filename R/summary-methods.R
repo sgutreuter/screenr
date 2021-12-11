@@ -14,6 +14,9 @@
 ##
 #' A Summary Method for \code{easy_tool}-Class Objects
 #'
+#' @description \code{summary.easy_tool} provides a summary method for
+#' \code{easy-tool}-class objects.
+#'
 #' @param object an \code{easy_tool} object.
 #'
 #' @param ... optional arguments passed to \code{summary} methods.
@@ -40,6 +43,9 @@ summary.easy_tool <- function(object, ...){
 ##
 #' A Summary Method for \code{lasso_screenr}-Class Objects
 #'
+#' @description \code{summary.lasso_screenr} provides a summary method for
+#' \code{lasso_screenr}-class objects.
+#'
 #' @param object a lasso_screenr object
 #'
 #' @param ... optional arguments passed to \code{summary} methods.
@@ -65,6 +71,9 @@ summary.lasso_screenr <- function(object, ...){
 ## Function summary.logreg_screenr
 ##
 #' A Summary Method for \code{logreg_screenr}-Class Objects
+#'
+#' @description \code{summary.logreg_screenr} provides a summary method for
+#' \code{logreg_screenr}-class objects.
 #'
 #' @param object an object of class \code{logreg_screenr} produced by function
 #' \code{logreg_screenr}.
@@ -101,6 +110,9 @@ summary.logreg_screenr <- function(object, ..., diagnostics = FALSE){
 ## Function summary.simpleSreenr
 ##
 #' A Summary Method for \code{simple_screenr}-Class Objects
+#'
+#' @description \code{summary.simple_screenr} provides a summary method for
+#' \code{simple_screenr}-class objects.
 #'
 #' @param object an object of class \code{simple_screenr}.
 #'

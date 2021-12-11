@@ -14,6 +14,13 @@
 ##
 #' Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects
 #'
+#' @description
+#' \code{easy_tool} rescales the model coefficients for the screening questions
+#' to whole numbers ranging from 1 to \code{max} (\code{QuestionWeights}). Those are
+#' used as weights for each screening question in the simplified screening tool.
+#' The test screening score is the sum of the weights, which is compared with the
+#' chosen threshold.
+#'
 #' @param object an object of class \code{lasso_screenr} or
 #' \code{logreg_screenr}.
 #'
@@ -46,12 +53,6 @@
 #' }
 #'
 #' @details
-#' The estimates of the coefficients for the screening questions are rescaled to
-#' whole numbers ranging from 1 to \code{max} (\code{QuestionWeights}). Those are
-#' used as weights for each screening question.  The cross-validation results
-#' are then converted to questionnaire scores, where the score for each subject
-#' is the sum of the weighted responses to each question.
-#'
 #' The \code{QuestionWeights} are the foundation for easy screening. For example,
 #' the screening tool could consist of a simple questionnaire followed by the
 #' weight for each question, expressed as a small whole number (1, ..., \code{max})
@@ -76,8 +77,9 @@
 #' @note Execute \code{methods(class = "easy_tool")} to see available methods.
 #'
 #' @seealso
-#' \code{rescale_to_int}, \code{coef.easy_tool}, \code{ntpp.easy_tool},
-#' \code{plot.easy_tool}, \code{print.easy_tool} and \code{summary.easy_tool}
+#' \code{\link{rescale_to_int}}, \code{\link{coef.easy_tool}},
+#' \code{\link{ntpp.easy_tool}}, \code{\link{plot.easy_tool}},
+#' \code{\link{print.easy_tool}} and \code{\link{summary.easy_tool}}
 #'
 #' @examples
 #' attach(uniobj1)

@@ -13,6 +13,9 @@
 ##
 #' S3 Methods for Extraction of Object Components
 #'
+#' @description
+#' \code{get_what} extracts components from objects.
+#'
 #' @param from an object from which to extract \code{what}.
 #'
 #' @param what the element to extract from \code{from}.
@@ -31,6 +34,10 @@ get_what <- function(from, what, ...) {
 ## Function get_what.easy_tool
 ##
 #' An S3 Method for Extraction of Components from \code{easy_tool} Objects
+#'
+#' @description
+#' \code{get_what.easy_tool} extracts components from \code{easy_tool}-class
+#' objects.
 #'
 #' @param from the \code{easy_tool}-class object from which to extract
 #' the component.
@@ -99,6 +106,10 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
 ## Function get_what.lasso_screenr
 ##
 #' An S3 Method for Extraction of Components from \code{lasso_screenr} Objects
+#'
+#' @description
+#' \code{get_what.lasso_screenr} extracts components from \code{lasso_screenr}-class
+#' objects.
 #'
 #' @param from the \code{lasso_screenr}-class object from which to extract
 #' the component.
@@ -183,6 +194,10 @@ get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAI
 ##
 #' An S3 Method for Extraction of Components from \code{logreg_screenr} Objects
 #'
+#' @description
+#' \code{get_what.logreg_screenr} extracts components from \code{logreg_screenr}-class
+#' objects.
+#'
 #' @param from the \code{logreg_screenr}-class object from which to extract
 #' the component.
 #'
@@ -256,6 +271,10 @@ get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf.level = 
 ## Function get_what.simple_screenr
 ##
 #' An S3 Method for Extraction of Components from \code{simple_screenr} Objects
+#'
+#' @description
+#' \code{get_what.simple_screenr} extracts components from \code{simple_screenr}-class
+#' objects.
 #'
 #' @param from the \code{simple_screenr}-class object from which to extract
 #' the component.

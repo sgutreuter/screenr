@@ -11,15 +11,19 @@
 ##
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
+#' @description \code{ntpp} computes the ratio of the total number of tests
+#' performed per positive test result.
+#'
 #' @param object an object from which to compute the number of tests
 #' per test positive test results.
 #'
 #' @param ... additional arguments.
 #'
-#' @seealso \code{link[screenr]{ntpp.lasso_screenr}}
-#' @seealso \code{link[screenr]{ntpp.logreg_screenr}}
-#' @seealso \code{link[screenr]{ntpp.data.frame}}
-#' @seealso \code{link[screenr]{ntpp.simple_screenr}}
+#' @seealso
+#' \code{\link{ntpp.lasso_screenr}}
+#' \code{\link{ntpp.logreg_screenr}}
+#' \code{\link{ntpp.data.frame}}
+#' \code{\link{ntpp.simple_screenr}}
 #'
 #' @export
 ntpp <- function(object, ...) {
@@ -30,6 +34,9 @@ ntpp <- function(object, ...) {
 ## Function ntpp.easy_tool
 ##
 #' Compute the Ratio of Total Tests to Positive Results from \code{easy_tool} Objects
+#'
+#' @description \code{ntpp.easy_tool} computes the ratio of the total number of
+#' tests performed per positive test result from \code{easy_tool}-class objects.
 #'
 #' @param object an \code{easy_tool}-class object produced by \code{easy_tool}.
 #'
@@ -75,6 +82,9 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 ## Function ntpp.lasso_screenr
 ##
 #' Compute the Ratio of Total Tests to Positive Results from \code{lasso_screenr} Objects
+#'
+#' @description \code{ntpp.lasso_screenr} computes the ratio of the total number of
+#' tests performed per positive test result from \code{lasso_screenr}-class objects.
 #'
 #' @param object a \code{lasso_screenr}-class object produced by \code{lasso_screenr}.
 #'
@@ -129,6 +139,9 @@ ntpp.lasso_screenr <- function(object, ..., model = "minAIC", type = "cvResults"
 ## Function ntpp.logreg_screenr
 ##
 #' Compute the Ratio of Total Tests to Positive Results from \code{logreg_screenr} Objects
+#'
+#' @description \code{ntpp.logreg_screenr} computes the ratio of the total number of
+#' tests performed per positive test result from \code{logreg_screenr}-class objects.
 #'
 #' @param object a \code{logreg_screenr}-class object produced by \code{logreg_screenr}.
 #'
@@ -185,6 +198,9 @@ ntpp.logreg_screenr <- function(object, ..., type = "cvResults",
 ##
 #' Compute the Ratio of Total Tests to Positive Results from a Data Frame
 #'
+#' @description \code{ntpp.data.frame} computes the ratio of the total number of
+#' tests performed per positive test result from data frames.
+#'
 #' @param object a one-row dataframe containing columns \code{sensitivity},
 #' \code{specificity} and \code{prev}.
 #'
@@ -215,6 +231,9 @@ ntpp.data.frame <- function(object, ...){
 ## Function ntpp.simple_screenr
 ##
 #' Compute the Ratio of Total Tests to Positive Results from \code{simple_screenr} Objects
+#'
+#' @description \code{ntpp.simple_screenr} computes the ratio of the total number of
+#' tests performed per positive test result from \code{simple_screenr}-class objects.
 #'
 #' @param object a \code{simple_screenr}-class object produced by \code{simple_screenr}.
 #'

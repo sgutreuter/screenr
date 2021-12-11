@@ -15,7 +15,7 @@
 #' estimated from an initial sample.  The choice of a particular screening
 #' threshold is left to the user, and should be based on careful consideration
 #' of application-specific tradeoffs between sensitivity and specificity.
-#' \code{screer} also enables easy construction of screening tools.
+#' \code{screenr} also enables easy construction of screening tools.
 #'
 #' @details
 #' The high-level functions in the \code{screenr} package are:
@@ -31,7 +31,7 @@
 #' \item{\code{\link{sens_spec}}}{Sensitivity and specificity from a 2 x 2 table}
 #' }
 #'
-#' There are \code{plot}, \code{print} \code{summary}, \code{predict},
+#' There are \code{plot}, \code{print}, \code{summary}, \code{predict},
 #' \code{get_what}, and \code{ntpp} methods for the objects produced by
 #' \code{lasso_screenr}, \code{logreg_screenr}, \code{simple_screenr}
 #' and \code{easy_tool}. In addition, there is a \code{coef} method for

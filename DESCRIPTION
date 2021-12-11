@@ -9,28 +9,30 @@ Authors@R:
 		email = "sgutreuter@gmail.com",
 		role = c("aut", "cre"),
 		comment = c(ORCID = "0000-0002-0733-2900"))
-Depends: R(>= 3.5.0), glmpath, pROC, dplyr, scales, stringr
+Depends: R(>= 3.5.0)
+Imports: glmpath, pROC, dplyr, scales, stringr
 Description: Package screenr enables easy development and validation
     of diagnostic test screening tools. It is designed to enable those
     with only a basic familiarity with R to develop, validate and
-    implement screening tools for diagnostic tests.
-    Consider the situation where a definitive test for some condition
-    is relatively expensive, and the condition is rare.  In that case,
-    universal testing would not be efficient in terms of the yield of
-    postive results per test performed.  Now suppose that responses to
-    a set of simple diagnostic questions or observations may be
-    predictive of the definitive test result. Package screenr enables
-    the estimation of thresholds for making decisions about when to
-    perform the definitive test on newly observed subjects based on
-    Receiver Operating Characteristics (ROC) estimated from an initial
-    sample. The choice of a particular screening threshold is left to
-    the user, and should be based on careful consideration of
-    application-specific tradeoffs between sensitivity (true positive
-    fraction) and specificity (true negative fraction).
+    implement screening tools for diagnostic tests. Consider the
+    situation where a definitive test for some condition is relatively
+    expensive, and the condition is rare.  In that case, universal
+    testing would not be efficient in terms of the yield of postive
+    results per test performed.  Now suppose that responses to a set
+    of simple diagnostic questions or observations may be predictive
+    of the definitive test result. Package screenr enables estimation
+    of thresholds for making decisions about when to perform the
+    definitive test on newly observed subjects based on Receiver
+    Operating Characteristics (ROC) estimated from an initial sample.
+    The choice of a particular screening threshold is left to the user,
+    and should be based on careful consideration of application-
+    specific tradeoffs between sensitivity (true positive fraction)
+    and specificity (true negative fraction).
 License: GPL (>= 2)
-URL: https://github.com/sgutreuter/screenr.git
+URL: https://github.com/sgutreuter/screenr/
 Encoding: UTF-8
 RoxygenNote: 7.1.2
+BugReports: https://github.com/sgutreuter/screenr/issues
 LazyData: true
 Suggests:
     rmarkdown,
