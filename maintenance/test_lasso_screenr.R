@@ -12,6 +12,7 @@ library(stringr)
 library(glmpath)
 #################################################################################
 ## Set paths and working directory
+#################################################################################
 codepath <- file.path(Sys.getenv("DEVEL"), "screenr/R")
 workpath <- file.path(Sys.getenv("DEVEL"), "screenr/maintenance")
 datapath <- file.path(Sys.getenv("DEVEL"), "screenr/data")
@@ -38,6 +39,10 @@ uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                          data = unicorns, Nfolds = 10, seed = 123)
 ##save(uniobj1, file = file.path(datapath, "uniobj1.rda"), compress = "xz")
 coef(uniobj1)
+coef(uniobj1, or = TRUE, intercept = FALSE)
+plot(uniobj1)
+pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
+plot(pathobj)
 print(uniobj1)
 summary(uniobj1)
 wtf <- get_what(from = uniobj1, what = "glmpathObj")
@@ -50,7 +55,7 @@ rm(wtf)
 new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         testresult = c(NA, NA),
                         Q1 = c(0, 0), Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0),
-                        Q5 = c(0, 1), Q6 = c(0, 1), Q7 = c(0, 1))
+                        Q5 = c(0, 1), Q6 = c(0, 0), Q7 = c(0, 0))
 
 #################################################################################
 ## Methods testing
@@ -82,6 +87,8 @@ print(uniobj1)
 ## summary
 summary(uniobj1)
 
+new <- predict(uniobj1,  newdata = new_corns )
+print(new )
 #################################################################################
 ## Experimentation
 #################################################################################

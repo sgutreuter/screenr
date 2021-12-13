@@ -18,7 +18,8 @@ A data frame consisting of the rows of \code{data} which are
 unique with respect to \code{colnames}
 }
 \description{
-Return Data Frame Rows Having Unique Values in Selected Columns
+\code{keepfirst} extracts those rows of a data frame which have
+unique values in selected columns.
 }
 \details{
 The dataframe \code{data} is sorted, and then only those rows which are unique

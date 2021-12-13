@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{nnt_}
 \alias{nnt_}
-\title{Computes the Anticpated Number of Tests per Postive Result}
+\title{Compute the Ratio of Total Tests Performed  Per Postive Result}
 \usage{
 nnt_(dframe)
 }
@@ -11,5 +11,6 @@ nnt_(dframe)
 \code{specificity} and \code{prev}.}
 }
 \description{
-Computes the Anticpated Number of Tests per Postive Result
+\code{nnt_} computes the anticipated average number of tests
+performed in order to observe a positive test result.
 }

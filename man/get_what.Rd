@@ -14,7 +14,7 @@ get_what(from, what, ...)
 \item{...}{additional arguments.}
 }
 \description{
-S3 Methods for Extraction of Object Components
+\code{get_what} extracts components from objects.
 }
 \seealso{
 \code{link{get_what.lasso_screenr}}

@@ -31,15 +31,16 @@ and additional functions for use with this object are available in the
 }
 }
 \description{
-An Overly Simple Approach to Test Screening
+\code{simple_screenr} implements the method described in
+Bandason et al. (2016).
 }
 \details{
 \code{simple_screenr} computes the in-sample (\emph{overly optimistic})
-performances for development of a very simple test screening tool implementing
-the method of Bandason et al. (2016).  \code{simpleScreener} is not optimized
-and is intended only for comparision with \code{lasso_screenr} or
-\code{logreg_screenr}, either of which will almost certainly  out-perform
-\code{simpleScreening}.
+performances for development of a very simple test screening tool based on
+the sums of affirmative questionnaire responses.  \code{simpleScreener} is
+not optimized and is intended only for comparision with \code{lasso_screenr} or
+\code{logreg_screenr}, either of which will almost certainly out-perform
+\code{simple_screenr}.
 }
 \examples{
 data(unicorns)
@@ -61,5 +62,8 @@ analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
 \url{http://doi.org/10.1186/1471-2105-12-77}
 }
 \seealso{
+\code{\link{easy_tool}} for a better approach to simplification
+using the results from \code{lasso_screenr} or \code{logreg_screenr}.
+
 \code{\link{lasso_screenr}}, \code{\link{logreg_screenr}}
 }

@@ -13,14 +13,12 @@ per test positive test results.}
 \item{...}{additional arguments.}
 }
 \description{
-An S3 Method to Compute the Ratio of Total Tests to Positive Results
+\code{ntpp} computes the ratio of the total number of tests
+performed per positive test result.
 }
 \seealso{
-\code{link[screenr]{ntpp.lasso_screenr}}
-
-\code{link[screenr]{ntpp.logreg_screenr}}
-
-\code{link[screenr]{ntpp.data.frame}}
-
-\code{link[screenr]{ntpp.simple_screenr}}
+\code{\link{ntpp.lasso_screenr}}
+\code{\link{ntpp.logreg_screenr}}
+\code{\link{ntpp.data.frame}}
+\code{\link{ntpp.simple_screenr}}
 }

@@ -53,10 +53,11 @@
 #' }
 #'
 #' @details
-#' The \code{QuestionWeights} are the foundation for easy screening. For example,
-#' the screening tool could consist of a simple questionnaire followed by the
-#' weight for each question, expressed as a small whole number (1, ..., \code{max})
-#' and/or an equal number of open circles.  The person doing the screening need
+#' The \code{QuestionWeights} (see Value, below) are the foundation for easy
+#' screening. For example, the screening tool could consist of a simple
+#' questionnaire followed by the weight for each question, expressed as a
+#' small whole number (1, ..., \code{max}) and/or an equal number of open
+#' circles.  The person doing the screening need
 #' only circle the numerical weight and/or fill in the circles if and only if the
 #' subject provides a "yes" response to a particular question.  The person doing
 #' the screening then obtains the final score for that subject by adding up the
@@ -77,9 +78,9 @@
 #' @note Execute \code{methods(class = "easy_tool")} to see available methods.
 #'
 #' @seealso
-#' \code{\link{rescale_to_int}}, \code{\link{coef.easy_tool}},
-#' \code{\link{ntpp.easy_tool}}, \code{\link{plot.easy_tool}},
-#' \code{\link{print.easy_tool}} and \code{\link{summary.easy_tool}}
+#' \code{\link{rescale_to_int}}, \code{\link{ntpp.easy_tool}},
+#' \code{\link{plot.easy_tool}}, \code{\link{print.easy_tool}} and
+#' \code{\link{summary.easy_tool}}
 #'
 #' @examples
 #' attach(uniobj1)

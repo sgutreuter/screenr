@@ -28,6 +28,10 @@ returns a dataframe dataframe containing medians and
 bootstrap confidence limits of sensitivity and specificity.
 }
 \description{
+\code{plot.simple_screenr} plots the \emph{k}-fold cross-validated
+receiver-operating characteristic, including confidence intervals on the
+combinations of the local maxima of sensitivity and specificity.
+
 Plot ROC curve with pointwise 95% confidence
 intevals on sensitivity and specificity and (optionally) returns a dataframe
 containing numerical values.

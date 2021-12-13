@@ -23,5 +23,6 @@ a data frame containing the following columns:
 }
 }
 \description{
-Compute the Ratio of Total Tests to Positive Results from a Data Frame
+\code{ntpp.data.frame} computes the ratio of the total number of
+tests performed per positive test result from data frames.
 }

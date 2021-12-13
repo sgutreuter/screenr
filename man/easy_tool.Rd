@@ -39,19 +39,18 @@ receiver-operating characteristic produced by \code{`pROC::roc`}.}
 }
 }
 \description{
-Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects
+\code{easy_tool} rescales the model coefficients for the screening questions
+to whole numbers ranging from 1 to \code{max} (\code{QuestionWeights}). Those are
+used as weights for each screening question in the simplified screening tool.
+The test screening score is the sum of the weights, which is compared with the
+chosen threshold.
 }
 \details{
-The estimates of the coefficients for the screening questions are rescaled to
-whole numbers ranging from 1 to \code{max} (\code{QuestionWeights}). Those are
-used as weights for each screening question.  The cross-validation results
-are then converted to questionnaire scores, where the score for each subject
-is the sum of the weighted responses to each question.
-
-The \code{QuestionWeights} are the foundation for easy screening. For example,
-the screening tool could consist of a simple questionnaire followed by the
-weight for each question, expressed as a small whole number (1, ..., \code{max})
-and/or an equal number of open circles.  The person doing the screening need
+The \code{QuestionWeights} (see Value, below) are the foundation for easy
+screening. For example, the screening tool could consist of a simple
+questionnaire followed by the weight for each question, expressed as a
+small whole number (1, ..., \code{max}) and/or an equal number of open
+circles.  The person doing the screening need
 only circle the numerical weight and/or fill in the circles if and only if the
 subject provides a "yes" response to a particular question.  The person doing
 the screening then obtains the final score for that subject by adding up the
@@ -78,6 +77,7 @@ tool <- easy_tool(uniobj1, max = 3)
 class(tool)
 }
 \seealso{
-\code{rescale_to_int}, \code{coef.easy_tool}, \code{ntpp.easy_tool},
-\code{plot.easy_tool}, \code{print.easy_tool} and \code{summary.easy_tool}
+\code{\link{rescale_to_int}}, \code{\link{ntpp.easy_tool}},
+\code{\link{plot.easy_tool}}, \code{\link{print.easy_tool}} and
+\code{\link{summary.easy_tool}}
 }

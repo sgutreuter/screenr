@@ -35,7 +35,8 @@ confidence intervals for \code{what =} \verb{"ROCci"}.}
 The selected component is returned invisibly.
 }
 \description{
-An S3 Method for Extraction of Components from \code{easy_tool} Objects
+\code{get_what.easy_tool} extracts components from \code{easy_tool}-class
+objects.
 }
 \details{
 \code{get_what} is provided to enable easy extraction of components that

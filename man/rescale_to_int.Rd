@@ -2,12 +2,12 @@
 % Please edit documentation in R/helper_functions.R
 \name{rescale_to_int}
 \alias{rescale_to_int}
-\title{Rescale Positive Vectors or Matrices to Integers in [1, \verb{max}]}
+\title{Rescale Positive Vectors or Matrices to Integers}
 \usage{
 rescale_to_int(x, max, colwise = TRUE)
 }
 \arguments{
-\item{x}{numeric matrix or vector of positive real numbers.}
+\item{x}{numeric matrix or vector of non-negative real numbers.}
 
 \item{max}{the value of largest element in the rescaled integer-valued
 vector.}
@@ -23,11 +23,9 @@ a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Ot
 the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}.
 }
 \description{
-Rescale Positive Vectors or Matrices to Integers in [1, \verb{max}]
-}
-\note{
-Any values of 0 in \code{x} are not rescaled, and are preserved in
-the result.
+\code{rescale_to_int} rescales the non-zero elements of
+real-valued numeric vectors or matrices to integers in the closed
+interval [1, \verb{max}]. Any zero-valued elements are left unchanged.
 }
 \examples{
 x <- c(0.55, 1.21, 0.94, 0, 0.13)

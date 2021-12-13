@@ -37,3 +37,7 @@ coefs <- mfit$coefficients
 lp <- as.matrix(cbind(rep(1, nrow(new_corns)), new_corns[, 3:9])) %*%
            as.matrix(coefs, ncol =  1)
 (preds <- inverseLink(lp, link = "logit"))
+
+
+roc <- get_what(from = uniobj1, what = "ROCci", se.min = 0.9)
+print(roc)

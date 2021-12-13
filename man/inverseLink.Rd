@@ -9,22 +9,22 @@ inverseLink(lp = NULL, link = NULL)
 \arguments{
 \item{lp}{numeric vector containing the estimated link.}
 
-\item{link}{(character) name of the link function (one of \verb{"logit"}, \verb{"cloglog"}
-or \verb{"probit"}).}
+\item{link}{(character) name of the link function (one of \verb{"logit"},
+\verb{"cloglog"} or \verb{"probit"}).}
 }
 \value{
 A numeric vector containing the inverse of the link function for the
 linear predictor.
 }
 \description{
-Returns the inverse of logit, cloglog and probit link functions for a linear
-predictor
+\code{inverseLink} returns the inverse of logit, cloglog and
+probit link functions for a linear predictor
 }
 \details{
-\code{inverseLink} returns the inverses of logit, cloglog and probit link functions,
-and is provided as a (laborious) way to compute predicted values from the \verb{ModelFit}
-component of \code{logreg_screenr}-class objects.  The \code{predict} methods are
-a better way to obtain predicted values.
+\code{inverseLink} returns the inverses of logit, cloglog and probit link
+functions, and is provided as a (laborious) way to compute predicted values
+from the \verb{ModelFit} component of \code{logreg_screenr}-class objects.
+The \code{predict} methods are a better way to obtain predicted values.
 }
 \note{
 \code{inverseLink} may not be included in future versions of the \code{screenr}

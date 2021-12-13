@@ -62,7 +62,9 @@ available in the \code{pROC} package.}
 }
 }
 \description{
-Fitting Screening Tools Using Ordinary Logistic Regression
+\code{logreg_screenr} is a convenience function which integrates ordinary
+logistic regression \emph{k}-fold  cross-validation and estimation of the
+receiver-operating characteristic.
 }
 \details{
 The results provide information from

@@ -13,6 +13,7 @@ rm(list =  ls())
 library(devtools)
 library(roxygen2)
 library(rmarkdown)
+library(knitr)
 
 pkgpath <- file.path(Sys.getenv("DEVEL"), "screenr" )
 codepath <- file.path(pkgpath, "R")
@@ -29,11 +30,10 @@ setwd(pkgpath)
 ## Compile the vignette
 #################################################################################
 ## library(bibtex)
-## demo <- file.path(pkgpath, "vignettes/screenr_demo.Rmd")
+demo_ <- file.path(pkgpath, "vignettes/screenr_Tutorial.Rmd")
 ## refs <- read.bib(file.path(pkgpath, "vignettes/screenr_refs.bib")
 ## keys <- names(refs)
-## rmarkdown::render(input = demo)
-
+rmarkdown::render(input = demo_)
 
 #################################################################################
 ## Always (re)generate NAMESPACE and documentation, and then check package from
@@ -44,10 +44,6 @@ if(file.exists(file.path(pkgpath, "NAMESPACE"))) {
     file.remove(file.path(pkgpath, "NAMESPACE"))}
 devtools::document()
 devtools::check()
-
-#################################################################################
-## Build vignette
-#################################################################################
 devtools::build_vignettes( )
 
 #################################################################################

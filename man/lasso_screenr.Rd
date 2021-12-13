@@ -69,16 +69,14 @@ and ROC object from BIC-best model selection}
 }
 }
 \description{
-Fitting Screening Tools Using Lasso-Like Regularization of Logistic Regression
-}
-\details{
 \code{lasso_screenr} is a convenience function which integrates
 logistic regression using \emph{L}1 regularization, \emph{k}-fold
 cross-validation and estimation of the receiver-operating characteristic.
 The in-sample and out-of-sample performance is estimated from the models
 which produced the minimum AIC and minimum BIC.  Execute
 \code{methods(class = "lasso_screenr")} to identify available methods.
-
+}
+\details{
 \code{lasso_screenr} uses the \emph{L}1 path regularizer of
 Park and Hastie (2007), which is similar
 to conventional lasso and elastic net. It differs from the

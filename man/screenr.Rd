@@ -3,14 +3,13 @@
 \docType{package}
 \name{screenr}
 \alias{screenr}
-\title{screenr}
+\title{screenr Package}
 \description{
 The \code{screenr} package enables construction of binary test-screening
 tools.  It is designed to enable those with only a basic familiarity with
 \code{R} to develop, validate and implement screening tools for diagnostic
 tests.
-}
-\details{
+
 Consider the situation where a diagnostic test for some condition is
 relatively expensive, and the condition is rare.  In that case, universal
 testing would not be efficient in terms of the yield of postive results per
@@ -21,9 +20,9 @@ in/out individuals based on Receiver Operating Characteristics (ROC)
 estimated from an initial sample.  The choice of a particular screening
 threshold is left to the user, and should be based on careful consideration
 of application-specific tradeoffs between sensitivity and specificity.
-\code{screer} also enables easy construction of screening tools.
-
-
+\code{screenr} also enables easy construction of screening tools.
+}
+\details{
 The high-level functions in the \code{screenr} package are:
 \describe{
 \item{\code{\link{lasso_screenr}}}{Test-screening based on GLM path regularization
@@ -37,13 +36,15 @@ to integers}
 \item{\code{\link{sens_spec}}}{Sensitivity and specificity from a 2 x 2 table}
 }
 
-There are \code{plot}, \code{print} \code{summary}, \code{predict},
+There are \code{plot}, \code{print}, \code{summary}, \code{predict},
 \code{get_what}, and \code{ntpp} methods for the objects produced by
 \code{lasso_screenr}, \code{logreg_screenr}, \code{simple_screenr}
 and \code{easy_tool}. In addition, there is a \code{coef} method for
 \code{lasso_screenr} and \code{logreg_screenr} objects.
 }
 \note{
+A tutorial is available from \code{vignette("screenr_Tutorial", package = "screenr")}
+
 The canonical source for \code{screenr} is
 \url{https://github.com/sgutreuter/screenr}
 }

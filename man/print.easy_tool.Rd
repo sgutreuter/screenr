@@ -12,7 +12,7 @@
 \item{...}{optional arguments to \code{print} methods.}
 }
 \description{
-A Print Method for \code{easy_tool}-Class Objects
+\code{print.easy_tool} is a print method.
 }
 \examples{
 attach(uniobj1)

@@ -15,8 +15,8 @@
 ##
 #' Return Data Frame Rows Having Unique Values in Selected Columns
 #'
-#' @description \code{keepfirst} extracts those rows of a data frame which have unique
-#' values in selected columns.
+#' @description \code{keepfirst} extracts those rows of a data frame which have
+#' unique values in selected columns.
 #'
 #' @param x character-valued column name along which the dataframe is sorted.
 #'
@@ -55,17 +55,17 @@ keepfirst <- function(x, colnames, data = NULL){
 #'
 #' @param lp numeric vector containing the estimated link.
 #'
-#' @param link (character) name of the link function (one of \verb{"logit"}, \verb{"cloglog"}
-#' or \verb{"probit"}).
+#' @param link (character) name of the link function (one of \verb{"logit"},
+#' \verb{"cloglog"} or \verb{"probit"}).
 #'
 #' @return A numeric vector containing the inverse of the link function for the
 #' linear predictor.
 #'
 #' @details
-#' \code{inverseLink} returns the inverses of logit, cloglog and probit link functions,
-#' and is provided as a (laborious) way to compute predicted values from the \verb{ModelFit}
-#' component of \code{logreg_screenr}-class objects.  The \code{predict} methods are
-#' a better way to obtain predicted values.
+#' \code{inverseLink} returns the inverses of logit, cloglog and probit link
+#' functions, and is provided as a (laborious) way to compute predicted values
+#' from the \verb{ModelFit} component of \code{logreg_screenr}-class objects.
+#' The \code{predict} methods are a better way to obtain predicted values.
 #'
 #' @seealso \code{\link[screenr]{predict.logreg_screenr}}
 #'
@@ -184,34 +184,41 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #'
 #' @description \code{roc_ci} computes bootstrap confidence intervals from
 #' objects of class \code{roc}, as produced by the \code{pROC} package.
+#' \code{roc_ci} is simply a convenience wrapper for
+#' \code{pROC::ci.thresholds} re-formatted for \code{screenr}.
 #'
-#' @param roc_ an object of class \code{roc}.
+#' @param object an object of class \code{roc}.
 #'
-#' @param bootreps number of bootstrap replicates.
+#' @param bootreps number of bootstrap replicates (default = 2000).
 #'
-#' @param conf.level confidence level for uncertainty intervals.
+#' @param conf.level confidence level for uncertainty intervals
+#' (default = 0.95).
 #'
-#' @param progress type of progress display.
+#' @param progress type of progress display
+#' (see \code{help(pROC::ci.thresholds)}).
 #'
-#' @param thresholds type of thresholds.
+#' @param thresholds type of thresholds (see \code{help(pROC::ci.thresholds)}).
 #'
 #' @param se.min minimum value of sensitivity returned.
 #'
 #' @return a data frame containing thresholds with sensititives, specificities
 #' and uncertainy intervals.
-roc_ci <- function(roc_, bootreps, conf.level, progress = "text",
-                   thresholds = "local maximas", se.min = se.min) {
-    ci_ <- pROC::ci.thresholds(roc_,
+#' @export
+roc_ci <- function(object, bootreps = 2000, conf.level = 0.95,
+                   progress = "none", thresholds = "local maximas",
+                   se.min = 0.5) {
+    if(!class(object) == "roc") stop("class(object) must be 'roc'" )
+    ci_ <- pROC::ci.thresholds(object,
                                boot.n = bootreps,
                                progress = progress,
                                conf.level = conf.level,
                                thresholds = thresholds)
-    threshold <- attr(ci_, "thresholds")
-    res <- data.frame(cbind(threshold, ci_$sensitivity,
-                            ci_$specificity))
+    res <- cbind(ci_$sensitivity, ci_$specificity)
+    threshold <- as.numeric(rownames(res))
+    res <- data.frame(cbind(threshold, res))
+    rownames(res) <- 1:dim(res)[1]
     names(res) <- c("Threshold", "se.lcl", "Sensitivity",
                     "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-    row.names(res) <- 1:(dim(ci_$sensitivity)[1])
     res <- res[res$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
     res[is.infinite(res[,1]), 1] <- 0
     res

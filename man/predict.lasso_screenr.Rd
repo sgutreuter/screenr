@@ -22,7 +22,8 @@ in \code{newdata} with the predicted probabilities of positive test results \cod
 \code{phat_minBIC} from the models that produced the minimum AIC and BIC, respectively.
 }
 \description{
-A Prediction Method for \code{lasso_screenr}-Class Objects
+\code{predict.lasso_screenr} computes predicted probabilities of positive
+test results from new data.
 }
 \details{
 This method is a convenience wrapper for \code{`glmpath::predict.glmpath`}.

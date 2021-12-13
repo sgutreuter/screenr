@@ -22,11 +22,12 @@ a \emph{p} x 2 matrix containing the estimated coefficients from the AIC-
 and BIC-best logistic regression models, where \emph{p} is the number of coefficients.
 }
 \description{
-An S3 Method to Extract Coefficients from \code{lasso_screenr} Objects
+\code{coef.lasso_screenr} extracts the logistic model parameter estimates
+from \code{lasso_screenr}-class objects.
 }
 \details{
 \code{coef.lasso_screenr} extracts the estimated coefficients from
-\code{logreg_screenr} objects.
+\code{lasso_screenr} objects.
 }
 \examples{
 attach(uniobj1)

@@ -26,11 +26,15 @@ producing 95\% confidence intervals.}
 This function produces a plot as a side effect.
 }
 \description{
-Plot ROC Curves from \code{logreg_screenr}-Class Objects
+\code{plot.logreg_screenr} plots the \emph{k}-fold cross-validated
+receiver-operating characteristic, including confidence intervals on the
+combinations of the local maxima of sensitivity and specificity.
 }
 \details{
 Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
 intevals along with the overly optimistic in-sample ROC curve.
+\code{plot.lasso_screenr} is an enhanced convenience wrapper for
+\code{pROC::plot.roc}.
 }
 \examples{
 attach(uniobj2)

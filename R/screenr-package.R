@@ -1,5 +1,6 @@
-#' screenr
+#' screenr Package
 #'
+#' @description
 #' The \code{screenr} package enables construction of binary test-screening
 #' tools.  It is designed to enable those with only a basic familiarity with
 #' \code{R} to develop, validate and implement screening tools for diagnostic
@@ -36,6 +37,9 @@
 #' \code{lasso_screenr}, \code{logreg_screenr}, \code{simple_screenr}
 #' and \code{easy_tool}. In addition, there is a \code{coef} method for
 #' \code{lasso_screenr} and \code{logreg_screenr} objects.
+#'
+#' @note
+#' A tutorial is available from \code{vignette("screenr_Tutorial", package = "screenr")}
 #'
 #' @note
 #' The canonical source for \code{screenr} is

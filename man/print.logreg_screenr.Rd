@@ -18,7 +18,8 @@ Nothing. Thresholds, specificities and sensitivities are printed as a
 side effect.
 }
 \description{
-A Print Method for \code{logreg_screenr}-Class Objects
+\code{print.logreg_screenr} is a print method for
+\code{logreg_screenr}-class objects.
 }
 \examples{
 attach(uniobj2)

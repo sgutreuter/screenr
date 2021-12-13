@@ -21,7 +21,8 @@ were used to obtain \code{object}.}
 \code{newdata} with the predicted probabilities of positive test results \code{phat}.
 }
 \description{
-A Prediction Method for \code{logreg_screenr}-Class Objects
+\code{predict.logreg_screenr} computes predicted probabilities of positive
+test results from new data.
 }
 \details{
 This method is a convenience wrapper for \code{`stats::predict.glm`}.

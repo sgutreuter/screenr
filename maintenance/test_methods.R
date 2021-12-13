@@ -37,6 +37,7 @@ source(file.path(codepath, "summary-methods.R"))
 load(file.path(datapath, "unicorns.rda"))
 load(file.path(datapath, "uniobj1.rda"))
 load(file.path(datapath, "uniobj2.rda"))
+load(file.path(datapath, "val_data.rda"))
 
 #################################################################################
 ## plot methods
@@ -79,3 +80,6 @@ too_simple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                              data = unicorns)
 myroc <- get_what(from = too_simple, what = "ROCci" )
 print(myroc)
+
+
+newpreds <- predict(uniobj1, newdata = val_data)

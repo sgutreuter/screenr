@@ -18,7 +18,8 @@ Sensitivities and specificities are displayed as proportions rather than
 percentages.
 }
 \description{
-Compute Sensitivity and Specificity from a 2 x 2 Table
+\code{sens_spec} computes sensitivity and specificity from a
+2 x 2 table.
 }
 \examples{
 Gold <- rbinom(20, 1, 0.50)

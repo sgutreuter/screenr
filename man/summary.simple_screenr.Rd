@@ -16,7 +16,8 @@ Nothing.  Thresholds, specificities and sensitivities are printed as
 a side effect.
 }
 \description{
-A Summary Method for \code{simple_screenr}-Class Objects
+\code{summary.simple_screenr} provides a summary method for
+\code{simple_screenr}-class objects.
 }
 \examples{
 data(unicorns)

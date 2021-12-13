@@ -17,7 +17,8 @@ AIC and BIC for each step along the GLM path for which the active set
 changed.
 }
 \description{
-A Summary Method for \code{easy_tool}-Class Objects
+\code{summary.easy_tool} provides a summary method for
+\code{easy-tool}-class objects.
 }
 \details{
 This is essentially a wrapper for \code{glmpath::summary.glmpath}

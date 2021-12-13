@@ -17,7 +17,8 @@ AIC and BIC for each step along the GLM path for which the active set
 changed.
 }
 \description{
-A Summary Method for \code{lasso_screenr}-Class Objects
+\code{summary.lasso_screenr} provides a summary method for
+\code{lasso_screenr}-class objects.
 }
 \details{
 This is essentially a wrapper for \code{glmpath::summary.glmpath}

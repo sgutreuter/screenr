@@ -34,7 +34,8 @@ confidence intervals for \code{what =} \verb{"ROCci"}.}
 The selected component is returned invisibly.
 }
 \description{
-An S3 Method for Extraction of Components from \code{simple_screenr} Objects
+\code{get_what.simple_screenr} extracts components from \code{simple_screenr}-class
+objects.
 }
 \details{
 \code{get_what} is provided to enable easy extraction of components for those

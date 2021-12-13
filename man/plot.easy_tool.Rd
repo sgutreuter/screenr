@@ -25,18 +25,20 @@ returns a dataframe containing sensitivities, specificities and their
 lower and upper confidence limits for threshold values of Pr(response = 1).
 }
 \description{
-Plot ROC Curves from \code{easy_tool}-Class Objects
+\code{plot.easy_tool} plots the \emph{k}-fold cross-validated
+receiver-operating characteristic, including confidence intervals on the
+combinations of the local maxima of sensitivity and specificity.
 }
 \details{
 \code{plot.easy_tool} is an enhanced convenience wrapper for
-\code{`pROC::plot.roc`}.  The table is useful for identifying the
+\code{pROC::plot.roc}.  The table is useful for identifying the
 minimum predicted response probabilities associated with particular
 sensitivities.  The sensitivities and specificities are the coordinates at
 change points in the cross-validated ROC curve, and the values of Threshold_Pr
-are the values of lower bound of the predicted probability that acheives those
-sensitivities and specificities.  For example, if Threshold_P = 0.002, then
+are the values of lower bound of the predicted probability that achieves those
+sensitivities and specificities.  For example, if Threshold = 3, then
 classifiction as positive of all those subjects for whom the predicted response
-probability is greater than or equal to 0.002 will achieve the corresponding
+probability is greater than or equal to 3 should achieve the corresponding
 sensitivity and specificity at the prescribed confidence level in new
 data drawn from the same distribution as the training sample.
 }

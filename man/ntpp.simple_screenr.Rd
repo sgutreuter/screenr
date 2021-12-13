@@ -26,7 +26,8 @@ condition among those who are screened out of testing.}
 }
 }
 \description{
-Compute the Ratio of Total Tests to Positive Results from \code{simple_screenr} Objects
+\code{ntpp.simple_screenr} computes the ratio of the total number of
+tests performed per positive test result from \code{simple_screenr}-class objects.
 }
 \details{
 The anticipated number of tests needed to observe a single positive test

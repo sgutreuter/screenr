@@ -18,7 +18,8 @@
 Nothing.  Summaries are printed as a side effect.
 }
 \description{
-A Summary Method for \code{logreg_screenr}-Class Objects
+\code{summary.logreg_screenr} provides a summary method for
+\code{logreg_screenr}-class objects.
 }
 \examples{
 attach(uniobj2)

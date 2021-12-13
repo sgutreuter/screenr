@@ -12,7 +12,8 @@
 \item{...}{optional arguments to \code{print} methods.}
 }
 \description{
-A Print Method for \code{lasso_screenr}-Class Objects
+\code{print.lasso_screenr} is a print method for
+\code{lasso_screenr}-class objects.
 }
 \examples{
 attach(uniobj1)

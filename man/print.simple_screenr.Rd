@@ -2,8 +2,7 @@
 % Please edit documentation in R/print-methods.R
 \name{print.simple_screenr}
 \alias{print.simple_screenr}
-\title{A Print Method for \code{simple_screenr}-Class Objects
-\code{print.simple_screenr} is an S3 print method for \code{simple_screenr} objects.}
+\title{A Print Method for \code{simple_screenr}-Class Objects}
 \usage{
 \method{print}{simple_screenr}(x, ...)
 }
@@ -17,8 +16,8 @@ Nothing. Thresholds, specificities and sensitivities are printed as a
 side effect.
 }
 \description{
-A Print Method for \code{simple_screenr}-Class Objects
-\code{print.simple_screenr} is an S3 print method for \code{simple_screenr} objects.
+\code{print.simple_screenr} is print method for
+\code{simple_screenr} objects.
 }
 \examples{
 data(unicorns)

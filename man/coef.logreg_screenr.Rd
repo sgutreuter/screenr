@@ -22,7 +22,8 @@ A numeric vector containing the estimated coefficients on the logit
 scale.
 }
 \description{
-An S3 Method to Extract Coefficients from \code{logreg_screenr} Objects
+\code{coef.logreg_screenr} extracts the logistic model parameter estimates
+from \code{logreg_screenr}-class objects.
 }
 \details{
 \code{coef.logreg_screenr} extracts the estimated coefficients from

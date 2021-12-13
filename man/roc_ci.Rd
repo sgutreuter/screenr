@@ -2,27 +2,29 @@
 % Please edit documentation in R/helper_functions.R
 \name{roc_ci}
 \alias{roc_ci}
-\title{Compute Cross-Validated Sensitivities, Specificities and Uncertainty Limits}
+\title{Compute Bootstrap Confidence Limits for Sensitivities and Specificities}
 \usage{
 roc_ci(
-  roc_,
-  bootreps,
-  conf.level,
-  progress = "text",
+  object,
+  bootreps = 2000,
+  conf.level = 0.95,
+  progress = "none",
   thresholds = "local maximas",
-  se.min = se.min
+  se.min = 0.5
 )
 }
 \arguments{
-\item{roc_}{an object of class \code{roc}.}
+\item{object}{an object of class \code{roc}.}
 
-\item{bootreps}{number of bootstrap replicates.}
+\item{bootreps}{number of bootstrap replicates (default = 2000).}
 
-\item{conf.level}{confidence level for uncertainty intervals.}
+\item{conf.level}{confidence level for uncertainty intervals
+(default = 0.95).}
 
-\item{progress}{type of progress display.}
+\item{progress}{type of progress display
+(see \code{help(pROC::ci.thresholds)}).}
 
-\item{thresholds}{type of thresholds.}
+\item{thresholds}{type of thresholds (see \code{help(pROC::ci.thresholds)}).}
 
 \item{se.min}{minimum value of sensitivity returned.}
 }
@@ -31,5 +33,8 @@ a data frame containing thresholds with sensititives, specificities
 and uncertainy intervals.
 }
 \description{
-Compute Cross-Validated Sensitivities, Specificities and Uncertainty Limits
+\code{roc_ci} computes bootstrap confidence intervals from
+objects of class \code{roc}, as produced by the \code{pROC} package.
+\code{roc_ci} is simply a convenience wrapper for
+\code{pROC::ci.thresholds} re-formatted for \code{screenr}.
 }

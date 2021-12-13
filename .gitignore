@@ -3,9 +3,12 @@
 *.log
 *.Rout
 *.bak
-.#*
+^.#*
+^#*
 tmp*
 obsolete
 .Rdata
 inst/doc
 ^auto
+/doc/
+/Meta/
