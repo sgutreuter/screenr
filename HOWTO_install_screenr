@@ -11,7 +11,7 @@ HOWTO Install screenr from GitHub
 
     library(devtools)
 
-4. Install screenr from GitHub (authoratative source):
+4. Install screenr from GitHub:
 
     devtools::install_github("sgutreuter/screenr")
 
