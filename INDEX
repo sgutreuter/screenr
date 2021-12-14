@@ -1,0 +1,79 @@
+coef.lasso_screenr      An S3 Method to Extract Coefficients from
+                        'lasso_screenr' Objects
+coef.logreg_screenr     An S3 Method to Extract Coefficients from
+                        'logreg_screenr' Objects
+easy_tool               Simplifying Screening from 'lasso_screenr' or
+                        'logreg_screenr' Objects
+get_what                S3 Methods for Extraction of Object Components
+get_what.easy_tool      An S3 Method for Extraction of Components from
+                        'easy_tool' Objects
+get_what.lasso_screenr
+                        An S3 Method for Extraction of Components from
+                        'lasso_screenr' Objects
+get_what.logreg_screenr
+                        An S3 Method for Extraction of Components from
+                        'logreg_screenr' Objects
+get_what.simple_screenr
+                        An S3 Method for Extraction of Components from
+                        'simple_screenr' Objects
+inverseLink             Compute the Inverses of Binomial Link Functions
+keepfirst               Return Data Frame Rows Having Unique Values in
+                        Selected Columns
+lasso_screenr           Fitting Screening Tools Using Lasso-Like
+                        Regularization of Logistic Regression
+logreg_screenr          Fitting Screening Tools Using Ordinary Logistic
+                        Regression
+nnt_                    Compute the Ratio of Total Tests Performed Per
+                        Postive Result
+ntpp                    An S3 Method to Compute the Ratio of Total
+                        Tests to Positive Results
+ntpp.data.frame         Compute the Ratio of Total Tests to Positive
+                        Results from a Data Frame
+ntpp.easy_tool          Compute the Ratio of Total Tests to Positive
+                        Results from 'easy_tool' Objects
+ntpp.lasso_screenr      Compute the Ratio of Total Tests to Positive
+                        Results from 'lasso_screenr' Objects
+ntpp.logreg_screenr     Compute the Ratio of Total Tests to Positive
+                        Results from 'logreg_screenr' Objects
+ntpp.simple_screenr     Compute the Ratio of Total Tests to Positive
+                        Results from 'simple_screenr' Objects
+plot.easy_tool          Plot ROC Curves from 'easy_tool'-Class Objects
+plot.lasso_screenr      Plot ROC Curves from 'lasso_screenr'-Class
+                        Objects
+plot.logreg_screenr     Plot ROC Curves from 'logreg_screenr'-Class
+                        Objects
+plot.simple_screenr     Plot ROC Curves from 'simple_screenr'-Class
+                        Objects
+predict.lasso_screenr   A Prediction Method for 'lasso_screenr'-Class
+                        Objects
+predict.logreg_screenr
+                        A Prediction Method for 'logreg_screenr'-Class
+                        Objects
+print.easy_tool         A Print Method for 'easy_tool'-Class Objects
+print.lasso_screenr     A Print Method for 'lasso_screenr'-Class
+                        Objects
+print.logreg_screenr    A Print Method for 'logreg_screenr'-Class
+                        Objects
+print.simple_screenr    A Print Method for 'simple_screenr'-Class
+                        Objects
+rescale_to_int          Rescale Positive Vectors or Matrices to
+                        Integers
+roc_ci                  Compute Bootstrap Confidence Limits for
+                        Sensitivities and Specificities
+screenr                 screenr Package
+sens_spec               Compute Sensitivity and Specificity from a 2 x
+                        2 Table
+simple_screenr          An Overly Simple Approach to Test Screening
+summary.easy_tool       A Summary Method for 'easy_tool'-Class Objects
+summary.lasso_screenr   A Summary Method for 'lasso_screenr'-Class
+                        Objects
+summary.logreg_screenr
+                        A Summary Method for 'logreg_screenr'-Class
+                        Objects
+summary.simple_screenr
+                        A Summary Method for 'simple_screenr'-Class
+                        Objects
+unicorns                UIV Testing Training Data on Unicorns
+uniobj1                 A 'lasso_screenr object'
+uniobj2                 A 'logreg_screenr object'
+val_data                UIV Test Validation Data on Unicorns
