@@ -22,9 +22,8 @@
 #'
 #' @param ... additional arguments.
 #'
-#' @seealso \code{link{get_what.lasso_screenr}}
-#' @seealso \code{link{get_what.logreg_screenr}}
-#' @seealso \code{link{get_what.simple_screenr}}
+#' @seealso \code{\link{get_what.easy_tool}}, \code{\link{get_what.lasso_screenr}},
+#' \code{\link{get_what.logreg_screenr}} and \code{\link{get_what.simple_screenr}}.
 #' @export
 get_what <- function(from, what, ...) {
     UseMethod("get_what")
@@ -63,17 +62,18 @@ get_what <- function(from, what, ...) {
 #' are not provided by the \code{plot}, \code{predict}, \code{print} or
 #' \code{summary} methods.
 #'
-#' The following values of \code{what} return:
+#' Valid values of \code{what} are:
 #' \describe{
-#' \item{\verb{"Call"}}{the function call that created \code{from}.}
-#' \item{\verb{"QuestionWeights"}}{the screening question weights, which
+#' \item{\verb{"Call"}}{returns the function call that created \code{from}.}
+#' \item{\verb{"QuestionWeights"}}{returns the screening question weights, which
 #' are the re-scaled logistic-regression coefficients.}
-#' \item{\verb{ROCci}}{a data frame containing sensitivities,
+#' \item{\verb{ROCci}}{returns a data frame containing sensitivities,
 #' specificities and their confidence limits, and thresholds}
-#' \item{\verb{"Scores"}}{the screening scores for each subject, which are the
-#' sums of the products of the binary question responses and their
+#' \item{\verb{"Scores"}}{returns the screening scores for each subject, which
+#' are the sums of the products of the binary question responses and their
 #' \code{QuestionWeights}}
-#' \item{\verb{"ROC"}}{the receiver-operating characteristic for the \code{Scores}}
+#' \item{\verb{"ROC"}}{returns the receiver-operating characteristic for the
+#' \code{Scores}}
 #' }
 #'
 #' @examples
@@ -224,9 +224,9 @@ get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAI
 #' The following values of \code{what} return:
 #' \describe{
 #' \item{\verb{"ModelFit"}}{the entire \code{glm}-class object produced by
-#' by \code{\link[stats]{glm}}}.
+#' by \code{\link[stats]{glm}}.}
 #' \item{\verb{ROCci}}{a data frame containing cross-validated sensitivities,
-#' specificities and their confidence limits, and thresholds}.
+#' specificities and their confidence limits, and thresholds.}
 #' \item{\verb{"cvROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
 #' containing the \emph{k}-fold cross-validated receiver-operating characteristic.}
 #' \item{\verb{"isROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
@@ -303,6 +303,8 @@ get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf.level = 
 #' \describe{
 #' \item{\verb{"isROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
 #' containing the in-sample (overly optimistic) receiver-operating characteristic.}
+#' \item{\verb{"ROCci"}}{a data frame containing cross-validated sensitivities,
+#' specificities and their confidence limits, and thresholds.}
 #' }
 #'
 #' @examples

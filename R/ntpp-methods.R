@@ -201,7 +201,7 @@ ntpp.logreg_screenr <- function(object, ..., type = "cvResults",
 #' @description \code{ntpp.data.frame} computes the ratio of the total number of
 #' tests performed per positive test result from data frames.
 #'
-#' @param object a one-row dataframe containing columns \code{sensitivity},
+#' @param object a  dataframe containing columns \code{sensitivity},
 #' \code{specificity} and \code{prev}.
 #'
 #' @param ... optional arguments to \code{ntpp} methods.

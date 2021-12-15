@@ -262,8 +262,8 @@ new <- predict(uniobj1,  newdata = new_corns )
 print(new)
 ```
 
-If the chosen screening threshold was 0.0066, then testing the second
-unicorn but screening out the first would have point estimates of
+If the chosen screening threshold was 0.0066, then testing Bernie P.
+but screening out Alice D. would have point estimates of
 sensitivity and specificity of 0.959 and 0.628 if the data from those
 two unicorns came from the same statistical population as those in the
 study data.

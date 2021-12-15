@@ -14,5 +14,3 @@ The choice of a particular screening threshold is left to the user, and
 should be based on careful consideration of application-specific tradeoffs
 between sensitivity (true positive fraction) and specificity (true negative
 fraction).
-
-See also: Tutorial_Example.html

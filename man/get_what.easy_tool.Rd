@@ -43,17 +43,18 @@ objects.
 are not provided by the \code{plot}, \code{predict}, \code{print} or
 \code{summary} methods.
 
-The following values of \code{what} return:
+Valid values of \code{what} are:
 \describe{
-\item{\verb{"Call"}}{the function call that created \code{from}.}
-\item{\verb{"QuestionWeights"}}{the screening question weights, which
+\item{\verb{"Call"}}{returns the function call that created \code{from}.}
+\item{\verb{"QuestionWeights"}}{returns the screening question weights, which
 are the re-scaled logistic-regression coefficients.}
-\item{\verb{ROCci}}{a data frame containing sensitivities,
+\item{\verb{ROCci}}{returns a data frame containing sensitivities,
 specificities and their confidence limits, and thresholds}
-\item{\verb{"Scores"}}{the screening scores for each subject, which are the
-sums of the products of the binary question responses and their
+\item{\verb{"Scores"}}{returns the screening scores for each subject, which
+are the sums of the products of the binary question responses and their
 \code{QuestionWeights}}
-\item{\verb{"ROC"}}{the receiver-operating characteristic for the \code{Scores}}
+\item{\verb{"ROC"}}{returns the receiver-operating characteristic for the
+\code{Scores}}
 }
 }
 \examples{

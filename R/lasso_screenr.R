@@ -39,17 +39,19 @@
 #'
 #' @details
 #' \code{lasso_screenr} uses the \emph{L}1 path regularizer of
-#' Park and Hastie (2007), which is similar
-#' to conventional lasso and elastic net. It differs from the
-#' lasso with the inclusion of a small fixed (\verb{1e-5}) penalty on the
-#' \emph{L}2 norm of the parameters, and
+#' Park and Hastie (2007), as implemented in the \code{glmpath} package.
+#' Park-Hastie regularization is is similar to the conventional lasso and the
+#' elastic net. It differs from the lasso with the inclusion of a very small,
+#' fixed (\verb{1e-5}) penalty on the \emph{L}2 norm of the parameters, and
 #' differs from the elastic net in that the \emph{L}2 penalty is
 #' fixed.  Like the elastic net, the Park-Hastie regularization is robust to
-#' highly correlated predictors.
+#' highly correlated predictors. The \emph{L}2 penalization can be turned off
+#' (\code{L2 = FALSE}), in which case the regularization is similar to the
+#' coventional lasso.
 #'
-#' The \emph{L}2 penalization can be turned off (\code{L2 = FALSE}), in which case
-#' the regularization is similar to the coventional lasso.
+#' The receiver-operating characteristics are computed using the \code{pROC} package.
 #'
+#' Out-of-sample performance is estimated using \emph{k}-fold cross-validation.
 #' For a gentle but Python-centric introduction to \emph{k}-fold cross-validation,
 #' see \url{https://machinelearningmastery.com/k-fold-cross-validation/}.
 #'

@@ -27,7 +27,7 @@
 #' of logistic regression models}
 #' \item{\code{\link{easy_tool}}}{Easy implementation of test-screening tools}
 #' \item{\code{\link{simple_screenr}}}{Simple un-optimized test-screening}
-#' \item{\code{link{rescale_to_Int}}}{Rescale a strictly positive vector of real numbers
+#' \item{\code{\link{rescale_to_int}}}{Rescale a strictly positive vector of real numbers
 #' to integers}
 #' \item{\code{\link{sens_spec}}}{Sensitivity and specificity from a 2 x 2 table}
 #' }

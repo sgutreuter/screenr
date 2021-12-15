@@ -46,11 +46,11 @@ keepfirst <- function(x, colnames, data = NULL){
 }
 
 
-## Function inverseLink
+## Function inverse_link
 ##
 #' Compute the Inverses of Binomial Link Functions
 #'
-#' @description \code{inverseLink} returns the inverse of logit, cloglog and
+#' @description \code{inverse_link} returns the inverse of logit, cloglog and
 #' probit link functions for a linear predictor
 #'
 #' @param lp numeric vector containing the estimated link.
@@ -62,14 +62,14 @@ keepfirst <- function(x, colnames, data = NULL){
 #' linear predictor.
 #'
 #' @details
-#' \code{inverseLink} returns the inverses of logit, cloglog and probit link
+#' \code{inverse_link} returns the inverses of logit, cloglog and probit link
 #' functions, and is provided as a (laborious) way to compute predicted values
 #' from the \verb{ModelFit} component of \code{logreg_screenr}-class objects.
 #' The \code{predict} methods are a better way to obtain predicted values.
 #'
 #' @seealso \code{\link[screenr]{predict.logreg_screenr}}
 #'
-#' @note \code{inverseLink} may not be included in future versions of the \code{screenr}
+#' @note \code{inverse_link} may not be included in future versions of the \code{screenr}
 #' package.
 #'
 #' @examples
@@ -83,11 +83,11 @@ keepfirst <- function(x, colnames, data = NULL){
 #' coefs <- mfit$coefficients
 #' lp <- as.matrix(cbind(rep(1, nrow(new_corns)), new_corns[, 3:9])) %*%
 #'            as.matrix(coefs, ncol =  1)
-#' (preds <- inverseLink(lp, link = "logit"))
+#' (preds <- inverse_link(lp, link = "logit"))
 #' ## Note that only the predicted values are returned.
 #' @importFrom stats pnorm
 #' @export
-inverseLink <- function(lp = NULL, link =  NULL){
+inverse_link <- function(lp = NULL, link =  NULL){
     if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
     if(link == "logit"){
         p <- exp(lp) / (1 + exp(lp))
@@ -135,7 +135,7 @@ nnt_ <- function(dframe) {
 ##
 #' Rescale Positive Vectors or Matrices to Integers
 #'
-#' @description \code{rescale_to_int} rescales the non-zero elements of
+#' @description \code{rescale_to_int} rescales the \emph{non-zero} elements of
 #' real-valued numeric vectors or matrices to integers in the closed
 #' interval [1, \verb{max}]. Any zero-valued elements are left unchanged.
 #'
@@ -203,6 +203,8 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #'
 #' @return a data frame containing thresholds with sensititives, specificities
 #' and uncertainy intervals.
+#'
+#' @seealso \code{\link[pROC]{ci.thresholds}}
 #' @export
 roc_ci <- function(object, bootreps = 2000, conf.level = 0.95,
                    progress = "none", thresholds = "local maximas",

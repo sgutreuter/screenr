@@ -23,7 +23,7 @@ a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Ot
 the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}.
 }
 \description{
-\code{rescale_to_int} rescales the non-zero elements of
+\code{rescale_to_int} rescales the \emph{non-zero} elements of
 real-valued numeric vectors or matrices to integers in the closed
 interval [1, \verb{max}]. Any zero-valued elements are left unchanged.
 }

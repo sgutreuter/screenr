@@ -43,6 +43,7 @@
 #'                         Q5 = c(0, 1), Q6 = c(0, 1), Q7 = c(0, 1))
 #' ## Predict the probabilities of testing positive for the new subjects
 #' predict(uniobj1, newdata = new_corns)
+#'
 #' @export
 predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
@@ -59,12 +60,9 @@ predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
     pAIC <- glmpath::predict.glmpath(obj, newx =  x,  newy = y,  s = sAIC, type = "response")
     sBIC <- which(obj$bic == min(obj$bic))
     pBIC <- glmpath::predict.glmpath(obj, newx =  x,  newy = y,  s = sBIC, type = "response")
-    dat <- data.frame(cbind(y, x))
-    names(dat)[1] <- rname
-    dat[[rname]] <- newdata[[rname]]
     res <- data.frame(pAIC, pBIC)
     names(res) <- c("phat_minAIC", "phat_minBIC")
-    res <- cbind(dat, res)
+    res <- cbind(newdata, res)
     invisible(res)
 }
 

@@ -15,7 +15,7 @@
 #'
 #' @description
 #' \code{plot.easy_tool} plots the \emph{k}-fold cross-validated
-#' receiver-operating characteristic, including confidence intervals on the
+#' receiver-operating characteristics, including confidence intervals on the
 #' combinations of the local maxima of sensitivity and specificity.
 #'
 #' @param x an object of class \code{easy_tool}.
@@ -34,16 +34,7 @@
 #' lower and upper confidence limits for threshold values of Pr(response = 1).
 #'
 #' @details \code{plot.easy_tool} is an enhanced convenience wrapper for
-#' \code{pROC::plot.roc}.  The table is useful for identifying the
-#' minimum predicted response probabilities associated with particular
-#' sensitivities.  The sensitivities and specificities are the coordinates at
-#' change points in the cross-validated ROC curve, and the values of Threshold_Pr
-#' are the values of lower bound of the predicted probability that achieves those
-#' sensitivities and specificities.  For example, if Threshold = 3, then
-#' classifiction as positive of all those subjects for whom the predicted response
-#' probability is greater than or equal to 3 should achieve the corresponding
-#' sensitivity and specificity at the prescribed confidence level in new
-#' data drawn from the same distribution as the training sample.
+#' \code{pROC::plot.roc}.
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.

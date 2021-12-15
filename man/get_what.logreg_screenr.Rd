@@ -45,9 +45,9 @@ who wish to perform computations that are not provided by the \code{coef},
 The following values of \code{what} return:
 \describe{
 \item{\verb{"ModelFit"}}{the entire \code{glm}-class object produced by
-by \code{\link[stats]{glm}}}.
+by \code{\link[stats]{glm}}.}
 \item{\verb{ROCci}}{a data frame containing cross-validated sensitivities,
-specificities and their confidence limits, and thresholds}.
+specificities and their confidence limits, and thresholds.}
 \item{\verb{"cvROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
 containing the \emph{k}-fold cross-validated receiver-operating characteristic.}
 \item{\verb{"isROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}

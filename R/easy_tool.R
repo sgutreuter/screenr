@@ -15,17 +15,17 @@
 #' Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects
 #'
 #' @description
-#' \code{easy_tool} rescales the model coefficients for the screening questions
-#' to whole numbers ranging from 1 to \code{max} (\code{QuestionWeights}). Those are
-#' used as weights for each screening question in the simplified screening tool.
-#' The test screening score is the sum of the weights, which is compared with the
-#' chosen threshold.
+#' \code{easy_tool} rescales model coefficients to whole numbers ranging from
+#' 1 to \code{max} (\code{QuestionWeights}). Those rescaled and rounded
+#' coefficients can be used as weights for each screening question in a
+#' simplified model-based screening tool. The test screening score is the sum
+#' of the weights for each subject.
 #'
 #' @param object an object of class \code{lasso_screenr} or
 #' \code{logreg_screenr}.
 #'
-#' @param max (numeric) the desired maximum value for the response-question
-#' weights (default is 3).
+#' @param max (numeric) the desired maximum value for the response weights
+#' (default is 3).
 #'
 #' @param model (for \verb{lasso_screenr} objects only) the desired basis
 #' model. Valid options are \verb{"minAIC"} (the default) and \verb{"minBIC"}.

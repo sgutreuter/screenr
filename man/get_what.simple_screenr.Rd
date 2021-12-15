@@ -46,6 +46,8 @@ The following values of \code{what} return:
 \describe{
 \item{\verb{"isROC"}}{the \code{roc}-class object produced by \code{\link[pROC]{roc}}
 containing the in-sample (overly optimistic) receiver-operating characteristic.}
+\item{\verb{"ROCci"}}{a data frame containing cross-validated sensitivities,
+specificities and their confidence limits, and thresholds.}
 }
 }
 \examples{

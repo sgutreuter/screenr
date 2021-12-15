@@ -7,7 +7,7 @@
 \method{ntpp}{data.frame}(object, ...)
 }
 \arguments{
-\item{object}{a one-row dataframe containing columns \code{sensitivity},
+\item{object}{a  dataframe containing columns \code{sensitivity},
 \code{specificity} and \code{prev}.}
 
 \item{...}{optional arguments to \code{ntpp} methods.}

@@ -38,3 +38,6 @@ objects of class \code{roc}, as produced by the \code{pROC} package.
 \code{roc_ci} is simply a convenience wrapper for
 \code{pROC::ci.thresholds} re-formatted for \code{screenr}.
 }
+\seealso{
+\code{\link[pROC]{ci.thresholds}}
+}

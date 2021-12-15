@@ -37,4 +37,5 @@ new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         Q5 = c(0, 1), Q6 = c(0, 1), Q7 = c(0, 1))
 ## Predict the probabilities of testing positive for the new subjects
 predict(uniobj1, newdata = new_corns)
+
 }

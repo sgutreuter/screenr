@@ -138,7 +138,7 @@ logreg_screenr <- function(formula,
         X_ho <- rbind(X_ho, xhoj)
         res <- stats::glm(formula, data = dat[-holdouts[[i]], ],
                           family = binomial(link = link), ...)
-        pred.prob <- inverseLink(stats::predict(res,
+        pred.prob <- inverse_link(stats::predict(res,
                                                 newdata = dat[holdouts[[i]], ]),
                                  link = link)
         y <- stats::model.response(dat[holdouts[[i]], ])
