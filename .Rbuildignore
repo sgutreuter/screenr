@@ -8,8 +8,8 @@
 ^README\\.Rmd$
 ^maintenance
 ^auto
-^doc$
-^Meta$
 ^Tutorial_Example.html
 ^.github
 ^screenr_0.4.0.pdf
+^doc$
+^Meta$

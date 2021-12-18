@@ -9,3 +9,5 @@ obsolete
 .Rdata
 ^auto
 /maintenance/
+/doc/
+/Meta/
