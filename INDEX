@@ -16,7 +16,7 @@ get_what.logreg_screenr
 get_what.simple_screenr
                         An S3 Method for Extraction of Components from
                         'simple_screenr' Objects
-inverseLink             Compute the Inverses of Binomial Link Functions
+inverse_link            Compute the Inverses of Binomial Link Functions
 keepfirst               Return Data Frame Rows Having Unique Values in
                         Selected Columns
 lasso_screenr           Fitting Screening Tools Using Lasso-Like

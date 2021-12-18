@@ -5,6 +5,7 @@
 ^\\.gitignore$
 ^HOWTO_install_screenr$
 ^README\\.md$
+^README\\.Rmd$
 ^maintenance
 ^auto
 ^Tutorial_Example.html
