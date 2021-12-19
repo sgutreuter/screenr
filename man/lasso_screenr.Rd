@@ -86,9 +86,11 @@ differs from the elastic net in that the \emph{L}2 penalty is
 fixed.  Like the elastic net, the Park-Hastie regularization is robust to
 highly correlated predictors. The \emph{L}2 penalization can be turned off
 (\code{L2 = FALSE}), in which case the regularization is similar to the
-coventional lasso.
+coventional lasso. Like all \emph{L}1 regularizers, the Park-Hastie
+algorithm automatically selects covariates.
 
-The receiver-operating characteristics are computed using the \code{pROC} package.
+The receiver-operating characteristics are computed using the \code{pROC}
+package.
 
 Out-of-sample performance is estimated using \emph{k}-fold cross-validation.
 For a gentle but Python-centric introduction to \emph{k}-fold cross-validation,

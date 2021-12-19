@@ -37,10 +37,11 @@ This vignette demonstrates the development and validation of such a
 screening tool using lasso-like *L*1 regularization [2] of logistic
 models, as implemented in the glmpath package [3].  The screenr
 package also supports maximum-likelihood estimation of logistic model
-parameters, but the regularization approach is simpler to use,
-automatically prevents over-fitting, and handles separation of
-outcomes by some predictor(s).  Model performance is evaluating using
-receiver-operating characteristics [4,5].
+parameters, but the regularization approach is simpler to use, selects
+predictor covariates automatically to prevent over-fitting, robust to
+correlations among the predictors, and handles any separation of
+outcomes that might exist for some predictor(s).  Model performance is
+evaluated using receiver-operating characteristics [4,5].
 
 
 # An (Artificial) Example {-}
@@ -95,7 +96,8 @@ infection would require, on average, testing
 
 # Screening Tool Development {-}
 
-Screening-tool development and thorough validation consists of four steps:
+Screening-tool development and thorough validation consists of four
+steps:
 
 1. Model fitting
 2. Selection of a screening threshold
@@ -107,12 +109,12 @@ resource limitations.
 
 ## Model fitting
 
-The first step is estimation of the logistic-model parameters
-from the training data.  A method known as *L*1 regularization has
-desirable properties for that task [2,3].  The function
-`lasso_screenr()` provides easy, integrated access to the *L*1
-regularization algorithm of Park and Hastie [3], as implemented in the
-glmpath R package, using a convenient formula interface:
+The first step is estimation of the logistic-model parameters from the
+training data.  A method known as *L*1 regularization has desirable
+properties for that task [2,3].  The function `lasso_screenr()`
+provides easy, integrated access to the *L*1 regularization algorithm
+of Park and Hastie [3], as implemented in the glmpath R package, using
+a convenient formula interface:
 
 ```{r}
 uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
@@ -122,19 +124,19 @@ class(uniobj1)
 
 The formula `testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7` is an
 expression of the statement "predict `testresult` from the seven
-predictor variables `Q1`, ..., `Q7`. The argument `Nfolds
-= 10` specifies the desired number of partitions (folds) to be used
-for cross validation (discussed under "Selection of a screening threshold",
-below).
+predictor variables `Q1`, ..., `Q7`. The argument `Nfolds = 10`
+specifies the desired number of partitions (folds) to be used for
+cross validation (discussed under "Selection of a screening
+threshold", below).
 
 The fitting algorithm computes logit-scale coefficients along the
 entire regularization path, and has the effect of selecting covariates
 based on penalization of *L*1-norm of their coefficients, similar to
-the ordinary lasso [2].  Unlike the lasso, the algorithm also imposes a very small
-penalty on the *L*2-norm, which eliminates adverse effects of any
-strong correlations among the predictors which provides useful estimates
-even if the response variable is separable by the predictors (albeit
-unlikely in test-screening applications).  Two
+the ordinary lasso [2].  Unlike the lasso, the algorithm also imposes
+a very small penalty on the *L*2-norm, which eliminates adverse
+effects of any strong correlations among the predictors which provides
+useful estimates even if the response variable is separable by the
+predictors (albeit unlikely in test-screening applications).  Two
 solutions along the regularization path which yield the smallest AIC
 and BIC values, denoted `"minAIC"` and `"minBIC"`, respectively, are
 given special status.  Those are likely the most useful solutions in
@@ -142,26 +144,25 @@ nearly all settings.
 
 The resulting `lasso_screenr`-class object (`uniobj1`) includes the
 results from regularization and performance measures from the fits to
-all of the data, and from *k*-fold cross validation. The resulting object,
-`uniobj1`, contains all of the information need to develop and
+all of the data, and from *k*-fold cross validation. The resulting
+object, `uniobj1`, contains all of the information need to develop and
 (internally) validate a screening tool for diagnostic tests.
 
 For example, the logit-scale coefficients for the special solutions
-are
-obtained using:
+are obtained using:
 
 ```{r}
 coef(uniobj1)
 ```
 
 Note that the coefficient for Q4 has been shrunk to zero in both the
-AIC- and BIC-best models which happen to coincide in the unicorn data.  In
-effect, Q4 has been eliminated from both of those models. Q4 was not
-an important predictor of the test result.
+AIC- and BIC-best models which happen to coincide in the unicorn data.
+In effect, Q4 has been eliminated from both of those models. Q4 was
+not an important predictor of the test result.
 
-One can also obtain the adjusted odds ratios and/or omit the intercept.  For
-example, the adjusted odds ratios for the seven predictors can be obtained
-using:
+One can also obtain the adjusted odds ratios and/or omit the
+intercept.  For example, the adjusted odds ratios for the seven
+predictors can be obtained using:
 
 ```{r}
 coef(uniobj1, or = TRUE, intercept = FALSE)
@@ -194,11 +195,12 @@ The methods should make it unnecessary to access components of
 
 ## Selection of a screening threshold {-}
 
-The next task is identifying whether sufficiently effective pre-test screening is
-possible and, if so, selecting the most appropriate screening threshold. That task
-requires careful consideration and expert judgment, neither of which
-are provided by the screenr package. However the screenr package does
-provide the results that are most relevant to that task.
+The next task is identifying whether sufficiently effective pre-test
+screening is possible and, if so, selecting the most appropriate
+screening threshold. That task requires careful consideration and
+expert judgment, neither of which are provided by the screenr
+package. However the screenr package does provide the results that are
+most relevant to that task.
 
 The receiver-operating characteristic (ROC) provides measures of the
 accuracy of screening at multiple thresholds. The `screenr` package
@@ -370,10 +372,11 @@ ntpp(et_3)
 
 The ratio of total tests to positive results is 40 when testing
 unicorns with a score of at least 3, and prevalence among the untested
-should be approximately 0.0006 (0.06\%). In contrast, the prevalence of UIV in the
-training data is `r (pbar <- mean(unicorns$testresult, na.rm = TRUE))` and
-therefore we would, on average, need to test approximately `r
-round(1/pbar)` unicorns in order to detect a single infection.
+should be approximately 0.0006 (0.06\%). In contrast, the prevalence
+of UIV in the training data is `r (pbar <- mean(unicorns$testresult,
+na.rm = TRUE))` and therefore we would, on average, need to test
+approximately `r round(1/pbar)` unicorns in order to detect a single
+infection.
 
 A example of a simple clinical screening form based on the question
 weight is shown in Figure .
@@ -399,12 +402,12 @@ sensitivity and specificity might still be overly optimistic.
 screening tool prior to use in new populations of subjects.**
 
 External validation requires a repetition of the study for the new
-population(s). For example, a follow-up study was performed on unicorns who sought
-care at facilities that were not represented in the screening
-sample. A total of `r dim(val_data)[1]` new unicorns were interviewed and tested
-for UIV as part of that follow-up study. External validation consists
-of assessment of the performance of the screening tool on those new
-subjects.
+population(s). For example, a follow-up study was performed on
+unicorns who sought care at facilities that were not represented in
+the screening sample. A total of `r dim(val_data)[1]` new unicorns
+were interviewed and tested for UIV as part of that follow-up
+study. External validation consists of assessment of the performance
+of the screening tool on those new subjects.
 
 The `predict` method provides the means predict test-positivity among
 the new subjects:
@@ -414,22 +417,20 @@ new_preds <- predict(uniobj1, newdata = val_data)
 head(new_preds)
 ```
 
-Note that we are predicting using the results from the initial study,
-as contained in `uniobj1`. The data frame `val_data` contains the new data
-from the follow-up study.
+Note that we are predicting using the model fit from the initial study,
+as contained in `uniobj1`. The data frame `val_data` contains the new
+data from the follow-up study.
 
-The data frame `newpreds` contains the results of tests from the new
+The data frame `new_preds` contains the results of tests from the new
 subjects and predicted probabilities of a positive outcome based on
 the AIC- and BIC-best models fitted to the training data. The
 questionnaire responses from the new subjects are also included. Those
 are needed to assess performance of simplified screening based on the
 sums of question weights.
 
-The performance of the screening tool when applied to the new subjects is
-again measured using the ROC.
-
-The ROC for testing in the new subjects is obtained using the `roc`
-function from the `pROC` package:
+The performance of the screening tool when applied to the new subjects
+is again measured using the ROC.  The ROC for testing in the new
+subjects is obtained using the `roc` function from the `pROC` package:
 
 ```{r}
 new_roc <- pROC::roc(testresult ~ phat_minAIC, data = new_preds,
@@ -444,9 +445,10 @@ plot(new_roc, print.auc = TRUE)
 ```
 
 Note that the AUC is slightly smaller than the AUC from
-cross-validation of the training data. However the `roc_ci` function provided by the `screenr` package
-provides more informative information, including confidence intervals
-for sensitivity and specificity:
+cross-validation of the training data. However the `roc_ci` function
+provided by the `screenr` package provides more informative
+information, including confidence intervals for sensitivity and
+specificity:
 
 ```{r}
 new_perf <- roc_ci(new_roc, se.min = 0.8)
@@ -457,14 +459,15 @@ print(new_perf)
 
 The `screenr` package eases the workload for development and
 evaluation of screening tools. Hopefully `screenr` will prove useful
-to both novice and experienced R users. This tutorial documents only the basic
-steps. However much more is possible. Execute `help(screenr)` in an R session to
-obtain a broader list of capabilities. End-users are
-encouraged to further explore the methods that are available for
-objects. Make use of the R commands `class(some_object)` and `methods(class =
-"some_class")` where `some_object` is the result of some function
-call, and `"some_class"` is the class of that object. Then use
-`help(methodname.some_class)` to obtain help for use of method `methodname`.
+to both novice and experienced R users. This tutorial documents only
+the basic steps. However much more is possible. Execute
+`help(screenr)` in an R session to obtain a broader list of
+capabilities. End-users are encouraged to further explore the methods
+that are available for objects. Make use of the R commands
+`class(some_object)` and `methods(class = "some_class")` where
+`some_object` is the result of some function call, and `"some_class"`
+is the class of that object. Then use `help(methodname.some_class)` to
+obtain help for use of method `methodname`.
 
 Some may want results that are not directly available from `screenr`
 functions and methods. In those cases, the `get_what` methods may

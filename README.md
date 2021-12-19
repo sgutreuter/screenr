@@ -56,6 +56,7 @@ The tutorial is recommended for first-time users:
 ``` r
     library(screenr)
     vignette("screenr_Tutorial", package = "screenr")
+#> starting httpd help server ... done
 ```
 
 ## Bug reports
