@@ -13,7 +13,7 @@ head(unicorns)
 
 ## -----------------------------------------------------------------------------
 uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
-                         data = unicorns, Nfolds = 10)
+                         data = unicorns, Nfolds = 10, seed = 123)
 class(uniobj1)
 
 ## -----------------------------------------------------------------------------
@@ -29,6 +29,9 @@ plot(pathobj)
 ## -----------------------------------------------------------------------------
 methods(class = "lasso_screenr")
 
+## ---- fig.width = 4, fig.height = 4, fig.fullwidth = TRUE---------------------
+plot(uniobj1, model = "minAIC")
+
 ## -----------------------------------------------------------------------------
 roc_maximas <- get_what(from = uniobj1, what = "ROCci", se.min = 0.9)
 print(roc_maximas)
@@ -41,6 +44,22 @@ new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
 						Q7 = c(0, 0))
 new <- predict(uniobj1,  newdata = new_corns )
 print(new)
+
+## -----------------------------------------------------------------------------
+new_preds <- predict(uniobj1, newdata = val_data)
+head(new_preds)
+
+## -----------------------------------------------------------------------------
+new_roc <- pROC::roc(testresult ~ phat_minAIC, data = new_preds,
+auc = TRUE)
+class(new_roc)
+
+## ---- fig.width = 4, fig.height = 4-------------------------------------------
+plot(new_roc, print.auc = TRUE)
+
+## -----------------------------------------------------------------------------
+new_perf <- roc_ci(new_roc, se.min = 0.8)
+print(new_perf)
 
 ## -----------------------------------------------------------------------------
 et_3 <- easy_tool(uniobj1, max = 3, model = "minAIC", crossval = TRUE)
@@ -60,25 +79,9 @@ plot(et_3)
 qw_maximas <- get_what(from = et_3, what = "ROCci")
 print(qw_maximas)
 
-## -----------------------------------------------------------------------------
-ntpp(et_3)
-
 ## ---- fig.width = 4, fig.height = 3-------------------------------------------
 knitr::include_graphics("UniTool.png")
 
 ## -----------------------------------------------------------------------------
-new_preds <- predict(uniobj1, newdata = val_data)
-head(new_preds)
-
-## -----------------------------------------------------------------------------
-new_roc <- pROC::roc(testresult ~ phat_minAIC, data = new_preds,
-auc = TRUE)
-class(new_roc)
-
-## ---- fig.width = 4, fig.height = 4-------------------------------------------
-plot(new_roc, print.auc = TRUE)
-
-## -----------------------------------------------------------------------------
-new_perf <- roc_ci(new_roc, se.min = 0.8)
-print(new_perf)
+ntpp(et_3)
 

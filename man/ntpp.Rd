@@ -16,6 +16,14 @@ per test positive test results.}
 \code{ntpp} computes the ratio of the total number of tests
 performed per positive test result.
 }
+\details{
+The anticipated number of tests required to detect a single positive
+\emph{nntp} is given by
+\deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+specificity. The anticipated prevalence among those screened out is given by
+\deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
+}
 \seealso{
 \code{\link{ntpp.lasso_screenr}}
 \code{\link{ntpp.logreg_screenr}}

@@ -19,6 +19,14 @@
 #'
 #' @param ... additional arguments.
 #'
+#' @details
+#' The anticipated number of tests required to detect a single positive
+#' \emph{nntp} is given by
+#' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+#' specificity. The anticipated prevalence among those screened out is given by
+#' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
+#'
 #' @seealso
 #' \code{\link{ntpp.lasso_screenr}}
 #' \code{\link{ntpp.logreg_screenr}}
@@ -56,9 +64,18 @@ ntpp <- function(object, ...) {
 #' }
 #'
 #' @details
-#' The anticipated number of tests needed to observe a single positive test
-#' result is a function of sensitivity, specificity and the prevalence proportion
-#' of the condition being tested.
+#' The anticipated number of tests required to detect a single positive
+#' \emph{nntp} is given by
+#' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+#' specificity. The anticipated prevalence among those screened out is given by
+#' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
+#'
+#' @seealso
+#' \code{\link{ntpp.lasso_screenr}}
+#' \code{\link{ntpp.logreg_screenr}}
+#' \code{\link{ntpp.data.frame}}
+#' \code{\link{ntpp.simple_screenr}}
 #'
 #' @examples
 #' attach(uniobj1)
@@ -111,9 +128,12 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 #' }
 #'
 #' @details
-#' The anticipated number of tests needed to observe a single positive test
-#' result is a function of sensitivity, specificity and the prevalence proportion
-#' of the condition being tested.
+#' The anticipated number of tests required to detect a single positive
+#' \emph{nntp} is given by
+#' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+#' specificity. The anticipated prevalence among those screened out is given by
+#' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @examples
 #' attach(uniobj1)
@@ -165,9 +185,12 @@ ntpp.lasso_screenr <- function(object, ..., model = "minAIC", type = "cvResults"
 #' }
 #'
 #' @details
-#' The anticipated number of tests needed to observe a single positive test
-#' result is a function of sensitivity, specificity and the prevalence proportion
-#' of the condition being tested.
+#' The anticipated number of tests required to detect a single positive
+#' \emph{nntp} is given by
+#' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+#' specificity. The anticipated prevalence among those screened out is given by
+#' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @examples
 #' attach(uniobj2)
@@ -214,6 +237,15 @@ ntpp.logreg_screenr <- function(object, ..., type = "cvResults",
 #' \item{\code{ntpp}}{anticipated total tests required per positive result}
 #' \item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
 #'}
+#'
+#' @details
+#' The anticipated number of tests required to detect a single positive
+#' \emph{nntp} is given by
+#' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+#' specificity. The anticipated prevalence among those screened out is given by
+#' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
+#'
 #' @export
 ntpp.data.frame <- function(object, ...){
     if(!is.data.frame(object)) stop("object not a data frame")
@@ -253,15 +285,12 @@ ntpp.data.frame <- function(object, ...){
 #' }
 #'
 #' @details
-#' The anticipated number of tests needed to observe a single positive test
-#' result is a function of sensitivity, specificity and the prevalence proportion
-#' of the condition being tested.
-#'
-#' @examples
-#' data(unicorns)
-#' toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
-#'                            data = unicorns)
-#' ntpp(toosimple)
+#' The anticipated number of tests required to detect a single positive
+#' \emph{nntp} is given by
+#' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+#' specificity. The anticipated prevalence among those screened out is given by
+#' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @export
 ntpp.simple_screenr <- function(object, ..., prev = NULL) {

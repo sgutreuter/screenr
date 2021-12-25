@@ -23,22 +23,25 @@ data(val_data)
 
 # Introduction {-}
 
-The screenr package enables easy development and validation of
+The screenr package eases the development and validation of
 pre-testing screening tools of the sort reviewed by Clemens et al
-[1]. Universal testing for a condition can be impractical if the test
+[1], but is applicable to any test-screening problem. Universal
+testing for a condition can be impractical if the test
 procedure is relatively expensive and the condition is rare.
 Alternatively, testing only those subjects having a sufficiently large
-probability of testing positive may be a viable alternative if a
+probability of testing positive may be viable if a
 screening procedure can be developed which has an acceptable
-sensitivity. That may be possible if easily measured/recorded risk
+[sensitivity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity).
+That may be possible if easily measured/recorded risk
 factors for test positivity can be identified.
 
 This vignette demonstrates the development and validation of such a
-screening tool using lasso-like *L*1 regularization [2] of logistic
+screening tool using lasso-like *L*1
+[regularization](https://towardsdatascience.com/regularization-in-machine-learning-76441ddcf99a) [2] of logistic
 models, as implemented in the glmpath package [3].  The screenr
 package also supports maximum-likelihood estimation of logistic model
 parameters, but the regularization approach is simpler to use, selects
-predictor covariates automatically to prevent over-fitting, robust to
+predictor covariates automatically to prevent over-fitting, is robust to
 correlations among the predictors, and handles any separation of
 outcomes that might exist for some predictor(s).  Model performance is
 evaluated using receiver-operating characteristics [4,5].
@@ -49,22 +52,22 @@ evaluated using receiver-operating characteristics [4,5].
 [Unicorns](https://www.britannica.com/topic/unicorn) suffer an
 epidemic of infection by the Unicorn Immunodeficiency Virus (UIV).
 There is currently no cure for UIV infection, but highly effective
-antiretrovial therapy has the potential to both block forward
+antiretrovial therapy has the potential to block forward
 transmission and to avert death from opportunistic infections
-associated with UIV infection.  Therefore it is critically important
+associated with UIV infection.  Therefore it is critical
 that UIV infection is detected, and that infected unicorns are
 enrolled in treatment.  However, UIV infection is sufficiently rare
 that universal testing of unicorns at health-care entry points is
 impractical.
 
-A sample of `r dim(unicorns)[1]` properly consented unicorns were
+A sample of `r dim(unicorns)[1]` properly consented adult unicorns were
 enrolled in a study aimed at evidence-based targeting of testing for
-UIV infection.  The subjects were administered a seven-item
+UIV infection.  The subjects were administered a
 questionnaire identifying the presence or absence of putative risk
 factors for UIV infection.  The prevalence of UIV is low, and
 therefore universal testing was deemed impractical.  The challenge
 then is to identify unicorns who should be prioritized for
-testing. Because UIV is transmissible and fatal if untreated, it is
+testing. Because UIV is transmissible and fatal if left untreated, it is
 important that the screening tool have an acceptably high sensitivity.
 The screenr package enables development and validation of such
 screening tools.
@@ -72,8 +75,8 @@ screening tools.
 The screening questionnaire included seven questions which were
 selected based on published information on infection risk. The data
 consists of the responses to the screening questions Q1, ..., Q7
-(coded as 1 for an affirmative (yes) response and 0 for a negative
-response) and the testing outcome (testresult), again coded 0 and 1
+(coded as 1 for an affirmative response and 0 for a negative
+response), and the testing outcome (testresult), again coded 0 and 1
 for negative and positive results, respectively.
 
 **NOTE:** It is critically important that all of the putative risk
@@ -88,11 +91,11 @@ The data from the unicorn study look like:
 head(unicorns)
 ```
 
-The prevalence of UIV in the sample of unicorns is `r
-mean(unicorns$testresult, na.rm = TRUE)`. Under universal testing
+The prevalence of UIV in the sample of unicorns is
+`r mean(unicorns$testresult, na.rm = TRUE)`. Under universal testing
 at health-care entry points, discovery of a single
 infection would require, on average, testing
-`r mean(unicorns$testresult, na.rm =  TRUE)` unicorns.
+`r round(1 / mean(unicorns$testresult, na.rm =  TRUE))` unicorns.
 
 # Screening Tool Development {-}
 
@@ -101,10 +104,10 @@ steps:
 
 1. Model fitting
 2. Selection of a screening threshold
-3. Implementation
-4. External validation on entirely new data
+3. External validation on entirely new data
+4. Implementation
 
-In practice, unfortunately, the fourth step is often neglected due to
+In practice, unfortunately, the third step is sometimes omitted due to
 resource limitations.
 
 ## Model fitting
@@ -118,29 +121,37 @@ a convenient formula interface:
 
 ```{r}
 uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
-                         data = unicorns, Nfolds = 10)
+                         data = unicorns, Nfolds = 10, seed = 123)
 class(uniobj1)
 ```
 
 The formula `testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7` is an
 expression of the statement "predict `testresult` from the seven
-predictor variables `Q1`, ..., `Q7`. The argument `Nfolds = 10`
+covariates `Q1`, ..., `Q7`. The argument `Nfolds = 10`
 specifies the desired number of partitions (folds) to be used for
-cross validation (discussed under "Selection of a screening
-threshold", below).
+cross validation (discussed under 'Selection of a screening
+threshold', below).
+
+
+**NOTE:** The optional `seed` argument specifies the starting value
+for the random-number generator used for cross-validation data-splitting. Here
+it is set to a fixed value to insure reproducibility. By default, the
+seed is set by the system clock, and therefore results will vary from
+run to run. Set the seed only if reproducible results are needed.
 
 The fitting algorithm computes logit-scale coefficients along the
 entire regularization path, and has the effect of selecting covariates
-based on penalization of *L*1-norm of their coefficients, similar to
+based on penalization by *L*1-[norm](https://towardsdatascience.com/norms-penalties-and-multitask-learning-2f1db5f97c1f)of their coefficients, similar to
 the ordinary lasso [2].  Unlike the lasso, the algorithm also imposes
 a very small penalty on the *L*2-norm, which eliminates adverse
-effects of any strong correlations among the predictors which provides
+effects of any strong correlations among the predictors and provides
 useful estimates even if the response variable is separable by the
 predictors (albeit unlikely in test-screening applications).  Two
-solutions along the regularization path which yield the smallest AIC
-and BIC values, denoted `"minAIC"` and `"minBIC"`, respectively, are
-given special status.  Those are likely the most useful solutions in
-nearly all settings.
+solutions along the regularization path which yield the smallest [AIC
+and BIC](https://docs.displayr.com/wiki/Information_Criteria) values,
+denoted `"minAIC"` and `"minBIC"`, respectively, are given special
+status.  Those are likely the most useful solutions in nearly all
+settings. However all solutions are accessible.
 
 The resulting `lasso_screenr`-class object (`uniobj1`) includes the
 results from regularization and performance measures from the fits to
@@ -155,8 +166,8 @@ are obtained using:
 coef(uniobj1)
 ```
 
-Note that the coefficient for Q4 has been shrunk to zero in both the
-AIC- and BIC-best models which happen to coincide in the unicorn data.
+Note that the coefficients for Q4 have been shrunk to zero in both the
+AIC- and BIC-best models, which happen to coincide in the unicorn data.
 In effect, Q4 has been eliminated from both of those models. Q4 was
 not an important predictor of the test result.
 
@@ -190,7 +201,7 @@ The screenr package provides the following methods for
 methods(class = "lasso_screenr")
 ```
 
-The methods should make it unnecessary to access components of
+The methods should make it mostly unnecessary to access components of
 `lasso_screenr`-class objects directly using R code similar to `object$component`.
 
 ## Selection of a screening threshold {-}
@@ -209,14 +220,13 @@ incorporates
 cross-validation](https://machinelearningmastery.com/k-fold-cross-validation/)
 to estimate the out-of-sample performance using only the training data
 (see also 'External validation on entirely new data', below).
-The ROC curve is a plot
+The ROC curve is a plot of
 sensitivity on the false-positive fraction (1 - specificity) or,
 equivalently, plots sensitivity against specificity with specificity plotted
 in _decreasing_ order. The ROC curves for the unicorns are displayed
-using the R code:
+using the R code
 
-```{r, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE, fig.cap =
-"ROC curves"}
+```{r, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
 plot(uniobj1, model = "minAIC")
 ```
 
@@ -245,7 +255,7 @@ local maxima along the cross-validated ROC curve. The argument `se.min
 = 0.9` limits the local maximas to those which produced a
 cross-validated sensitivity estimate of at least 0.90. Here there are
 ten options for screening.  For example, testing those unicorns for
-which the predicted probability of testing positive is 0.00685891 or
+which the predicted probability of testing positive is 0.00686 (row 5) or
 larger would have an out-of-sample sensitivity of 0.959 and
 specificity of 0.628.
 
@@ -264,129 +274,12 @@ new <- predict(uniobj1,  newdata = new_corns )
 print(new)
 ```
 
-If the chosen screening threshold was 0.0066, then testing Bernie P.
+If the chosen screening threshold was 0.00686, then testing Bernie P.
 but screening out Alice D. would have point estimates of
 sensitivity and specificity of 0.959 and 0.628 if the data from those
 two unicorns came from the same statistical population as those in the
 study data.
 
-## Implementation
-
-There are two basic approaches to implementation of test screening
-based on the results from the unicorn study.
-
-### Implementation based on probabilities of testing positive
-
-First, a smartphone or
-tablet application could be developed which contains the questionnaire
-and code that mimics the functionality of the `predict` method.
-
-The predicted probability of infection is given by
-$$P = \frac{1}{1 + exp(-Xb)}$$
-where _X_ is a (design) matrix containing values of 1 in
-the first column and the 0/1 question responses in the remaining
-columns, and _b_ is a column vector of the estimated logit-scale
-coefficients, including the intercept.
-
-The interviewer would enter the responses to the questions and the
-application would indicate whether the subject should be referred for
-testing based on the internally computed value of _P_. This is the
-ideal approach, and should be used wherever possible. However, a
-simpler approach may be needed in many health-care settings.
-
-**NOTE:** Screening questions for which estimated coefficients equal 0
-(and those zero-valued coefficients) can and should be eliminated from
-the screening application.
-
-### Simplified implementation based on question weights
-
-Alternatively, the non-zero coefficient estimates could be rounded to
-whole numbers between 1 and *m*, where *m* is some number from, say, 3
-to 10. Those rounded values are used as weights for the question
-responses. The score for an individual is the sum of the question
-weights.  The choice of *m* involves a trade-off. Small values, say
-*m* = 3, make it easy to add-up or tally the scores. However, they may
-also result in degraded performance in terms of sensitivity and
-specificity. Large values for *m* may approximate the performance of
-screening based on the predicted probabilities of infection, but
-require more difficult additions which are vulnerable to human error.
-
-We can explore this strategy for UIV screening in unicorns using the
-`easy_tool` function:
-
-```{r}
-et_3 <- easy_tool(uniobj1, max = 3, model = "minAIC", crossval = TRUE)
-class(et_3)
-```
-Recall that `uniobj1` contains the results of lasso estimation. The
-argument `max` represents *m*, in this case 3. The remaining arguments
-specify creation of question weights from the AIC-best model with
-performance base on the cross-validated results in `uniobj1`.  The
-resulting object, `et_3`, is of class `easy_tool`.
-
-Methods for that class are found by executing:
-```{r}
-methods(class = "easy_tool")
-```
-
-The question weights can be extracted using the `get_what` method:
-```{r}
-qwts <- get_what(from = et_3, what = "QuestionWeights")
-print(qwts)
-```
-
-The decision to use those question weights for screening should be
-based on their receiver-operating characteristic. Again, a plot method
-is available to display the ROC curve:
-
-```{r, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
-plot(et_3)
-```
-
-Note that the AUC is almost as large as the AUC from the actual model
-fit. However there are fewer local maximas, and therefore fewer
-choices for screening thresholds. Again, the screening thresholds for
-the scores based on the sums of the question weights can be printed:
-```{r}
-qw_maximas <- get_what(from = et_3, what = "ROCci")
-print(qw_maximas)
-```
-
-Referral for testing all unicorns having a screening score (threshold)
-of 3 or more will have point estimates for sensitivity and specificity
-of 0.98 and 0.55, respectively, if those unicorns come from the same
-statistical population as those in the study.
-
-**NOTE:** Screening questions for which the question weights equal 0
-can and should be eliminated from the clinical screening form.
-
-How will implementation of that screening tool affect testing? To help
-answer that question, we can compute the ratio of total number of
-tests performed to the anticipated number of positive test results and
-the anticipated prevalence among those who are screened *out* of testing
-using the `ntpp` (number of tests per positive) function:
-
-```{r}
-ntpp(et_3)
-```
-
-The ratio of total tests to positive results is 40 when testing
-unicorns with a score of at least 3, and prevalence among the untested
-should be approximately 0.0006 (0.06\%). In contrast, the prevalence
-of UIV in the training data is `r (pbar <- mean(unicorns$testresult,
-na.rm = TRUE))` and therefore we would, on average, need to test
-approximately `r round(1/pbar)` unicorns in order to detect a single
-infection.
-
-A example of a simple clinical screening form based on the question
-weight is shown in Figure .
-
-```{r, fig.width = 4, fig.height = 3}
-knitr::include_graphics("UniTool.png")
-```
-
-**NOTE:** Screening questions for which the question weights equal 0
-can and should be eliminated from the screening form.
 
 ## External validation on entirely new data
 
@@ -409,7 +302,7 @@ were interviewed and tested for UIV as part of that follow-up
 study. External validation consists of assessment of the performance
 of the screening tool on those new subjects.
 
-The `predict` method provides the means predict test-positivity among
+The `predict` method provides the means to predict test-positivity among
 the new subjects:
 
 ```{r}
@@ -455,6 +348,137 @@ new_perf <- roc_ci(new_roc, se.min = 0.8)
 print(new_perf)
 ```
 
+## Implementation
+
+There are two basic approaches to implementation of test screening
+based on the results from the unicorn study.  The first requires the use of
+smartphones or tablets, and the second requires only the ability to count.
+
+### Implementation based on probabilities of testing positive
+
+First, a smartphone or
+tablet application could be developed which contains the questionnaire
+and code that mimics the functionality of the `predict` method.  The
+predicted probability of infection is given by
+$$P = \frac{1}{1 + exp(-Xb)}$$
+where _X_ is a (design) matrix containing values of 1 in
+the first column and the 0/1 question responses in the remaining
+columns, and _b_ is a column vector of the estimated logit-scale
+coefficients, including the intercept.
+
+The interviewer would enter the responses to the questions and the
+application would indicate whether the subject should be referred for
+testing based on the internally computed value of _P_. This is the
+ideal approach, and should be used wherever possible.
+
+**NOTE:** Screening questions for which estimated coefficients equal 0
+(and those zero-valued coefficients) can and should be eliminated from
+the screening application.
+
+However, an approach which does not require electronic technology may
+be needed in many health-care settings.
+
+### Simplified implementation based on question weights
+
+Alternatively, the non-zero coefficient estimates could be rounded to
+whole numbers between 1 and *m*, where *m* is some number from, say, 3
+to 10. Those rounded values are used as weights for the question
+responses. The score for an individual is the sum of the question
+weights.  The choice of *m* involves a trade-off. Small values, say
+*m* = 3, make it easy to add-up or tally the scores. However, they will
+also result in degraded performance in terms of sensitivity and
+specificity. Large values for *m* may approach the performance of
+screening based on the predicted probabilities of infection, but
+require more difficult additions and therefore are more prone to human
+error.
+
+We can explore this strategy for UIV screening in unicorns using the
+`easy_tool` function:
+
+```{r}
+et_3 <- easy_tool(uniobj1, max = 3, model = "minAIC", crossval = TRUE)
+class(et_3)
+```
+Recall that `uniobj1` contains the results of lasso estimation. The
+argument `max` represents *m*, in this case 3. The remaining arguments
+specify creation of question weights from the AIC-best model, with
+performance base on the cross-validated results in `uniobj1`.  The
+resulting object, `et_3`, is of class `easy_tool`.
+
+Methods for that class are found by executing:
+```{r}
+methods(class = "easy_tool")
+```
+
+The question weights can be extracted using the `get_what` method:
+```{r}
+qwts <- get_what(from = et_3, what = "QuestionWeights")
+print(qwts)
+```
+
+The decision to use those question weights for screening should be
+based on their receiver-operating characteristic. Again, a plot method
+is available to display the ROC curve:
+
+```{r, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
+plot(et_3)
+```
+
+Note that the AUC is almost as large as the AUC from the actual model
+fit. However there are fewer local maximas, and therefore fewer
+choices for screening thresholds. Again, the screening thresholds for
+the scores based on the sums of the question weights can be printed:
+```{r}
+qw_maximas <- get_what(from = et_3, what = "ROCci")
+print(qw_maximas)
+```
+
+Referral for testing all unicorns having a screening score (threshold)
+of 3 or more will have point estimates for sensitivity and specificity
+of 0.98 and 0.55, respectively.
+
+A example of a simple clinical screening form based on question
+weights is shown in the figure, below.
+
+```{r, fig.width = 4, fig.height = 3}
+knitr::include_graphics("UniTool.png")
+```
+
+**NOTE:** Screening questions for which the question weights equal 0
+can and should be eliminated from the screening form.
+
+# Effects of screening on testing results
+
+How will implementation of that screening tool affect testing? To help
+answer that question, we can compute the ratio of total number of
+tests performed to the anticipated number of positive test results and
+the anticipated prevalence among those who are screened *out* of
+testing.  Effective screening will greatly
+reduce the prevalence among those who are screened out of testing and
+will have high sensitivity. Efficient screening will reduce the ratio of numbers of
+tests to positive test results.
+Both measures are obtained by using the `ntpp` (number of tests per
+positive) function:
+
+```{r}
+ntpp(et_3)
+```
+
+After screening out unicorns having score less than 3 (row 4, as
+identified by sensitivity and specificity), the prevalence of UIV
+among the *untested* should be approximately 0.0006 (0.06\%). In
+contrast, the prevalence of UIV among all subjects in the training
+data is `r (pbar <- round(mean(unicorns$testresult, na.rm = TRUE),
+digits = 4))`.
+
+The ratio of total tests to positive results is 28.7 when testing
+unicorns with a score of at least 3. Without screening, in contrast,
+an average of approximately
+`r round(1/pbar, digits = 1)` would need to be tested in order to
+detect a single
+infection.
+
+
 # Epilogue
 
 The `screenr` package eases the workload for development and
@@ -473,7 +497,7 @@ Some may want results that are not directly available from `screenr`
 functions and methods. In those cases, the `get_what` methods may
 provide an easy way to extract the results contained in the objects
 produced by, for example, the `glmpath::glmpath` and `pROC::roc`
-functions. However, experienced R users will make use of
+functions. However, experienced R users may also use
 `str(some_object)` to identify other components for extraction using
 the idiom `some_object$some_component`.
 

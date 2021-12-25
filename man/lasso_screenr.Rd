@@ -94,7 +94,8 @@ package.
 
 Out-of-sample performance is estimated using \emph{k}-fold cross-validation.
 For a gentle but Python-centric introduction to \emph{k}-fold cross-validation,
-see \url{https://machinelearningmastery.com/k-fold-cross-validation/}.
+see
+\url{https://machinelearningmastery.com/k-fold-cross-validation/}.
 }
 \examples{
 data(unicorns)

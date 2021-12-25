@@ -30,13 +30,22 @@ condition among those who are screened out of testing.}
 tests performed per positive test result from \code{easy_tool}-class objects.
 }
 \details{
-The anticipated number of tests needed to observe a single positive test
-result is a function of sensitivity, specificity and the prevalence proportion
-of the condition being tested.
+The anticipated number of tests required to detect a single positive
+\emph{nntp} is given by
+\deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
+where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
+specificity. The anticipated prevalence among those screened out is given by
+\deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 }
 \examples{
 attach(uniobj1)
 tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
 ntpp(tool)
 
+}
+\seealso{
+\code{\link{ntpp.lasso_screenr}}
+\code{\link{ntpp.logreg_screenr}}
+\code{\link{ntpp.data.frame}}
+\code{\link{ntpp.simple_screenr}}
 }
