@@ -29,6 +29,9 @@ plot(pathobj)
 ## -----------------------------------------------------------------------------
 methods(class = "lasso_screenr")
 
+## ---- eval = FALSE------------------------------------------------------------
+#  saveRDS(uniobj1, file = "uniobj1.rds" )
+
 ## ---- fig.width = 4, fig.height = 4, fig.fullwidth = TRUE---------------------
 plot(uniobj1, model = "minAIC")
 

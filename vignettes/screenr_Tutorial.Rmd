@@ -130,10 +130,7 @@ expression of the statement "predict `testresult` from the seven
 covariates `Q1`, ..., `Q7`. The argument `Nfolds = 10`
 specifies the desired number of partitions (folds) to be used for
 cross validation (discussed under 'Selection of a screening
-threshold', below).
-
-
-**NOTE:** The optional `seed` argument specifies the starting value
+threshold', below).  The optional `seed` argument specifies the starting value
 for the random-number generator used for cross-validation data-splitting. Here
 it is set to a fixed value to insure reproducibility. By default, the
 seed is set by the system clock, and therefore results will vary from
@@ -203,6 +200,14 @@ methods(class = "lasso_screenr")
 
 The methods should make it mostly unnecessary to access components of
 `lasso_screenr`-class objects directly using R code similar to `object$component`.
+
+**IMPORTANT:** The object returned by `lasso_screenr` (or any of the other
+"_screenr" functions) contains information critical to validation and
+implementation of test screening. Therefore **the object should be saved
+for future use**, for example:
+```{r, eval = FALSE}
+saveRDS(uniobj1, file = "uniobj1.rds" )
+```
 
 ## Selection of a screening threshold {-}
 
@@ -437,7 +442,7 @@ Referral for testing all unicorns having a screening score (threshold)
 of 3 or more will have point estimates for sensitivity and specificity
 of 0.98 and 0.55, respectively.
 
-A example of a simple clinical screening form based on question
+An example of a simple clinical screening form based on question
 weights is shown in the figure, below.
 
 ```{r, fig.width = 4, fig.height = 3}
