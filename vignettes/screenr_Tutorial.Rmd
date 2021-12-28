@@ -116,7 +116,7 @@ The first step is estimation of the logistic-model parameters from the
 training data.  A method known as *L*1 regularization has desirable
 properties for that task [2,3].  The function `lasso_screenr()`
 provides easy, integrated access to the *L*1 regularization algorithm
-of Park and Hastie [3], as implemented in the glmpath R package, using
+of Park and Hastie [3], as implemented in the glmpath `R` package, using
 a convenient formula interface:
 
 ```{r}
@@ -199,7 +199,7 @@ methods(class = "lasso_screenr")
 ```
 
 The methods should make it mostly unnecessary to access components of
-`lasso_screenr`-class objects directly using R code similar to `object$component`.
+`lasso_screenr`-class objects directly using `R` code similar to `object$component`.
 
 **IMPORTANT:** The object returned by `lasso_screenr` (or any of the other
 "_screenr" functions) contains information critical to validation and
@@ -229,7 +229,7 @@ The ROC curve is a plot of
 sensitivity on the false-positive fraction (1 - specificity) or,
 equivalently, plots sensitivity against specificity with specificity plotted
 in _decreasing_ order. The ROC curves for the unicorns are displayed
-using the R code
+using the `R` code
 
 ```{r, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
 plot(uniobj1, model = "minAIC")
@@ -488,11 +488,11 @@ infection.
 
 The `screenr` package eases the workload for development and
 evaluation of screening tools. Hopefully `screenr` will prove useful
-to both novice and experienced R users. This tutorial documents only
+to both novice and experienced `R` users. This tutorial documents only
 the basic steps. However much more is possible. Execute
-`help(screenr)` in an R session to obtain a broader list of
+`help(screenr)` in an `R` session to obtain a broader list of
 capabilities. End-users are encouraged to further explore the methods
-that are available for objects. Make use of the R commands
+that are available for objects. Make use of the `R` commands
 `class(some_object)` and `methods(class = "some_class")` where
 `some_object` is the result of some function call, and `"some_class"`
 is the class of that object. Then use `help(methodname.some_class)` to
@@ -502,7 +502,7 @@ Some may want results that are not directly available from `screenr`
 functions and methods. In those cases, the `get_what` methods may
 provide an easy way to extract the results contained in the objects
 produced by, for example, the `glmpath::glmpath` and `pROC::roc`
-functions. However, experienced R users may also use
+functions. However, experienced `R` users may also use
 `str(some_object)` to identify other components for extraction using
 the idiom `some_object$some_component`.
 
