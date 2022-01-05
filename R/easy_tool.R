@@ -87,12 +87,11 @@
 #' tool <- easy_tool(uniobj1, max = 3)
 #' class(tool)
 #' @export
-easy_tool <- function(object, max = 3, model = "minAIC",
-                     crossval = TRUE, ...) {
+easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
+                      crossval = TRUE, ...) {
+    model  <- match.arg(model)
     if(!class(object) %in% c("lasso_screenr", "logreg_screenr"))
         stop("object not of class lasso_screenr or logreg_screenr")
-    if(class(object) == "lasso_screenr" & !(model %in% c("minAIC", "minBIC")))
-        stop("model must be one of 'minAIC' or 'minBIC'")
     if(max < 2) {
         max <- 2
         warning("max has been re-set to 2 (and 2 may not be so good)")

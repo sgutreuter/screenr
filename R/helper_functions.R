@@ -87,8 +87,8 @@ keepfirst <- function(x, colnames, data = NULL){
 #' ## Note that only the predicted values are returned.
 #' @importFrom stats pnorm
 #' @export
-inverse_link <- function(lp = NULL, link =  NULL){
-    if(!link %in% c("logit", "cloglog", "probit")) stop("Bad link specification")
+inverse_link <- function(lp = NULL, link = c("logit", "cloglog", "probit")){
+    link <- match.arg(link)
     if(link == "logit"){
         p <- exp(lp) / (1 + exp(lp))
     }else{

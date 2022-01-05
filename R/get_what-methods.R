@@ -162,15 +162,16 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
 #' }
 #'
 #' @export
-get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAIC",
+get_what.lasso_screenr <- function(from = NULL,
+                                   what = c("glmpathObj", "ROCci", "cvROC", "isROC"),
+                                   ...,
+                                   model = c("minAIC", "minBIC"),
                                    conf.level = 0.95, bootreps =  2000,
                                    se.min = 0.7){
+    what  <- match.arg(what)
+    model = match.arg(model)
     if(!"lasso_screenr" %in% class(from))
         stop("Object not lasso_screenr class")
-    if(!what %in% c("glmpathObj", "ROCci", "cvROC", "isROC"))
-        stop("Invalid what argument; must be one of 'glmpathObj', 'ROCci', 'cvROC' or 'isROC'")
-    if(!model %in% c("minAIC", "minBIC"))
-        stop("Invalid model argument; must be one of 'minAIC' or 'minBIC'" )
     if(what == "glmpathObj") {
         res <- from[[what]]
     } else {
@@ -243,12 +244,14 @@ get_what.lasso_screenr <- function(from = NULL, what = NULL, ..., model = "minAI
 #' }
 #'
 #' @export
-get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf.level = 0.95,
+get_what.logreg_screenr <- function(from = NULL,
+                                    what = c("ModelFit", "ROCci", "cvROC", "isROC"),
+                                    ...,
+                                    conf.level = 0.95,
                                     bootreps =  2000, se.min = 0.7) {
     if(!"logreg_screenr" %in% class(from))
         stop("from not a logreg_screenr object")
-    if(!what %in% c("ModelFit", "ROCci", "cvROC", "isROC"))
-        stop("Invalid what argument; must be one of 'ModelFit', 'ROCci', cvROC' or 'isROC")
+    what <- match.arg(what)
     if(what == "ModelFit") {
         res <- from[[what]]
     } else {
@@ -317,13 +320,12 @@ get_what.logreg_screenr <- function(from = NULL, what = NULL, ..., conf.level = 
 #' }
 #'
 #' @export
-get_what.simple_screenr <- function(from = NULL, what = NULL, ...,
+get_what.simple_screenr <- function(from = NULL, what = c("ROCci", "isROC"), ...,
                                     conf.level = 0.95, bootreps = 2000,
                                     se.min =  0.6) {
     if(!"simple_screenr" %in% class(from))
         stop("from not a simple_screenr object")
-    if(!what %in% c("ROCci", "isROC"))
-        stop("Invalid what argument; must be ROCci or isROC")
+    what <- match.arg(what)
     if(what == "isROC") what <- "ISroc"
     if(what == "ISroc"){
         res <- from[[what]]

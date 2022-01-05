@@ -120,13 +120,12 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @importFrom graphics legend plot lines
 #' @import pROC
 #' @export
-plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = "minAIC",
+plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "minBIC"),
                                 conf_level = 0.95, bootreps = 2000){
     if(!("lasso_screenr" %in% class(x)))
             stop("Object not lasso_screenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
-    if(!model %in% c("minAIC", "minBIC"))
-        stop("Specify 'minAIC' or 'minBIC' for model")
+    model <- match.arg(model)
     cvROC <- x$cvResults[[model]][["ROC"]]
     isROC <- x$isResults[[model]][["ROC"]]
 

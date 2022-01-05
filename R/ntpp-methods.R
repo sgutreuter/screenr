@@ -140,12 +140,13 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 #' ntpp(uniobj1)
 #'
 #' @export
-ntpp.lasso_screenr <- function(object, ..., model = "minAIC", type = "cvResults",
-                                prev = NULL) {
+ntpp.lasso_screenr <- function(object, ..., model = c("minAIC", "minBIC"),
+                               type = c("cvResults", "isResults"),
+                               prev = NULL) {
      if(!class(object) == "lasso_screenr")
          stop("object not of class lasso_screenr")
-     if(!type %in% c("cvResults", "isResults"))
-         stop("type must be 'cvResults' or 'isResults'" )
+     model <- match.arg(model)
+     type <- match.arg(type )
      if(is.null(prev)) prev <- object$Prevalence
      ssp <- data.frame(sensitivity = object[[type]][[model]][["ROC"]][["sensitivities"]],
                        specificity = object[[type]][[model]][["ROC"]][["specificities"]])
@@ -197,12 +198,11 @@ ntpp.lasso_screenr <- function(object, ..., model = "minAIC", type = "cvResults"
 #' ntpp(uniobj2)
 #'
 #' @export
-ntpp.logreg_screenr <- function(object, ..., type = "cvResults",
+ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
                                 prev = NULL) {
      if(!class(object) == "logreg_screenr")
          stop("object not of class logreg_screenr")
-     if(!type %in% c("cvResults", "isResults"))
-         stop("type must be 'cvResults' or 'isResults'" )
+     type <- match.arg(type)
      if(is.null(prev )) prev <- object$Prevalence
      if(type == "cvResults") {
          x <- "CVroc"

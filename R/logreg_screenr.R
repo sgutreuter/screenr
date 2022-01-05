@@ -101,13 +101,13 @@
 #' @export
 logreg_screenr <- function(formula,
                             data = NULL,
-                            link = "logit",
+                            link = c("logit", "cloglog", "probit"),
                             Nfolds = 10,
                             seed = Sys.time(),
                             ...){
     if(!inherits(formula, "formula")) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
-    if(!link %in% c("logit", "cloglog", "probit")) stop("Invalid link")
+    link <- match.arg(link)
     call <- match.call()
     m <- match(c("formula", "data"), names(call), 0L)
     mf <- call[c(1L, m)]
