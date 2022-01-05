@@ -3,7 +3,6 @@
 ^issues$
 ^\\.git$
 ^\\.gitignore$
-^HOWTO_install_screenr$
 ^README\\.md$
 ^README\\.Rmd$
 ^maintenance
