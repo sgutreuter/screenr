@@ -6,7 +6,7 @@
 \usage{
 \method{get_what}{simple_screenr}(
   from = NULL,
-  what = NULL,
+  what = c("ROCci", "isROC"),
   ...,
   conf.level = 0.95,
   bootreps = 2000,

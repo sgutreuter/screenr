@@ -6,9 +6,9 @@
 \usage{
 \method{get_what}{lasso_screenr}(
   from = NULL,
-  what = NULL,
+  what = c("glmpathObj", "ROCci", "cvROC", "isROC"),
   ...,
-  model = "minAIC",
+  model = c("minAIC", "minBIC"),
   conf.level = 0.95,
   bootreps = 2000,
   se.min = 0.7

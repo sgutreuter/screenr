@@ -8,7 +8,7 @@
 logreg_screenr(
   formula,
   data = NULL,
-  link = "logit",
+  link = c("logit", "cloglog", "probit"),
   Nfolds = 10,
   seed = Sys.time(),
   ...

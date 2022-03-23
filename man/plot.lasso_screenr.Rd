@@ -8,7 +8,7 @@
   x,
   ...,
   plot_ci = TRUE,
-  model = "minAIC",
+  model = c("minAIC", "minBIC"),
   conf_level = 0.95,
   bootreps = 2000
 )

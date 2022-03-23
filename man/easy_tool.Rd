@@ -4,7 +4,7 @@
 \alias{easy_tool}
 \title{Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects}
 \usage{
-easy_tool(object, max = 3, model = "minAIC", crossval = TRUE, ...)
+easy_tool(object, max = 3, model = c("minAIC", "minBIC"), crossval = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{lasso_screenr} or

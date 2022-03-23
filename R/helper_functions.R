@@ -227,35 +227,72 @@ roc_ci <- function(object, bootreps = 2000, conf.level = 0.95,
 }
 
 
-## Function sens_spec
+## Function sens_spec_plus
 ##
-#' Compute Sensitivity and Specificity from a 2 x 2 Table
+#' Compute Sensitivity, specificity and a few friends
 #'
-#' @description \code{sens_spec} computes sensitivity and specificity from a
-#' 2 x 2 table.
+#' @description \code{sens_spec_plus} computes sensitivity, specificity and a
+#' few friends from a gold standard and testing results. \code{sens_spec_plus}
+#' is a convenience wrapper for \code{epiR::epi.tests}.
 #'
-#' @param x a 2 x 2 table, with columns representing frequencies of
-#' gold-standard status and rows representing frequencies of status ascertained
-#' from testing.  The first row contains frequencies of negative test results
-#' and the first column contain frequencies of true negatives.
+#' @param test character-valued name of the variable containing testing results,
+#' code as 0 for negative and 1 for positive.
 #'
-#' @return a list containing components sensitivity and specificity.
-#' Sensitivities and specificities are displayed as proportions rather than
-#' percentages.
+#' @param gold character-valued name of the variable containing gold standard,
+#' code as 0 for negative and 1 for positive.
+#'
+#' @param data data frame containing \code{test} and \code{gold}.
+#'
+#' @param method type of confidence interval
+#' (\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). The
+#' default is \verb{"exact"}.
+#'
+#' @param conf.level confidence level, a numeric value between 0 and 1.
+#'
+#' @return a list containing components \code{table} and \code{ests}:
+#' \describe{
+#' \item{\code{table}}{ a 2 x 2 cross-tabulation which is the anti-transpose of the
+#' result produced by \code{base::table(gold, test)}.}
+#' \item{\code{ests}}{a dataframe containing the apparent and true positive
+#' proportions, sensitivity, specificity, positive predictive value (PPV),
+#' negative predictive value (NPV), and the lower and upper confidence limits for
+#' each.}
+#' }
+#'
+#' @seealso \code{\link[epiR]{epi.tests}}
 #'
 #' @examples
 #' Gold <- rbinom(20, 1, 0.50)
-#' Test <- Gold; Test[c(3, 9, 12, 16)] <- 1 - Test[c(3, 9, 12, 16)]
-#' sens_spec(table(Test, Gold))
+#' Test <- Gold; Test[c(3, 5, 9, 12, 16)] <- 1 - Test[c(3, 5, 9, 12, 16)]
+#' dat <- data.frame(Gold = Gold, Test = Test)
+#' sens_spec_plus(test = "Test", gold = "Gold", data = dat)
+#' @importFrom epiR epi.tests
 #' @export
-sens_spec <- function(x){
-    if(!class(x) == "table") stop('arg class is not "table"')
-    if(!(dim(x)[1] == 2L & dim(x)[2] == 2L)) stop("arg not a 2x2 table")
-    spec = x[1, 1] / sum(x[ , 1])
-    sens = x[2, 2] / sum(x[ , 2])
-    result = list(sensitivity = sens, specificity = spec)
+sens_spec_plus <- function(test = NULL, gold = NULL, data = NULL,
+                           method = c("exact", "wilson", "agresti",
+                                      "clopper-pearson", "jeffreys"),
+                           conf.level =  0.95){
+    if(!is.data.frame(data)) stop("data must be a data.frame object")
+    if(!all((data[[test]] %in% c(0, 1)) | is.na(data[[test]])))
+        stop("Values of test must be 0, 1 or NA")
+    if(!all((data[[gold]] %in% c(0, 1)) | is.na(data[[gold]])))
+        stop("Values of gold must be 0, 1 or NA")
+    if(!(conf.level > 0 & conf.level < 1 )) stop("conf.level not in (0,1)")
+    cimethod <- match.arg(method)
+    .dat <- data.frame(data[, c(test, gold)])
+    .dat <- .dat[complete.cases(.dat), ]
+    .tst <- ordered(.dat[[test]], levels = c(1, 0), labels = c("Pos", "Neg"))
+    .gld <- ordered(.dat[[gold]], levels = c(1, 0), labels = c("Pos", "Neg"))
+    .tbl <- table(.tst, .gld)
+    .res <- epiR::epi.tests(.tbl, method = cimethod, conf.level = conf.level)
+    .table <- .res$tab
+    colnames(.table) <- c("      True +", "      True -", "     Total")
+    .ests <- rbind(.res$detail$ap, .res$detail$tp, .res$detail$se,
+                  .res$detail$sp, .res$detail$pv.pos, .res$detail$pv.neg)
+    rownames(.ests) <- c("Apparent_positivity", "True_positivity", "Sensitivity",
+                        "Specificity", "PPV", "NPV")
+    result <- list(table = .table, ests = .ests)
     result
 }
-
 
 ################################   END of FILE   ################################

@@ -6,7 +6,7 @@
 \usage{
 \method{get_what}{logreg_screenr}(
   from = NULL,
-  what = NULL,
+  what = c("ModelFit", "ROCci", "cvROC", "isROC"),
   ...,
   conf.level = 0.95,
   bootreps = 2000,

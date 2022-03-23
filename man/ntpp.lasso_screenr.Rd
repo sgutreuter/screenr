@@ -4,7 +4,13 @@
 \alias{ntpp.lasso_screenr}
 \title{Compute the Ratio of Total Tests to Positive Results from \code{lasso_screenr} Objects}
 \usage{
-\method{ntpp}{lasso_screenr}(object, ..., model = "minAIC", type = "cvResults", prev = NULL)
+\method{ntpp}{lasso_screenr}(
+  object,
+  ...,
+  model = c("minAIC", "minBIC"),
+  type = c("cvResults", "isResults"),
+  prev = NULL
+)
 }
 \arguments{
 \item{object}{a \code{lasso_screenr}-class object produced by \code{lasso_screenr}.}

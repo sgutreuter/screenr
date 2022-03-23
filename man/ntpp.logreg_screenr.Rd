@@ -4,7 +4,7 @@
 \alias{ntpp.logreg_screenr}
 \title{Compute the Ratio of Total Tests to Positive Results from \code{logreg_screenr} Objects}
 \usage{
-\method{ntpp}{logreg_screenr}(object, ..., type = "cvResults", prev = NULL)
+\method{ntpp}{logreg_screenr}(object, ..., type = c("cvResults", "isResults"), prev = NULL)
 }
 \arguments{
 \item{object}{a \code{logreg_screenr}-class object produced by \code{logreg_screenr}.}

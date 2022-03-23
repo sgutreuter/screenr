@@ -4,7 +4,7 @@
 \alias{inverse_link}
 \title{Compute the Inverses of Binomial Link Functions}
 \usage{
-inverse_link(lp = NULL, link = NULL)
+inverse_link(lp = NULL, link = c("logit", "cloglog", "probit"))
 }
 \arguments{
 \item{lp}{numeric vector containing the estimated link.}
