@@ -21,12 +21,12 @@ setwd(workpath)
 ## Source the screenr R code for experimentation and testing
 #################################################################################
 source(file.path(codepath, "logreg_screenr.R"))
-source(file.path(codepath, "coef.R"))
-source(file.path(codepath, "print.R"))
-source(file.path(codepath, "summary.R"))
-source(file.path(codepath, "ntpp.R"))
-source(file.path(codepath, "predict.R"))
-source(file.path(codepath, "get_what.R"))
+source(file.path(codepath, "coef-methods.R"))
+source(file.path(codepath, "print-methods.R"))
+source(file.path(codepath, "summary-methods.R"))
+source(file.path(codepath, "ntpp-methods.R"))
+source(file.path(codepath, "predict-methods.R"))
+source(file.path(codepath, "get_what-methods.R"))
 source(file.path(codepath, "helper_functions.R"))
 load(file.path(datapath, "unicorns.rda"))
 ##uniobj2 <- readRDS(file.path(datapath, "uniobj2.Rdata") )
@@ -41,7 +41,7 @@ coef(uniobj2)
 
 #################################################################################
 ## Create new data for prediction
-#################################################################################
+################################################################################
 new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         testresult = c(NA, NA), Q1 = c(0, 0), Q2 = c(0, 0),
                         Q3 = c(0, 0), Q4 = c(0, 0), Q5 = c(0, 1), Q6 = c(0, 1 ))
@@ -55,8 +55,8 @@ coef(uniobj2)
 coef(uniobj2, intercept = FALSE, or = TRUE)
 
 ## getWhat
-mfit <- getWhat(from = uniobj2, what = "ModelFit")
-mfit$coefs
+mfit <- get_what(from = uniobj2, what = "ModelFit")
+mfit$coef
 
 ## ntpp
 ntpp(uniobj2)

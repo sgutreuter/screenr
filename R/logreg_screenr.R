@@ -21,13 +21,11 @@
 #' @param formula an object of class \code{stats::formula} defining the
 #' testing outcome and predictor covariates, which is passed to \code{stats::glm()}.
 #'
-#' @param data  the "training" sample; a data frame containing the testing
-#' outcome and predictive covariates to be used for testing screening.  The
+#' @param data a dataframe containing the variables defined in \verb{formula}. The
 #' testing outcome must be binary (0,1) indicating negative and positive test
 #' results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates
-#' are typically
-#' binary (0 = no, 1 = yes) responses to questions which may be predictive of
-#' the test result, but any numeric or factor covariates can be used.
+#' are typically binary (0 = no, 1 = yes) responses to questions which may be
+#' predictive of the test result, but any numeric or factor covariates can be used.
 #'
 #' @param link the character-valued name of the link function for logistic
 #' regression.  Choices are \verb{"logit"} (default), \verb{"cloglog"} or
@@ -35,6 +33,26 @@
 #'
 #' @param Nfolds number of folds used for \emph{k}-fold cross
 #' validation (default = 10, minimum = 2, maximum = 100).
+#'
+#' @param partial.auc either a logical \verb{FALSE} or a numeric vector of the
+#' form \code{c(left, right)} where left and right are numbers in the interval
+#' [0, 1] specifying the endpoints for computation of the partial area under the
+#' ROC curve (pAUC). The total AUC is computed if \code{partial.auc} = \verb{FALSE}.
+#' Default: \code{c(0.8, 1.0)}
+#'
+#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{specificity},
+#' specifying for which the pAUC should be computed.  \code{partial.auc.focus} is
+#' ignored if \code{partial.auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.
+#'
+#' @param partial.auc.correct logical value indicating whether the pAUC should be
+#' transformed the interval from 0.5 to 1.0. \code{partial.auc.correct} is
+#' ignored if \code{partial.auc} = \verb{FALSE}. Default: \verb{TRUE}).
+#'
+#' @param conf.level a number between 0 and 1 specifying the confidence level
+#' for confidence intervals for the (partial)AUC. Default: 0.95.
+#'
+#' @param boot.n Number of bootstrap replications for computation of confidence
+#' intervals for the (partial)AUC. Default: 4000.
 #'
 #' @param seed random-number generator seed for cross-validation data splitting.
 #'
@@ -83,6 +101,10 @@
 #' @seealso \code{\link[stats]{glm}}
 #'
 #' @references
+#' Kim J-H. Estimating classification error rate: Repeated cross-validation, repeated
+#' hold-out and bootstrap. Computational Statistics and Data Analysis.
+#' 2009:53(11):3735-3745. \url{http://doi.org/10.1016/j.csda.2009.04.009}
+#'
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
 #' Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
 #' analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
@@ -100,11 +122,15 @@
 #' @importFrom stats model.frame complete.cases model.response glm binomial
 #' @export
 logreg_screenr <- function(formula,
-                            data = NULL,
-                            link = c("logit", "cloglog", "probit"),
-                            Nfolds = 10,
-                            seed = Sys.time(),
-                            ...){
+                           data = NULL,
+                           link = c("logit", "cloglog", "probit"),
+                           Nfolds = 10,
+                           partial.auc = c(0.8, 1.0),
+                           partial.auc.focus = "sensitivity",
+                           partial.auc.correct = TRUE,
+                           boot.n = 4000, conf.level = 0.95,
+                           seed = Sys.time(),
+                           ...){
     if(!inherits(formula, "formula")) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     link <- match.arg(link)
@@ -125,7 +151,13 @@ logreg_screenr <- function(formula,
     parmEst <- lrfit$coeff[-1]
     if(any(parmEst < 0))
         warning("Some coefficient(s) < 0; associations should be positive.")
-    is.roc <- pROC::roc(lrfit$y, lrfit$fitted.values)
+    is.roc <- pROC::roc(lrfit$y, lrfit$fitted.values,
+                        auc = TRUE, ci = TRUE, of = "auc",
+                        conf.level = conf.level,
+                        boot.n = boot.n,
+                        partial.auc = partial.auc,
+                        partial.auc.focus = partial.auc.focus,
+                        partial.auc.correct = partial.auc.correct)
     N <- nrow(dat)
     holdouts <- split(sample(1:N), 1:Nfolds)
     cv.results <- data.frame(NULL)
@@ -153,7 +185,12 @@ logreg_screenr <- function(formula,
     }
     attr(X_ho, "Description") <- "Hold-out predictors"
     cv.roc <- pROC::roc(cv.results$y, cv.results$cv.pred.prob,
-                        auc = TRUE)
+                        auc = TRUE, ci = TRUE, of = "auc",
+                        boot.n = boot.n,
+                        conf.level = conf.level,
+                        partial.auc = partial.auc,
+                        partial.auc.focus = partial.auc.focus,
+                        partial.auc.correct = partial.auc.correct)
     class(cv.results) <-  c("cv.predictions", "data.frame")
     result <- list(Call = call,
                    formula = formula,

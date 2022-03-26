@@ -22,11 +22,21 @@
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
 #' @param conf_level confidence level
 #' @param bootreps the number of bootstrap replications for estimation of
-#' confidence intervals.
+#' confidence intervals. Default: 4000.
+#' @param print.auc logical indicator for printing the area
+#' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
+#' @param partial.auc One of \verb{FALSE} or a length two numeric vector
+#' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
+#' of the interval over which to compute the partial AUC (pAUC). Ignored if
+#' \code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.
+#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{"specificity"},
+#' indicating the measure for which the partial AUC is to be computed. Default:
+#' \verb{"specificity"}.
+#' @param partial.auc.correct logical indictor for transformation of the pAUC
+#' to fall within the range from 0.5 (random guess) to 1.0 (perfect
+#' classification). Default: \verb{TRUE}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
-#'
-#' @importFrom graphics legend plot
 #'
 #' @return
 #' This function produces a plot as a side effect and (optionally)
@@ -38,8 +48,7 @@
 #'
 #' @references
 #' Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.
-#' 27(8):861-874.
-#' \url{https://doi.org/10.1016/j.patrec.2005.10.010}
+#' 27(8):861-874. \url{https://doi.org/10.1016/j.patrec.2005.10.010}
 #'
 #' Linden A. Measuring diagnostic and predictive accuracy in disease
 #' management: an introduction to receiver operating characteristic (ROC) analysis.
@@ -54,22 +63,41 @@
 #' attach(uniobj1)
 #' tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
 #' plot(tool)
-#' @importFrom graphics legend plot lines
+#' @importFrom graphics legend plot abline
 #' @import pROC
 #' @export
 plot.easy_tool <- function(x, ..., plot_ci = TRUE,
-                                 conf_level = 0.95, bootreps = 2000){
+                           conf_level = 0.95, bootreps = 4000,
+                           print.auc = TRUE,
+                           partial.auc = c(0.8, 1),
+                           partial.auc.focus = c("sensitivity", "specificity"),
+                           partial.auc.correct = TRUE){
     if(!("easy_tool" %in% class(x)))
             stop("Object not easy_tool class")
     stopifnot(conf_level > 0 & conf_level < 1)
+    partial.auc.focus = match.arg(partial.auc.focus)
     roc_  <- x$ROC
-    pROC::plot.roc(roc_, print.auc = TRUE, ci = FALSE, ...)
+    if(is.logical(partial.auc)){
+        pROC::plot.roc(roc_, print.auc = TRUE, ci = FALSE, ...)
+        } else {
+        pROC::plot.roc(roc_, print.auc = print.auc, reuse.auc = FALSE,
+                       partial.auc = partial.auc,
+                       partial.auc.focus = partial.auc.focus,
+                       partial.auc.correct = partial.auc.correct)
+        if(partial.auc.focus == "sensitivity") {
+            abline(h = partial.auc[1], lty = 2)
+            abline(h = partial.auc[2], lty = 2)
+        } else {
+            abline(h = partial.auc[1], lty = 2)
+            abline(h = partial.auc[2], lty = 2)
+        }
+        }
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(roc_,
                                      boot.n = bootreps,
                                      conf.level = conf_level)
+        plot(ciplt)
     }
-    if(plot_ci) plot(ciplt)
 }
 
 
@@ -79,16 +107,31 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #'
 #' @description
 #' \code{plot.lasso_screenr} plots the \emph{k}-fold cross-validated
-#' receiver-operating characteristic, including confidence intervals on the
-#' combinations of the local maxima of sensitivity and specificity.
+#' receiver-operating characteristic for out-of-sample screening performance,
+#' including confidence intervals on the combinations of the local maxima of
+#' sensitivity and specificity.
 #'
 #' @param x an object of class \code{lasso_screenr}.
 #' @param plot_ci (logical) plot confidence intervals if \verb{TRUE}.
+#' Default: \verb{TRUE}.
 #' @param model (character) select either the model which produced the
-#' minimum AIC (\verb{"minAIC"}) or minimum BIC (\verb{"minBIC"}).
-#' @param conf_level confidence level
+#' minimum AIC (\verb{"minAIC"}) or minimum BIC (\verb{"minBIC"}). Default:
+#' \verb{minAIC},
+#' @param conf_level confidence level. Default: 0.95.
 #' @param bootreps the number of bootstrap replications for estimation of
-#' confidence intervals.
+#' confidence intervals. Default: 4000.
+#' @param print.auc logical indicator for printing the area
+#' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
+#' @param partial.auc One of \verb{FALSE} or a length two numeric vector
+#' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
+#' of the interval over which to compute the partial AUC (pAUC). Ignored if
+#' \code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.
+#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{"specificity"},
+#' indicating the measure for which the partial AUC is to be computed. Default:
+#' \verb{"specificity"}.
+#' @param partial.auc.correct logical indictor for transformation of the pAUC
+#' to fall within the range from 0.5 (random guess) to 1.0 (perfect
+#' classification). Default: \verb{TRUE}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
 #'
@@ -117,25 +160,43 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @examples
 #' attach(uniobj1)
 #' plot(uniobj1, model = "minAIC")
-#' @importFrom graphics legend plot lines
+#' @importFrom graphics legend plot lines abline
 #' @import pROC
 #' @export
 plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "minBIC"),
-                                conf_level = 0.95, bootreps = 2000){
+                               conf_level = 0.95, bootreps = 4000,
+                               print.auc = TRUE,
+                               partial.auc = c(0.8, 1),
+                               partial.auc.focus = c("sensitivity", "specificity"),
+                               partial.auc.correct = TRUE){
     if(!("lasso_screenr" %in% class(x)))
             stop("Object not lasso_screenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
     model <- match.arg(model)
+    partial.auc.focus = match.arg(partial.auc.focus)
     cvROC <- x$cvResults[[model]][["ROC"]]
     isROC <- x$isResults[[model]][["ROC"]]
-
-    pROC::plot.roc(cvROC, print.auc = TRUE, ci = FALSE, ...)
+    if(is.logical(partial.auc)) {
+        pROC::plot.roc(cvROC, print.auc = TRUE, ci = FALSE, ...)
+    } else {
+        pROC::plot.roc(cvROC, print.auc = print.auc, reuse.auc = FALSE,
+                       partial.auc = partial.auc,
+                       partial.auc.focus = partial.auc.focus,
+                       partial.auc.correct = partial.auc.correct)
+        if(partial.auc.focus == "sensitivity") {
+            abline(h = partial.auc[1], lty = 2)
+            abline(h = partial.auc[2], lty = 2)
+        } else {
+            abline(h = partial.auc[1], lty = 2)
+            abline(h = partial.auc[2], lty = 2)
+        }
+    }
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(cvROC,
                                      boot.n = bootreps,
                                      conf.level = conf_level)
+         plot(ciplt)
     }
-    if(plot_ci) plot(ciplt)
     pROC::lines.roc(isROC, lty = 3)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
@@ -148,18 +209,30 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #'
 #' @description
 #' \code{plot.logreg_screenr} plots the \emph{k}-fold cross-validated
-#' receiver-operating characteristic, including confidence intervals on the
-#' combinations of the local maxima of sensitivity and specificity.
+#' receiver-operating characteristic for out-of-sample screening performanc,
+#' including confidence intervals on the combinations of the local maxima of
+#' sensitivity and specificity.
 #'
 #' @param x an object of class \code{logreg_screenr}.
 #' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
-#' on sensitivity and specificity (default = \verb{TRUE}). See also
+#' on sensitivity and specificity. Default: \verb{TRUE}). See also
 #' \code{\link[pROC]{ci.thresholds}}.
-#' @param conf_level confidence level in the interval (0,1). Default is 0.95
-#' producing 95\% confidence intervals.
+#' @param conf_level confidence level in the interval (0,1). Default: 0.95.
 #' @param bootreps number of bootstrap replications for estimation of confidence
-#' (default = 2000).
+#' intervals. Default: 4000.
+#' #' @param print.auc logical indicator for printing the area
+#' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
+#' @param partial.auc One of \verb{FALSE} or a length two numeric vector
+#' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
+#' of the interval over which to compute the out-of-sample partial AUC (pAUC).
+#' Ignored if \code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.
+#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{"specificity"},
+#' indicating the measure for which the out-of-sample partial AUC is to be computed.
+#' Default: \verb{"specificity"}.
+#' @param partial.auc.correct logical indictor for transformation of the pAUC
+#' to fall within the range from 0.5 (random guess) to 1.0 (perfect
+#' classification). Default: \verb{TRUE}
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect.
@@ -190,17 +263,35 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #'
 #' @importFrom graphics legend plot
 #' @export
-plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
-                                bootreps = 2000){
+plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,                                                bootreps = 4000,
+                                print.auc = TRUE,
+                                partial.auc = c(0.8, 1),
+                                partial.auc.focus = c("sensitivity", "specificity"),
+                                partial.auc.correct = TRUE){
     if(!class(x) == "logreg_screenr") stop("x is not a logreg_screenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
-    plot(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
+    partial.auc.focus = match.arg(partial.auc.focus)
+    if(is.logical(partial.auc)) {
+        pROC::plot.roc(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
+    } else {
+        pROC::plot.roc(x$CVroc, print.auc = print.auc, reuse.auc = FALSE,
+                       partial.auc = partial.auc,
+                       partial.auc.focus = partial.auc.focus,
+                       partial.auc.correct = partial.auc.correct)
+        if(partial.auc.focus == "sensitivity") {
+            abline(h = partial.auc[1], lty = 2)
+            abline(h = partial.auc[2], lty = 2)
+        } else {
+            abline(h = partial.auc[1], lty = 2)
+            abline(h = partial.auc[2], lty = 2)
+        }
+    }
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$CVroc,
                                      boot.n = bootreps,
                                      conf.level = conf_level)
+        plot(ciplt)
     }
-    if(plot_ci) plot(ciplt)
     pROC::lines.roc(x$ISroc, lty = 3)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
@@ -268,6 +359,6 @@ plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",
                                      conf.level = conf_level)
+        plot(ciplt)
         }
-    if(plot_ci) plot(ciplt)
 }
