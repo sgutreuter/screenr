@@ -56,7 +56,6 @@ The tutorial is recommended for first-time users:
 ``` r
     library(screenr)
     vignette("screenr_Tutorial", package = "screenr")
-#> Warning: vignette 'screenr_Tutorial' not found
 ```
 
 ## Bug reports

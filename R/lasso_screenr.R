@@ -167,7 +167,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     call <- match.call()
     mf <- stats::model.frame(formula, data)
     y <- as.numeric(mf[, 1])
-    x <- as.numeric(as.matrix(mf[, -1]))
+    x <- apply(as.matrix(mf[, -1]), 2, as.numeric)
     N <- nrow(x)
     prev <- mean(y)
     lam2 <- ifelse(L2 == FALSE, 0, 1e-5)
