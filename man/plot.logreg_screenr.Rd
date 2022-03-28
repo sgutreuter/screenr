@@ -4,7 +4,17 @@
 \alias{plot.logreg_screenr}
 \title{Plot ROC Curves from \code{logreg_screenr}-Class Objects}
 \usage{
-\method{plot}{logreg_screenr}(x, ..., plot_ci = TRUE, conf_level = 0.95, bootreps = 2000)
+\method{plot}{logreg_screenr}(
+  x,
+  ...,
+  plot_ci = TRUE,
+  conf_level = 0.95,
+  bootreps = 4000,
+  print.auc = TRUE,
+  partial.auc = c(0.8, 1),
+  partial.auc.focus = c("sensitivity", "specificity"),
+  partial.auc.correct = TRUE
+)
 }
 \arguments{
 \item{x}{an object of class \code{logreg_screenr}.}
@@ -13,22 +23,38 @@
 
 \item{plot_ci}{logical indicator for plotting point-wise confidence
 intervals at the locally maximum subset of coordinates for
-on sensitivity and specificity (default = \verb{TRUE}). See also
+on sensitivity and specificity. Default: \verb{TRUE}). See also
 \code{\link[pROC]{ci.thresholds}}.}
 
-\item{conf_level}{confidence level in the interval (0,1). Default is 0.95
-producing 95\% confidence intervals.}
+\item{conf_level}{confidence level in the interval (0,1). Default: 0.95.}
 
 \item{bootreps}{number of bootstrap replications for estimation of confidence
-(default = 2000).}
+intervals. Default: 4000.}
+
+\item{print.auc}{logical indicator for printing the area
+under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.}
+
+\item{partial.auc}{One of \verb{FALSE} or a length two numeric vector
+of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
+of the interval over which to compute the out-of-sample partial AUC (pAUC).
+Ignored if \code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.}
+
+\item{partial.auc.focus}{one of \verb{"sensitivity"} or \verb{"specificity"},
+indicating the measure for which the out-of-sample partial AUC is to be computed.
+Default: \verb{"specificity"}.}
+
+\item{partial.auc.correct}{logical indictor for transformation of the pAUC
+to fall within the range from 0.5 (random guess) to 1.0 (perfect
+classification). Default: \verb{TRUE}}
 }
 \value{
 This function produces a plot as a side effect.
 }
 \description{
 \code{plot.logreg_screenr} plots the \emph{k}-fold cross-validated
-receiver-operating characteristic, including confidence intervals on the
-combinations of the local maxima of sensitivity and specificity.
+receiver-operating characteristic for out-of-sample screening performanc,
+including confidence intervals on the combinations of the local maxima of
+sensitivity and specificity.
 }
 \details{
 Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
@@ -37,9 +63,10 @@ intevals along with the overly optimistic in-sample ROC curve.
 \code{pROC::plot.roc}.
 }
 \examples{
+\dontrun{
 attach(uniobj2)
 plot(uniobj2)
-
+}
 }
 \references{
 Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.

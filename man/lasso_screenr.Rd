@@ -9,6 +9,11 @@ lasso_screenr(
   data = NULL,
   Nfolds = 10,
   L2 = TRUE,
+  partial.auc = c(0.8, 1),
+  partial.auc.focus = "sensitivity",
+  partial.auc.correct = TRUE,
+  boot.n = 4000,
+  conf.level = 0.95,
   seed = Sys.time(),
   ...
 )
@@ -17,18 +22,42 @@ lasso_screenr(
 \item{formula}{an object of class \code{stats::formula} defining the
 testing outcome and predictor covariates.}
 
-\item{data}{a dataframe containing the variables defined in \verb{formula}.}
+\item{data}{a dataframe containing the variables defined in \verb{formula}. The
+testing outcome must be binary (0,1) indicating negative and positive test
+results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates
+are typically binary (0 = no, 1 = yes) responses to questions which may be
+predictive of the test result, but any numeric or factor covariates can be used.}
 
 \item{Nfolds}{the number of folds used for \emph{k}-fold cross
-validation (default = 10, minimum = 2, maximum = 100).}
+validation. Default = 10; minimum = 2, maximum = 100.}
 
-\item{L2}{(logical) switch controlling penalization using the \emph{L}2 norm of the
-parameters (default = \verb{TRUE}).}
+\item{L2}{(logical) switch controlling penalization using the \emph{L}2 norm of
+the parameters.  Default: \verb{TRUE}).}
+
+\item{partial.auc}{either a logical \verb{FALSE} or a numeric vector of the
+form \code{c(left, right)} where left and right are numbers in the interval
+[0, 1] specifying the endpoints for computation of the partial area under the
+ROC curve (pAUC). The total AUC is computed if \code{partial.auc} = \verb{FALSE}.
+Default: \code{c(0.8, 1.0)}}
+
+\item{partial.auc.focus}{one of \verb{"sensitivity"} or \verb{specificity},
+specifying for which the pAUC should be computed.  \code{partial.auc.focus} is
+ignored if \code{partial.auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.}
+
+\item{partial.auc.correct}{logical value indicating whether the pAUC should be
+transformed the interval from 0.5 to 1.0. \code{partial.auc.correct} is
+ignored if \code{partial.auc} = \verb{FALSE}. Default: \verb{TRUE}).}
+
+\item{boot.n}{Number of bootstrap replications for computation of confidence
+intervals for the (partial)AUC. Default: 4000.}
+
+\item{conf.level}{a number between 0 and 1 specifying the confidence level
+for confidence intervals for the (partial)AUC. Default: 0.95.}
 
 \item{seed}{random number generator seed for cross-validation data splitting.}
 
-\item{...}{additional arguments passed to \code{\link[glmpath]{glmpath}} or
-\code{\link[pROC]{roc}}.}
+\item{...}{additional arguments passed to \code{\link[glmpath]{glmpath}},
+\code{\link[pROC]{roc}}, \code{\link[pROC]{auc}} or \code{\link[pROC]{ci}} .}
 }
 \value{
 Return (invisibly) an object of class \code{lasso_screenr} containing
@@ -71,7 +100,7 @@ and ROC object from BIC-best model selection}
 \description{
 \code{lasso_screenr} is a convenience function which integrates
 logistic regression using \emph{L}1 regularization, \emph{k}-fold
-cross-validation and estimation of the receiver-operating characteristic.
+cross-validation, and estimation of the receiver-operating characteristic (ROC).
 The in-sample and out-of-sample performance is estimated from the models
 which produced the minimum AIC and minimum BIC.  Execute
 \code{methods(class = "lasso_screenr")} to identify available methods.
@@ -81,13 +110,14 @@ which produced the minimum AIC and minimum BIC.  Execute
 Park and Hastie (2007), as implemented in the \code{glmpath} package.
 Park-Hastie regularization is is similar to the conventional lasso and the
 elastic net. It differs from the lasso with the inclusion of a very small,
-fixed (\verb{1e-5}) penalty on the \emph{L}2 norm of the parameters, and
+\emph{fixed} (\verb{1e-5}) penalty on the \emph{L}2 norm of the parameters, and
 differs from the elastic net in that the \emph{L}2 penalty is
 fixed.  Like the elastic net, the Park-Hastie regularization is robust to
 highly correlated predictors. The \emph{L}2 penalization can be turned off
 (\code{L2 = FALSE}), in which case the regularization is similar to the
 coventional lasso. Like all \emph{L}1 regularizers, the Park-Hastie
-algorithm automatically selects covariates.
+algorithm automatically deletes covariates by shrinking their parameter
+estimates to 0.
 
 The receiver-operating characteristics are computed using the \code{pROC}
 package.
@@ -98,11 +128,13 @@ see
 \url{https://machinelearningmastery.com/k-fold-cross-validation/}.
 }
 \examples{
+\dontrun{
 data(unicorns)
 help(unicorns)
 uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                           data = unicorns, Nfolds = 10)
 summary(uniobj1)
+}
 
 }
 \references{
@@ -110,11 +142,16 @@ Park MY, Hastie T. \emph{L}1-regularization path algorithm for generalized linea
 models. Journal of the Royal Statistical Society Series B. 2007;69(4):659-677.
 \url{https://doi.org/10.1111/j.1467-9868.2007.00607.x}
 
+Kim J-H. Estimating classification error rate: Repeated cross-validation, repeated
+hold-out and bootstrap. Computational Statistics and Data Analysis.
+2009:53(11):3735-3745. \url{http://doi.org/10.1016/j.csda.2009.04.009}
+
 Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
 Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
 analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
 \url{http://doi.org/10.1186/1471-2105-12-77}
 }
 \seealso{
-\code{\link[glmpath]{glmpath}}, \code{\link[pROC]{roc}}
+\code{\link[glmpath]{glmpath}}, \code{\link[pROC]{roc}},
+\code{\link[pROC]{auc}}
 }

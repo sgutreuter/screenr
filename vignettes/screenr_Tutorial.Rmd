@@ -241,7 +241,7 @@ fit. Confidence intervals for sensitivity and specificity are plotted
 at the local maxima (largest distances perpendicular to the 1:1
 line). Those maxima are the complete set options for screening.
 
-The area under the curve (AUC) is 0.9, which is very good compared
+The partial area under the curve (partial AUC) is good compared
 with random assignment, which would have an AUC of 0.5. However,
 sensitivity and specificity at the local maxima of the ROC curve are
 more relevant to test screening.  It is difficult to read
@@ -339,10 +339,11 @@ class(new_roc)
 The `pROC` package provides a plot method for `roc`-class objects:
 
 ```{r, fig.width = 4, fig.height = 4}
-plot(new_roc, print.auc = TRUE)
+plot(new_roc, print.auc = TRUE, partial.auc =  c(0.8, 1.0),
+     partial.auc.focus = "sensitivity", partial.auc.correct = TRUE)
 ```
 
-Note that the AUC is slightly smaller than the AUC from
+Note that the partial AUC is slightly smaller than the partial AUC from
 cross-validation of the training data. However the `roc_ci` function
 provided by the `screenr` package provides more informative
 information, including confidence intervals for sensitivity and

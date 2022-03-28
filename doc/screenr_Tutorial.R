@@ -58,7 +58,8 @@ auc = TRUE)
 class(new_roc)
 
 ## ---- fig.width = 4, fig.height = 4-------------------------------------------
-plot(new_roc, print.auc = TRUE)
+plot(new_roc, print.auc = TRUE, partial.auc =  c(0.8, 1.0),
+     partial.auc.focus = "sensitivity", partial.auc.correct = TRUE)
 
 ## -----------------------------------------------------------------------------
 new_perf <- roc_ci(new_roc, se.min = 0.8)

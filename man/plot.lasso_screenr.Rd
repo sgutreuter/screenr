@@ -10,7 +10,11 @@
   plot_ci = TRUE,
   model = c("minAIC", "minBIC"),
   conf_level = 0.95,
-  bootreps = 2000
+  bootreps = 4000,
+  print.auc = TRUE,
+  partial.auc = c(0.8, 1),
+  partial.auc.focus = c("sensitivity", "specificity"),
+  partial.auc.correct = TRUE
 )
 }
 \arguments{
@@ -19,23 +23,42 @@
 \item{...}{any additional arguments passed to \code{pROC::plot.roc} or
 \code{pROC::lines.roc}.}
 
-\item{plot_ci}{(logical) plot confidence intervals if \verb{TRUE}.}
+\item{plot_ci}{(logical) plot confidence intervals if \verb{TRUE}.
+Default: \verb{TRUE}.}
 
 \item{model}{(character) select either the model which produced the
-minimum AIC (\verb{"minAIC"}) or minimum BIC (\verb{"minBIC"}).}
+minimum AIC (\verb{"minAIC"}) or minimum BIC (\verb{"minBIC"}). Default:
+\verb{minAIC},}
 
-\item{conf_level}{confidence level}
+\item{conf_level}{confidence level. Default: 0.95.}
 
 \item{bootreps}{the number of bootstrap replications for estimation of
-confidence intervals.}
+confidence intervals. Default: 4000.}
+
+\item{print.auc}{logical indicator for printing the area
+under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.}
+
+\item{partial.auc}{One of \verb{FALSE} or a length two numeric vector
+of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
+of the interval over which to compute the partial AUC (pAUC). Ignored if
+\code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.}
+
+\item{partial.auc.focus}{one of \verb{"sensitivity"} or \verb{"specificity"},
+indicating the measure for which the partial AUC is to be computed. Default:
+\verb{"specificity"}.}
+
+\item{partial.auc.correct}{logical indictor for transformation of the pAUC
+to fall within the range from 0.5 (random guess) to 1.0 (perfect
+classification). Default: \verb{TRUE}.}
 }
 \value{
 This function produces a plot as a side effect.
 }
 \description{
 \code{plot.lasso_screenr} plots the \emph{k}-fold cross-validated
-receiver-operating characteristic, including confidence intervals on the
-combinations of the local maxima of sensitivity and specificity.
+receiver-operating characteristic for out-of-sample screening performance,
+including confidence intervals on the combinations of the local maxima of
+sensitivity and specificity.
 }
 \details{
 Plot cross-validated (out-of-sample) ROC curve with pointwise confidence
@@ -44,8 +67,10 @@ intevals along with the overly optimistic in-sample ROC curve.
 \code{pROC::plot.roc}.
 }
 \examples{
+\dontrun{
 attach(uniobj1)
 plot(uniobj1, model = "minAIC")
+}
 }
 \references{
 Fawcett T. An introduction to ROC analysis. Pattern Recognition Letters. 2006.

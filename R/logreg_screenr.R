@@ -111,12 +111,13 @@
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
 #'
 #' @examples
+#' \dontrun{
 #' data(unicorns)
 #' help(unicorns)
 #' uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                            data = unicorns, link = "logit", Nfolds = 10)
 #' summary(uniobj2)
-#'
+#'}
 #' @aliases{binomialScreenr}
 #' @import pROC
 #' @importFrom stats model.frame complete.cases model.response glm binomial

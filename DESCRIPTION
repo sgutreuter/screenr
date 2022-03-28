@@ -2,7 +2,7 @@ Package: screenr
 Type: Package
 Title: Construction of Binary Test-Screening Rules
 Version: 0.4.1
-Date: 2022-02-23
+Date: 2022-03-28
 Authors@R:
 	person(given = "Steve",
 		family ="Gutreuter",

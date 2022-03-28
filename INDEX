@@ -61,8 +61,8 @@ rescale_to_int          Rescale Positive Vectors or Matrices to
 roc_ci                  Compute Bootstrap Confidence Limits for
                         Sensitivities and Specificities
 screenr                 screenr Package
-sens_spec               Compute Sensitivity and Specificity from a 2 x
-                        2 Table
+sens_spec_plus          Compute Sensitivity, specificity and a few
+                        friends
 simple_screenr          An Overly Simple Approach to Test Screening
 summary.easy_tool       A Summary Method for 'easy_tool'-Class Objects
 summary.lasso_screenr   A Summary Method for 'lasso_screenr'-Class

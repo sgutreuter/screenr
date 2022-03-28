@@ -14,10 +14,10 @@ sens_spec_plus(
 }
 \arguments{
 \item{test}{character-valued name of the variable containing testing results,
-code as 0 for negative and 1 for positive.}
+coded as 0 for negative and 1 for positive.}
 
 \item{gold}{character-valued name of the variable containing gold standard,
-code as 0 for negative and 1 for positive.}
+coded as 0 for negative and 1 for positive.}
 
 \item{data}{data frame containing \code{test} and \code{gold}.}
 
@@ -30,7 +30,7 @@ default is \verb{"exact"}.}
 \value{
 a list containing components \code{table} and \code{ests}:
 \describe{
-\item{\code{table}}{ a 2 x 2 cross-tabulation which is the anti-transpose of the
+\item{\code{table}}{a 2 x 2 table which is the anti-transpose of the
 result produced by \code{base::table(gold, test)}.}
 \item{\code{ests}}{a dataframe containing the apparent and true positive
 proportions, sensitivity, specificity, positive predictive value (PPV),

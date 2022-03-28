@@ -139,11 +139,13 @@
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
 #'
 #' @examples
+#' \dontrun{
 #' data(unicorns)
 #' help(unicorns)
 #' uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                           data = unicorns, Nfolds = 10)
 #' summary(uniobj1)
+#' }
 #'
 #' @import pROC
 #' @importFrom stats model.frame
@@ -196,6 +198,8 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     AIC <- data.frame(NULL)
     BIC <- data.frame(NULL)
     pAUC <- data.frame(NULL )
+    minAIC <- NULL
+    minBIC <- NULL
     for(i in c("AIC", "BIC")){
         minIC <- min(sumry[[i]])
         step <- sumry[sumry[[i]] == minIC, ]$Step

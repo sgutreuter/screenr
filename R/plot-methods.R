@@ -158,8 +158,10 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #'
 #' @examples
+#' \dontrun{
 #' attach(uniobj1)
 #' plot(uniobj1, model = "minAIC")
+#' }
 #' @importFrom graphics legend plot lines abline
 #' @import pROC
 #' @export
@@ -221,7 +223,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #' @param conf_level confidence level in the interval (0,1). Default: 0.95.
 #' @param bootreps number of bootstrap replications for estimation of confidence
 #' intervals. Default: 4000.
-#' #' @param print.auc logical indicator for printing the area
+#' @param print.auc logical indicator for printing the area
 #' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
 #' @param partial.auc One of \verb{FALSE} or a length two numeric vector
 #' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
@@ -258,9 +260,10 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #' BMC Bioinformatics 2011; 12:77. \url{https://www.biomedcentral.com/1471-2105/12/77}
 #'
 #' @examples
+#' \dontrun{
 #' attach(uniobj2)
 #' plot(uniobj2)
-#'
+#'}
 #' @importFrom graphics legend plot
 #' @export
 plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,                                                bootreps = 4000,
