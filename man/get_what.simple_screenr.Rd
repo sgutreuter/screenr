@@ -9,7 +9,7 @@
   what = c("ROCci", "isROC"),
   ...,
   conf.level = 0.95,
-  bootreps = 2000,
+  bootreps = 4000,
   se.min = 0.6
 )
 }
@@ -22,13 +22,14 @@ are \verb{"ROCci"} and \verb{"isROC"}.}
 
 \item{...}{optional arguments to \code{get_what} methods.}
 
-\item{conf.level}{(optional) confidence level for \code{what =} \verb{"ROCci"}}
+\item{conf.level}{(optional) confidence level for \code{what =} \verb{"ROCci"}.
+Default: 09.5.}
 
 \item{bootreps}{the number of bootstrap replications for estimation of
-confidence intervals for \code{what =} \verb{"ROCci"}.}
+confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.}
 
 \item{se.min}{minimum value of sensitivity printed for
-\code{what =} \verb{ROCci} (default = 0.6).}
+\code{what =} \verb{ROCci}.  Default: 0.6.}
 }
 \value{
 The selected component is returned invisibly.

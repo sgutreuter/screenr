@@ -56,7 +56,7 @@
 #' @param boot.n number of bootstrap replications for computation of confidence
 #' intervals for the (partial)AUC. Default: 4000.
 #'
-#' @param standarize logical; if TRUE predictors are standardized to unit
+#' @param standardize logical; if TRUE predictors are standardized to unit
 #' variance.  Default: FALSE (sensible for binary and logical predictors).
 #'
 #' @param seed random number generator seed for cross-validation data splitting.
@@ -172,8 +172,8 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     call <- match.call()
     mf <- stats::model.frame(formula, data)
     y <- as.numeric(mf[, 1])
-    xclass <- lapply(mf[, 1], class)
-    if(any(!(xclass %in% c("numeric", "logical"))))
+    xclass <- lapply(mf[, -1], class)
+    if(any(!(xclass %in% c("numeric", "logical", "integer"))))
         stop("The predictor variables must be numeric or logical")
     x <- apply(as.matrix(mf[, -1]), 2, as.numeric)
     N <- nrow(x)

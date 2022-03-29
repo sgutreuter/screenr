@@ -266,7 +266,8 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #'}
 #' @importFrom graphics legend plot
 #' @export
-plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,                                                bootreps = 4000,
+plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
+                                bootreps = 4000,
                                 print.auc = TRUE,
                                 partial.auc = c(0.8, 1),
                                 partial.auc.focus = c("sensitivity", "specificity"),
@@ -318,14 +319,14 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,      
 #'
 #' @param plot_ci logical indicator for plotting point-wise confidence
 #' intervals at the locally maximum subset of coordinates for
-#' on sensitivity and specificity (default = \verb{TRUE}). See also
+#' on sensitivity and specificity.  Default: \verb{TRUE}. See also
 #' \code{\link[pROC]{ci.thresholds}}.
 #'
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
-#' producing 95\% confidence intervals.
+#' producing 95\% confidence intervals. Default: \verb{TRUE}.
 #'
 #' @param bootreps numeric-valued number of bootstrap replication for estimation
-#' of 95\% confidence intervals.
+#' of 95\% confidence intervals. Default: 4000.
 #'
 #' @param ... additional arguments for \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.
 #'
@@ -355,7 +356,7 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,      
 #' @importFrom graphics plot
 #' @export
 plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
-                               bootreps = 2000){
+                               bootreps = 4000){
     if(!class(x) == "simple_screenr") stop("x is not a simple_screenr object")
     plt <- plot(x$ISroc, print.auc = TRUE, ...)
     if(plot_ci){

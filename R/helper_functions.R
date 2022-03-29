@@ -189,26 +189,26 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #'
 #' @param object an object of class \code{roc}.
 #'
-#' @param bootreps number of bootstrap replicates (default = 2000).
+#' @param bootreps number of bootstrap replicates.  Default: 4000.
 #'
-#' @param conf.level confidence level for uncertainty intervals
-#' (default = 0.95).
+#' @param conf.level confidence level for uncertainty intervals.
+#' Default: 0.95.
 #'
-#' @param progress type of progress display
-#' (see \code{help(pROC::ci.thresholds)}).
+#' @param progress character-valued type of progress display
+#' (see \code{help(pROC::ci.thresholds)}). Default \verb{"none"}.
 #'
 #' @param thresholds type of thresholds (see \code{help(pROC::ci.thresholds)}).
 #'
-#' @param se.min minimum value of sensitivity returned.
+#' @param se.min minimum value of sensitivity returned. Default: 0.8.
 #'
 #' @return a data frame containing thresholds with sensititives, specificities
 #' and uncertainy intervals.
 #'
 #' @seealso \code{\link[pROC]{ci.thresholds}}
 #' @export
-roc_ci <- function(object, bootreps = 2000, conf.level = 0.95,
+roc_ci <- function(object, bootreps = 4000, conf.level = 0.95,
                    progress = "none", thresholds = "local maximas",
-                   se.min = 0.5) {
+                   se.min = 0.8) {
     if(!class(object) == "roc") stop("class(object) must be 'roc'" )
     ci_ <- pROC::ci.thresholds(object,
                                boot.n = bootreps,
@@ -244,10 +244,11 @@ roc_ci <- function(object, bootreps = 2000, conf.level = 0.95,
 #' @param data data frame containing \code{test} and \code{gold}.
 #'
 #' @param method type of confidence interval
-#' (\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). The
-#' default is \verb{"exact"}.
+#' (\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). Default:
+#' \verb{"exact"}.
 #'
 #' @param conf.level confidence level, a numeric value between 0 and 1.
+#' Default: 0.95.
 #'
 #' @return a list containing components \code{table} and \code{ests}:
 #' \describe{

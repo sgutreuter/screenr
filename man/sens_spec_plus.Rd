@@ -22,10 +22,11 @@ coded as 0 for negative and 1 for positive.}
 \item{data}{data frame containing \code{test} and \code{gold}.}
 
 \item{method}{type of confidence interval
-(\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). The
-default is \verb{"exact"}.}
+(\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). Default:
+\verb{"exact"}.}
 
-\item{conf.level}{confidence level, a numeric value between 0 and 1.}
+\item{conf.level}{confidence level, a numeric value between 0 and 1.
+Default: 0.95.}
 }
 \value{
 a list containing components \code{table} and \code{ests}:

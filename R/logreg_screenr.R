@@ -28,17 +28,17 @@
 #' predictive of the test result, but any numeric or factor covariates can be used.
 #'
 #' @param link the character-valued name of the link function for logistic
-#' regression.  Choices are \verb{"logit"} (default), \verb{"cloglog"} or
-#' \verb{"probit"}.
+#' regression.  Choices are \verb{"logit"}, \verb{"cloglog"} or
+#' \verb{"probit"}. Default: \verb{"logit"}.
 #'
 #' @param Nfolds number of folds used for \emph{k}-fold cross
-#' validation (default = 10, minimum = 2, maximum = 100).
+#' validation (minimum = 2, maximum = 100).  Default: 10.
 #'
 #' @param partial.auc either a logical \verb{FALSE} or a numeric vector of the
 #' form \code{c(left, right)} where left and right are numbers in the interval
 #' [0, 1] specifying the endpoints for computation of the partial area under the
 #' ROC curve (pAUC). The total AUC is computed if \code{partial.auc} = \verb{FALSE}.
-#' Default: \code{c(0.8, 1.0)}
+#' Default: \code{c(0.8, 1.0)}.
 #'
 #' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{specificity},
 #' specifying for which the pAUC should be computed.  \code{partial.auc.focus} is

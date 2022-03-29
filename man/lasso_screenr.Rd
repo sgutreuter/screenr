@@ -14,19 +14,20 @@ lasso_screenr(
   partial.auc.correct = TRUE,
   boot.n = 4000,
   conf.level = 0.95,
+  standardize = FALSE,
   seed = Sys.time(),
   ...
 )
 }
 \arguments{
 \item{formula}{an object of class \code{stats::formula} defining the
-testing outcome and predictor covariates.}
+testing outcome and predictor variables.}
 
-\item{data}{a dataframe containing the variables defined in \verb{formula}. The
-testing outcome must be binary (0,1) indicating negative and positive test
-results, respectively, or logical (\verb{TRUE}/\verb{FALSE}).  The covariates
-are typically binary (0 = no, 1 = yes) responses to questions which may be
-predictive of the test result, but any numeric or factor covariates can be used.}
+\item{data}{a dataframe containing the variables defined in \verb{formula}.
+The testing outcome must be binary (0 = no/negative, 1 = yes/positive) or
+logical (\verb{FALSE}/\verb{TRUE}).  The the predictor variables are
+are typically binary or logical responses to questions which may be
+predictive of the test result, but numeric variables can also be used.}
 
 \item{Nfolds}{the number of folds used for \emph{k}-fold cross
 validation. Default = 10; minimum = 2, maximum = 100.}
@@ -48,11 +49,14 @@ ignored if \code{partial.auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.}
 transformed the interval from 0.5 to 1.0. \code{partial.auc.correct} is
 ignored if \code{partial.auc} = \verb{FALSE}. Default: \verb{TRUE}).}
 
-\item{boot.n}{Number of bootstrap replications for computation of confidence
+\item{boot.n}{number of bootstrap replications for computation of confidence
 intervals for the (partial)AUC. Default: 4000.}
 
 \item{conf.level}{a number between 0 and 1 specifying the confidence level
 for confidence intervals for the (partial)AUC. Default: 0.95.}
+
+\item{standardize}{logical; if TRUE predictors are standardized to unit
+variance.  Default: FALSE (sensible for binary and logical predictors).}
 
 \item{seed}{random number generator seed for cross-validation data splitting.}
 
@@ -98,7 +102,7 @@ and ROC object from BIC-best model selection}
 }
 }
 \description{
-\code{lasso_screenr} is a convenience function which integrates
+\code{lasso_screenr} is a convenience function which combines
 logistic regression using \emph{L}1 regularization, \emph{k}-fold
 cross-validation, and estimation of the receiver-operating characteristic (ROC).
 The in-sample and out-of-sample performance is estimated from the models
@@ -110,13 +114,14 @@ which produced the minimum AIC and minimum BIC.  Execute
 Park and Hastie (2007), as implemented in the \code{glmpath} package.
 Park-Hastie regularization is is similar to the conventional lasso and the
 elastic net. It differs from the lasso with the inclusion of a very small,
-\emph{fixed} (\verb{1e-5}) penalty on the \emph{L}2 norm of the parameters, and
+\emph{fixed} (\verb{1e-5}) penalty on the \emph{L}2 norm of the parameter
+vector, and
 differs from the elastic net in that the \emph{L}2 penalty is
 fixed.  Like the elastic net, the Park-Hastie regularization is robust to
 highly correlated predictors. The \emph{L}2 penalization can be turned off
 (\code{L2 = FALSE}), in which case the regularization is similar to the
 coventional lasso. Like all \emph{L}1 regularizers, the Park-Hastie
-algorithm automatically deletes covariates by shrinking their parameter
+algorithm automatically "deletes" covariates by shrinking their parameter
 estimates to 0.
 
 The receiver-operating characteristics are computed using the \code{pROC}

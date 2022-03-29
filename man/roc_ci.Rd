@@ -6,27 +6,27 @@
 \usage{
 roc_ci(
   object,
-  bootreps = 2000,
+  bootreps = 4000,
   conf.level = 0.95,
   progress = "none",
   thresholds = "local maximas",
-  se.min = 0.5
+  se.min = 0.8
 )
 }
 \arguments{
 \item{object}{an object of class \code{roc}.}
 
-\item{bootreps}{number of bootstrap replicates (default = 2000).}
+\item{bootreps}{number of bootstrap replicates.  Default: 4000.}
 
-\item{conf.level}{confidence level for uncertainty intervals
-(default = 0.95).}
+\item{conf.level}{confidence level for uncertainty intervals.
+Default: 0.95.}
 
-\item{progress}{type of progress display
-(see \code{help(pROC::ci.thresholds)}).}
+\item{progress}{character-valued type of progress display
+(see \code{help(pROC::ci.thresholds)}). Default \verb{"none"}.}
 
 \item{thresholds}{type of thresholds (see \code{help(pROC::ci.thresholds)}).}
 
-\item{se.min}{minimum value of sensitivity returned.}
+\item{se.min}{minimum value of sensitivity returned. Default: 0.8.}
 }
 \value{
 a data frame containing thresholds with sensititives, specificities

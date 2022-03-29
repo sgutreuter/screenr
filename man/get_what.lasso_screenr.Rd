@@ -10,29 +10,30 @@
   ...,
   model = c("minAIC", "minBIC"),
   conf.level = 0.95,
-  bootreps = 2000,
-  se.min = 0.7
+  bootreps = 4000,
+  se.min = 0.8
 )
 }
 \arguments{
 \item{from}{the \code{lasso_screenr}-class object from which to extract
 the component.}
 
-\item{what}{the (character) name of the component to extract. Valid values are
-\verb{"glmpathObj"}, \verb{ROCci}, \verb{"cvROC"} and \verb{"isROC"}.}
+\item{what}{the character-valued name of the component to extract. Valid values are
+\verb{"glmpathObj"}, \verb{"ROCci"}, \verb{"cvROC"} and \verb{"isROC"}.}
 
 \item{...}{optional arguments to \code{get_what} methods.}
 
-\item{model}{the (character) name of the model for which the component is
-desired.  Valid values are \verb{"minAIC"} and \verb{"minBIC"}.}
+\item{model}{the character-valued name of the model for which the component is
+desired.  Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
+Default: \verb{"minAIC"}.}
 
-\item{conf.level}{(optional) confidence level for \code{what =} \verb{"ROCci"}}
+\item{conf.level}{confidence level for \code{what =} \verb{"ROCci"}. Default: 0.95.}
 
 \item{bootreps}{the number of bootstrap replications for estimation of
-confidence intervals for \code{what =} \verb{"ROCci"}.}
+confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.}
 
 \item{se.min}{minimum value of sensitivity printed for
-\code{what =} \verb{ROCci} (default = 0.7).}
+\code{what =} \verb{ROCci}.  Default: 0.8.}
 }
 \value{
 The selected component is returned invisibly.

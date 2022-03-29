@@ -48,10 +48,10 @@ get_what <- function(from, what, ...) {
 #' @param conf.level (optional) confidence level for \code{what =} \verb{ROCci}
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
-#' confidence intervals for \code{what =} \verb{"ROCci"}.
+#' confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.
 #'
 #' @param se.min minimum value of sensitivity printed for
-#' \code{what =} \verb{ROCci} (default = 0.7).
+#' \code{what =} \verb{ROCci}.  Default: 0.8.
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
@@ -86,8 +86,8 @@ get_what <- function(from, what, ...) {
 #' print(ROCci)
 #' }
 #' @export
-get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
-                             conf.level = 0.95, se.min = 0.7){
+get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 4000,
+                             conf.level = 0.95, se.min = 0.8){
     if(!"easy_tool" %in% class(from))
         stop("Object not easy_tool class")
     if(!what %in% c("QuestionWeights", "Call", "ROC", "Scores", "ROCci"))
@@ -114,19 +114,20 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 2000,
 #' @param from the \code{lasso_screenr}-class object from which to extract
 #' the component.
 #'
-#' @param what the (character) name of the component to extract. Valid values are
-#' \verb{"glmpathObj"}, \verb{ROCci}, \verb{"cvROC"} and \verb{"isROC"}.
+#' @param what the character-valued name of the component to extract. Valid values are
+#' \verb{"glmpathObj"}, \verb{"ROCci"}, \verb{"cvROC"} and \verb{"isROC"}.
 #'
-#' @param model the (character) name of the model for which the component is
+#' @param model the character-valued name of the model for which the component is
 #' desired.  Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
+#' Default: \verb{"minAIC"}.
 #'
-#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}
+#' @param conf.level confidence level for \code{what =} \verb{"ROCci"}. Default: 0.95.
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
-#' confidence intervals for \code{what =} \verb{"ROCci"}.
+#' confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.
 #'
 #' @param se.min minimum value of sensitivity printed for
-#' \code{what =} \verb{ROCci} (default = 0.7).
+#' \code{what =} \verb{ROCci}.  Default: 0.8.
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
@@ -166,8 +167,8 @@ get_what.lasso_screenr <- function(from = NULL,
                                    what = c("glmpathObj", "ROCci", "cvROC", "isROC"),
                                    ...,
                                    model = c("minAIC", "minBIC"),
-                                   conf.level = 0.95, bootreps =  2000,
-                                   se.min = 0.7){
+                                   conf.level = 0.95, bootreps =  4000,
+                                   se.min = 0.8){
     what  <- match.arg(what)
     model = match.arg(model)
     if(!"lasso_screenr" %in% class(from))
@@ -205,13 +206,14 @@ get_what.lasso_screenr <- function(from = NULL,
 #' @param what the (character) name of the component to extract. Valid values are
 #' \verb{"ModelFit"}, \verb{"ROCci"}, \verb{"cvROC"} and \verb{"isROC"}.
 #'
-#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}
+#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}.
+#' Default: 0.95.
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
-#' confidence intervals for \code{what =} \verb{"ROCci"}.
+#' confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.
 #'
 #' @param se.min minimum value of sensitivity printed for
-#' \code{what =} \verb{ROCci} (default = 0.7).
+#' \code{what =} \verb{ROCci}. Default: 0.8.
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
@@ -248,7 +250,7 @@ get_what.logreg_screenr <- function(from = NULL,
                                     what = c("ModelFit", "ROCci", "cvROC", "isROC"),
                                     ...,
                                     conf.level = 0.95,
-                                    bootreps =  2000, se.min = 0.7) {
+                                    bootreps =  4000, se.min = 0.8) {
     if(!"logreg_screenr" %in% class(from))
         stop("from not a logreg_screenr object")
     what <- match.arg(what)
@@ -285,13 +287,14 @@ get_what.logreg_screenr <- function(from = NULL,
 #' @param what the (character) name of the component to extract. Valid values
 #' are \verb{"ROCci"} and \verb{"isROC"}.
 #'
-#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}
+#' @param conf.level (optional) confidence level for \code{what =} \verb{"ROCci"}.
+#' Default: 09.5.
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
-#' confidence intervals for \code{what =} \verb{"ROCci"}.
+#' confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.
 #'
 #' @param se.min minimum value of sensitivity printed for
-#' \code{what =} \verb{ROCci} (default = 0.6).
+#' \code{what =} \verb{ROCci}.  Default: 0.6.
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
@@ -321,7 +324,7 @@ get_what.logreg_screenr <- function(from = NULL,
 #'
 #' @export
 get_what.simple_screenr <- function(from = NULL, what = c("ROCci", "isROC"), ...,
-                                    conf.level = 0.95, bootreps = 2000,
+                                    conf.level = 0.95, bootreps = 4000,
                                     se.min =  0.6) {
     if(!"simple_screenr" %in% class(from))
         stop("from not a simple_screenr object")
