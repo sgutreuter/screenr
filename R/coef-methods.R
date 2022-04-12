@@ -32,8 +32,9 @@
 #' \code{coef.lasso_screenr} extracts the estimated coefficients from
 #' \code{lasso_screenr} objects.
 #'
-#' @return a \emph{p} x 2 matrix containing the estimated coefficients from the AIC-
-#' and BIC-best logistic regression models, where \emph{p} is the number of coefficients.
+#' @return a \emph{p} x 2 matrix of estimated coefficients (or odds ratios)
+#' from the AIC- and BIC-best logistic regression models, where \emph{p} is
+#' the number of coefficients.
 #'
 #' @examples
 #' attach(uniobj1)
@@ -75,8 +76,8 @@ coef.lasso_screenr <- function(object, ..., intercept = TRUE, or = FALSE){
 #' \code{coef.logreg_screenr} extracts the estimated coefficients from
 #' \code{logreg_screenr} objects.
 #'
-#' @return A numeric vector containing the estimated coefficients on the logit
-#' scale.
+#' @return A \emph{p} x 1 matrix of estimated coefficients (or odds ratios),
+#' where \emph{p} is the number of coefficients.
 #'
 #' @examples
 #' attach(uniobj2)
@@ -90,5 +91,7 @@ coef.logreg_screenr <- function(object, ..., intercept =  TRUE, or = FALSE){
     coef_ <- object[["ModelFit"]][["coefficients"]]
     if(intercept == FALSE) coef_ <- coef_[-1]
     if(or == TRUE ) coef_ <- exp(coef_)
+    coef_ <- as.matrix(coef_)
+    colnames(coef_) <- "Estimate"
     coef_
 }

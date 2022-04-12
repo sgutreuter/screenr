@@ -62,7 +62,7 @@ print.lasso_screenr <- function(x, ...){
     print(x$Call)
     cat("\nglmpath x:\n")
     glmpath::print.glmpath(x$glmpathObj)
-    cat("\nPrevalence:", x$Prevalence, "\n")
+    cat("\nTest positivity:", x$Prevalence, "\n")
 }
 
 

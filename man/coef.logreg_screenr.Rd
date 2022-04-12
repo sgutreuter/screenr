@@ -18,8 +18,8 @@
 are the default.}
 }
 \value{
-A numeric vector containing the estimated coefficients on the logit
-scale.
+A \emph{p} x 1 matrix of estimated coefficients (or odds ratios),
+where \emph{p} is the number of coefficients.
 }
 \description{
 \code{coef.logreg_screenr} extracts the logistic model parameter estimates
