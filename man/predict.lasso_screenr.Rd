@@ -12,21 +12,24 @@
 
 \item{...}{optional arguments to \code{predict} methods.}
 
-\item{newdata}{new dataframe from which predicted probabilities of positive test results are desired.
-The dataframe must contain values of the same response variables and covariates that were used
-to obtain \code{obj}.}
+\item{newdata}{new dataframe from which predicted probabilities of positive
+test results are desired.  The dataframe must contain values of the same
+response variables and covariates that were used to obtain \code{obj}.}
 }
 \value{
-\code{predict.lasso_screenr} returns (invisibly) a dataframe augmenting the complete cases
-in \code{newdata} with the predicted probabilities of positive test results \code{phat_minAIC} and
-\code{phat_minBIC} from the models that produced the minimum AIC and BIC, respectively.
+\code{predict.lasso_screenr} returns (invisibly) a dataframe
+augmenting the complete cases in \code{newdata} with the predicted
+probabilities of positive test results \code{phat_minAIC} and
+\code{phat_minBIC} from the models that produced the minimum AIC and BIC,
+respectively.
 }
 \description{
-\code{predict.lasso_screenr} computes predicted probabilities of positive
-test results from new data.
+\code{predict.lasso_screenr} computes predicted probabilities of
+positive test results from new data.
 }
 \details{
-This method is a convenience wrapper for \code{`glmpath::predict.glmpath`}.
+This method is a convenience wrapper for \
+code{`glmpath::predict.glmpath`}.
 }
 \examples{
 attach(uniobj1)
@@ -36,6 +39,5 @@ new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         Q1 = c(0, 0), Q2 = c(0, 0), Q3 = c(0, 1), Q4 = c(0, 0),
                         Q5 = c(0, 1), Q6 = c(0, 1), Q7 = c(0, 1))
 ## Predict the probabilities of testing positive for the new subjects
-predict(uniobj1, newdata = new_corns)
-
+print(predict(uniobj1, newdata = new_corns))
 }

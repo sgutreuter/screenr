@@ -559,7 +559,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Recall that <code>uniobj1</code> contains the results of lasso estimation. The argument <code>max</code> represents <em>m</em>, in this case 3. The remaining arguments specify creation of question weights from the AIC-best model, with performance base on the cross-validated results in <code>uniobj1</code>. The resulting object, <code>et_3</code>, is of class <code>easy_tool</code>.</p>
 <p>Methods for that class are found by executing:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">methods</span>(<span class="dt">class =</span> <span class="st">&quot;easy_tool&quot;</span>)</a>
-<a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt; [1] get_what ntpp     plot     print    summary </span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt; [1] get_what ntpp     plot     predict  print    summary </span></a>
 <a class="sourceLine" id="cb16-3" title="3"><span class="co">#&gt; see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>The question weights can be extracted using the <code>get_what</code> method:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">qwts &lt;-<span class="st"> </span><span class="kw">get_what</span>(<span class="dt">from =</span> et_<span class="dv">3</span>, <span class="dt">what =</span> <span class="st">&quot;QuestionWeights&quot;</span>)</a>

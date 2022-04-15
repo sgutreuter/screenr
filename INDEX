@@ -44,6 +44,8 @@ plot.logreg_screenr     Plot ROC Curves from 'logreg_screenr'-Class
                         Objects
 plot.simple_screenr     Plot ROC Curves from 'simple_screenr'-Class
                         Objects
+predict.easy_tool       A Prediction Method for 'easy_tool'-Class
+                        Objects
 predict.lasso_screenr   A Prediction Method for 'lasso_screenr'-Class
                         Objects
 predict.logreg_screenr

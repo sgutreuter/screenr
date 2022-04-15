@@ -26,6 +26,8 @@ in-sample (\verb{FALSE}) performance evaluation.}
 \code{easy_tool} returns (invisibly) an object of class \code{easy_tool}
 containing:
 \describe{
+\item{\code{Call}}{The call to \code{easy_tool}.}
+\item{\code{varname}}{The names of the response and predictor variables.}
 \item{\code{QuestionWeights}}{Weights for the screening questions obtained
 by rescaling the non-zero-valued logistic regression coefficients to whole
 numbers ranging from 1 to \code{max}.}

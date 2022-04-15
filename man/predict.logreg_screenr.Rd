@@ -12,17 +12,18 @@
 
 \item{...}{optional arguments to \code{predict} methods.}
 
-\item{newdata}{new dataframe from which predicted probabilities of positive test results are
-desired. The dataframe must contain values of the same response variables and covariates that
-were used to obtain \code{object}.}
+\item{newdata}{new dataframe from which predicted probabilities of positive
+test results are desired. The dataframe must contain values of the same
+response variables and covariates that were used to obtain \code{object}.}
 }
 \value{
-\code{predict.logreg_screenr} returns (invisibly) a dataframe augmenting
-\code{newdata} with the predicted probabilities of positive test results \code{phat}.
+\code{predict.logreg_screenr} returns (invisibly) a dataframe
+augmenting \code{newdata} with the predicted probabilities of positive test
+results \code{phat}.
 }
 \description{
-\code{predict.logreg_screenr} computes predicted probabilities of positive
-test results from new data.
+\code{predict.logreg_screenr} computes predicted probabilities
+of positive test results from new data.
 }
 \details{
 This method is a convenience wrapper for \code{`stats::predict.glm`}.
@@ -35,5 +36,5 @@ new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         Q3 = c(0, 0), Q4 = c(0, 0), Q5 = c(0, 1), Q6 = c(0, 1 ),
                         Q7 = c(0, 1))
 ## Predict the probabilities of testing positive for the new subjects
-predict(uniobj2, newdata = new_corns)
+print(predict(uniobj2, newdata = new_corns))
 }

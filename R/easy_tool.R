@@ -40,6 +40,8 @@
 #' \code{easy_tool} returns (invisibly) an object of class \code{easy_tool}
 #' containing:
 #' \describe{
+#' \item{\code{Call}}{The call to \code{easy_tool}.}
+#' \item{\code{varname}}{The names of the response and predictor variables.}
 #' \item{\code{QuestionWeights}}{Weights for the screening questions obtained
 #' by rescaling the non-zero-valued logistic regression coefficients to whole
 #' numbers ranging from 1 to \code{max}.}
@@ -167,7 +169,10 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
     }
     ROC <- pROC::roc(response ~ score, data = scframe)
     Type <- ifelse(crossval == TRUE, "cross-validated", "in-sample")
+    yvarname <- as.character(object$formula[2])
+    predictors <- as.character(object$formula[-c(1, 2)])
     result <- list(Call = call,
+                   varnames = all.vars(object$formula),
                    QuestionWeights = QuestionWeights,
                    Type = Type,
                    Scores = scframe,
