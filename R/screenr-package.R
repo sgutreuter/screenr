@@ -18,6 +18,11 @@
 #' of application-specific tradeoffs between sensitivity and specificity.
 #' \code{screenr} also enables easy construction of screening tools.
 #'
+#' A tutorial is available from \code{vignette("screenr_Tutorial", package = "screenr")}.
+#'
+#' The pdf versions of the package manual and the tutorial are available at
+#' \url{https://github.com/sgutreuter/screenr}.
+#'
 #' @details
 #' The high-level functions in the \code{screenr} package are:
 #' \describe{
@@ -37,9 +42,6 @@
 #' \code{lasso_screenr}, \code{logreg_screenr}, \code{simple_screenr}
 #' and \code{easy_tool}. In addition, there is a \code{coef} method for
 #' \code{lasso_screenr} and \code{logreg_screenr} objects.
-#'
-#' @note
-#' A tutorial is available from \code{vignette("screenr_Tutorial", package = "screenr")}
 #'
 #' @note
 #' The canonical source for \code{screenr} is
