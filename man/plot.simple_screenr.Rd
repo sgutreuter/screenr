@@ -4,12 +4,13 @@
 \alias{plot.simple_screenr}
 \title{Plot ROC Curves from \code{simple_screenr}-Class Objects}
 \usage{
-\method{plot}{simple_screenr}(x, ..., plot_ci = TRUE, conf_level = 0.95, bootreps = 4000)
+\method{plot}{simple_screenr}(x, ..., plot_ci = TRUE, conf_level = 0.95, type = "S", bootreps = 4000)
 }
 \arguments{
 \item{x}{an object of class \code{simple_screenr}.}
 
-\item{...}{additional arguments for \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.}
+\item{...}{additional arguments for \verb{\link{plot}} or passed to
+\verb{\link{plot.roc}} and friends.}
 
 \item{plot_ci}{logical indicator for plotting point-wise confidence
 intervals at the locally maximum subset of coordinates for
@@ -18,6 +19,8 @@ on sensitivity and specificity.  Default: \verb{TRUE}. See also
 
 \item{conf_level}{confidence level in the interval (0,1). Default is 0.95
 producing 95\% confidence intervals. Default: \verb{TRUE}.}
+
+\item{type}{type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.}
 
 \item{bootreps}{numeric-valued number of bootstrap replication for estimation
 of 95\% confidence intervals. Default: 4000.}

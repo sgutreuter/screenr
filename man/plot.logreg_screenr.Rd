@@ -13,7 +13,8 @@
   print.auc = TRUE,
   partial.auc = c(0.8, 1),
   partial.auc.focus = c("sensitivity", "specificity"),
-  partial.auc.correct = TRUE
+  partial.auc.correct = TRUE,
+  type = "S"
 )
 }
 \arguments{
@@ -45,7 +46,9 @@ Default: \verb{"specificity"}.}
 
 \item{partial.auc.correct}{logical indictor for transformation of the pAUC
 to fall within the range from 0.5 (random guess) to 1.0 (perfect
-classification). Default: \verb{TRUE}}
+classification). Default: \verb{TRUE}.}
+
+\item{type}{type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.}
 }
 \value{
 This function produces a plot as a side effect.

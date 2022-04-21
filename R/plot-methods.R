@@ -35,6 +35,7 @@
 #' @param partial.auc.correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
+#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
 #'
@@ -71,19 +72,21 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
                            print.auc = TRUE,
                            partial.auc = c(0.8, 1),
                            partial.auc.focus = c("sensitivity", "specificity"),
-                           partial.auc.correct = TRUE){
+                           partial.auc.correct = TRUE,
+                           type =  "S"){
     if(!("easy_tool" %in% class(x)))
             stop("Object not easy_tool class")
     stopifnot(conf_level > 0 & conf_level < 1)
     partial.auc.focus = match.arg(partial.auc.focus)
     roc_  <- x$ROC
     if(is.logical(partial.auc)){
-        pROC::plot.roc(roc_, print.auc = TRUE, ci = FALSE, ...)
+        pROC::plot.roc(roc_, print.auc = print.auc, ci = plot_ci, type = type, ...)
         } else {
         pROC::plot.roc(roc_, print.auc = print.auc, reuse.auc = FALSE,
                        partial.auc = partial.auc,
                        partial.auc.focus = partial.auc.focus,
-                       partial.auc.correct = partial.auc.correct)
+                       partial.auc.correct = partial.auc.correct,
+                       type =  type)
         if(partial.auc.focus == "sensitivity") {
             abline(h = partial.auc[1], lty = 2)
             abline(h = partial.auc[2], lty = 2)
@@ -132,6 +135,7 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @param partial.auc.correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
+#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
 #'
@@ -170,7 +174,8 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
                                print.auc = TRUE,
                                partial.auc = c(0.8, 1),
                                partial.auc.focus = c("sensitivity", "specificity"),
-                               partial.auc.correct = TRUE){
+                               partial.auc.correct = TRUE,
+                               type =  "S"){
     if(!("lasso_screenr" %in% class(x)))
             stop("Object not lasso_screenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
@@ -179,12 +184,12 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
     cvROC <- x$cvResults[[model]][["ROC"]]
     isROC <- x$isResults[[model]][["ROC"]]
     if(is.logical(partial.auc)) {
-        pROC::plot.roc(cvROC, print.auc = TRUE, ci = FALSE, ...)
+        pROC::plot.roc(cvROC, print.auc = print.auc, ci = plot_ci, type = type, ...)
     } else {
         pROC::plot.roc(cvROC, print.auc = print.auc, reuse.auc = FALSE,
                        partial.auc = partial.auc,
                        partial.auc.focus = partial.auc.focus,
-                       partial.auc.correct = partial.auc.correct)
+                       partial.auc.correct = partial.auc.correct, type = type, ...)
         if(partial.auc.focus == "sensitivity") {
             abline(h = partial.auc[1], lty = 2)
             abline(h = partial.auc[2], lty = 2)
@@ -199,7 +204,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
                                      conf.level = conf_level)
          plot(ciplt)
     }
-    pROC::lines.roc(isROC, lty = 3)
+    pROC::lines.roc(isROC, lty = 3, type = type)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
 }
@@ -234,7 +239,8 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #' Default: \verb{"specificity"}.
 #' @param partial.auc.correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
-#' classification). Default: \verb{TRUE}
+#' classification). Default: \verb{TRUE}.
+#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect.
@@ -271,17 +277,20 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 print.auc = TRUE,
                                 partial.auc = c(0.8, 1),
                                 partial.auc.focus = c("sensitivity", "specificity"),
-                                partial.auc.correct = TRUE){
+                                partial.auc.correct = TRUE,
+                                type =  "S"){
     if(!class(x) == "logreg_screenr") stop("x is not a logreg_screenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
     partial.auc.focus = match.arg(partial.auc.focus)
     if(is.logical(partial.auc)) {
-        pROC::plot.roc(x$CVroc, print.auc = TRUE, ci = FALSE, ...)
+        pROC::plot.roc(x$CVroc, print.auc = print,auc, ci = plot_ci,
+                       type = type, ...)
     } else {
         pROC::plot.roc(x$CVroc, print.auc = print.auc, reuse.auc = FALSE,
                        partial.auc = partial.auc,
                        partial.auc.focus = partial.auc.focus,
-                       partial.auc.correct = partial.auc.correct)
+                       partial.auc.correct = partial.auc.correct,
+                       type = type)
         if(partial.auc.focus == "sensitivity") {
             abline(h = partial.auc[1], lty = 2)
             abline(h = partial.auc[2], lty = 2)
@@ -296,7 +305,7 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                      conf.level = conf_level)
         plot(ciplt)
     }
-    pROC::lines.roc(x$ISroc, lty = 3)
+    pROC::lines.roc(x$ISroc, lty = 3, type = type)
     legend("bottomright", legend = c("cross-validated", "in-sample"),
            lty = c(1, 3), lwd = c(2, 2))
 }
@@ -328,7 +337,10 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' @param bootreps numeric-valued number of bootstrap replication for estimation
 #' of 95\% confidence intervals. Default: 4000.
 #'
-#' @param ... additional arguments for \verb{\link{plot}} or passed to \verb{\link{plot.roc}} and friends.
+#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
+#'
+#' @param ... additional arguments for \verb{\link{plot}} or passed to
+#' \verb{\link{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect, and (optionally)
 #' returns a dataframe dataframe containing medians and
@@ -356,9 +368,9 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' @importFrom graphics plot
 #' @export
 plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
-                               bootreps = 4000){
+                                type =  "S", bootreps = 4000){
     if(!class(x) == "simple_screenr") stop("x is not a simple_screenr object")
-    plt <- plot(x$ISroc, print.auc = TRUE, ...)
+    plt <- plot(x$ISroc, print.auc = TRUE, type = type, ...)
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",
