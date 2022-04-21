@@ -180,7 +180,7 @@ get_what.lasso_screenr <- function(from = NULL,
             res <- from[["cvResults"]][[model]][["ROC"]]
         } else {
             if(what == "isROC") {
-                res <- from[["isResults"]][["ROC"]]
+                res <- from[["isResults"]][[model]][["ROC"]]
             } else {
                 roc_  <- from[["cvResults"]][[model]][["ROC"]]
                 res <- roc_ci(roc_, bootreps = bootreps,

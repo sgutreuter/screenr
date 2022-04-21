@@ -5,6 +5,7 @@
 ^\\.gitignore$
 ^README\\.md$
 ^README\\.Rmd$
+README.html
 ^maintenance
 ^auto
 ^Tutorial_Example.html
