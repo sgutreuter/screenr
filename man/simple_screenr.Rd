@@ -4,7 +4,14 @@
 \alias{simple_screenr}
 \title{An Overly Simple Approach to Test Screening}
 \usage{
-simple_screenr(formula, data)
+simple_screenr(
+  formula,
+  data,
+  partial_auc = c(0.8, 1),
+  partial_auc_focus = "sensitivity",
+  partial_auc_correct = TRUE,
+  conf_level = 0.95
+)
 }
 \arguments{
 \item{formula}{an object of class \code{\link[stats]{formula}} defining the
@@ -17,6 +24,23 @@ respectively, or logical (\verb{TRUE}/\verb{FALSE}), and the screening scores
 are the row-wise sums of the values of those covariates.  The covariates are
 typically binary (0 = no, 1 = yes) responses to questions, but the responses
 may also be ordinal numeric values.}
+
+\item{partial_auc}{either a logical \verb{FALSE} or a numeric vector of the
+form \code{c(left, right)} where left and right are numbers in the interval
+[0, 1] specifying the endpoints for computation of the partial area under the
+ROC curve (pAUC). The total AUC is computed if \code{partial\_auc} = \verb{FALSE}.
+Default: \code{c(0.8, 1.0)}}
+
+\item{partial_auc_focus}{one of \verb{"sensitivity"} or \verb{specificity},
+specifying for which the pAUC should be computed.  \code{partial.auc.focus} is
+ignored if \code{partial\_auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.}
+
+\item{partial_auc_correct}{logical value indicating whether the pAUC should be
+transformed the interval from 0.5 to 1.0. \code{partial\_auc\_correct} is
+ignored if \code{partial\_auc} = \verb{FALSE}. Default: \verb{TRUE}).}
+
+\item{conf_level}{a number between 0 and 1 specifying the confidence level
+for confidence intervals for the (partial)AUC. Default: 0.95.}
 }
 \value{
 An object of class \code{simple_screenr} containing the elements:

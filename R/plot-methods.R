@@ -331,6 +331,9 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' on sensitivity and specificity.  Default: \verb{TRUE}. See also
 #' \code{\link[pROC]{ci.thresholds}}.
 #'
+#' @param print_auc logical indicator for printing the area
+#' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
+#'
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals. Default: \verb{TRUE}.
 #'

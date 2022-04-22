@@ -4,7 +4,15 @@
 \alias{plot.simple_screenr}
 \title{Plot ROC Curves from \code{simple_screenr}-Class Objects}
 \usage{
-\method{plot}{simple_screenr}(x, ..., plot_ci = TRUE, conf_level = 0.95, type = "S", bootreps = 4000)
+\method{plot}{simple_screenr}(
+  x,
+  ...,
+  plot_ci = TRUE,
+  conf_level = 0.95,
+  print_auc = TRUE,
+  type = "S",
+  bootreps = 4000
+)
 }
 \arguments{
 \item{x}{an object of class \code{simple_screenr}.}
@@ -19,6 +27,9 @@ on sensitivity and specificity.  Default: \verb{TRUE}. See also
 
 \item{conf_level}{confidence level in the interval (0,1). Default is 0.95
 producing 95\% confidence intervals. Default: \verb{TRUE}.}
+
+\item{print_auc}{logical indicator for printing the area
+under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.}
 
 \item{type}{type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.}
 
