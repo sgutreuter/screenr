@@ -368,9 +368,9 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' @importFrom graphics plot
 #' @export
 plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
-                                type =  "S", bootreps = 4000){
+                                print_auc = TRUE, type =  "S", bootreps = 4000){
     if(!class(x) == "simple_screenr") stop("x is not a simple_screenr object")
-    plt <- plot(x$ISroc, print.auc = TRUE, type = type, ...)
+    plt <- plot(x$ISroc, print.auc = print_auc, type = type, ...)
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",

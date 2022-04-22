@@ -26,6 +26,23 @@
 #' typically binary (0 = no, 1 = yes) responses to questions, but the responses
 #' may also be ordinal numeric values.
 #'
+#' @param partial_auc either a logical \verb{FALSE} or a numeric vector of the
+#' form \code{c(left, right)} where left and right are numbers in the interval
+#' [0, 1] specifying the endpoints for computation of the partial area under the
+#' ROC curve (pAUC). The total AUC is computed if \code{partial\_auc} = \verb{FALSE}.
+#' Default: \code{c(0.8, 1.0)}
+#'
+#' @param partial_auc_focus one of \verb{"sensitivity"} or \verb{specificity},
+#' specifying for which the pAUC should be computed.  \code{partial.auc.focus} is
+#' ignored if \code{partial\_auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.
+#'
+#' @param partial_auc_correct logical value indicating whether the pAUC should be
+#' transformed the interval from 0.5 to 1.0. \code{partial\_auc\_correct} is
+#' ignored if \code{partial\_auc} = \verb{FALSE}. Default: \verb{TRUE}).
+#'
+#' @param conf_level a number between 0 and 1 specifying the confidence level
+#' for confidence intervals for the (partial)AUC. Default: 0.95.
+#'
 #' @return An object of class \code{simple_screenr} containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
@@ -70,10 +87,13 @@
 #' @import pROC
 #' @importFrom stats model.response
 #' @export
-simple_screenr <- function(formula, data){
+simple_screenr <- function(formula, data, partial_auc = c(0.8, 1.0),
+                          partial_auc_focus = "sensitivity",
+                          partial_auc_correct = TRUE,
+                          conf_level = 0.95){
     warning("WARNING! WARNING! WARNING! simple_screenr is suboptimal and is provided only for comparison with other methods." )
     mf <- match.call(expand.dots = FALSE)
-    call <- mf
+    call <- match.call( )
     m <- match(c("formula", "data"), names(mf), 0L)
     mf <- mf[c(1L, m)]
     mf[[1L]] <- quote(stats::model.frame)
@@ -85,7 +105,10 @@ simple_screenr <- function(formula, data){
     preds <- mf[, -1]
     npreds <- dim(preds)[2]
     score <- apply(preds, 1, sum)
-    is.roc <- pROC::roc(y, score, auc = TRUE, direction = "<")
+    is.roc <- pROC::roc(y, score, ci = TRUE, of = "auc", conf.level = conf_level,
+                        partial.auc = partial_auc,
+                        partial.auc.focus = partial_auc_focus,
+                        partial.auc.correct = partial_auc_correct, direction = "<")
     scores <- cbind(dat, score = score)
     result <- list(Call = call,
                    Prevalence = prev,
