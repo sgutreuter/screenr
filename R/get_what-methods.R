@@ -261,7 +261,7 @@ get_what.logreg_screenr <- function(from = NULL,
             res <- from[["CVroc"]]
         } else {
             if(what == "isROC") {
-                res <- from[["isROC"]]
+                res <- from[["ISroc"]]
             } else {
                 roc_  <-  from[["CVroc"]]
                 res <- roc_ci(roc_, bootreps = bootreps,
