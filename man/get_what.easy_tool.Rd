@@ -9,8 +9,8 @@
   what = NULL,
   ...,
   bootreps = 4000,
-  conf.level = 0.95,
-  se.min = 0.8
+  conf_level = 0.95,
+  se_min = 0.8
 )
 }
 \arguments{
@@ -26,9 +26,9 @@ the component.}
 \item{bootreps}{the number of bootstrap replications for estimation of
 confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.}
 
-\item{conf.level}{(optional) confidence level for \code{what =} \verb{ROCci}}
+\item{conf_level}{(optional) confidence level for \code{what =} \verb{ROCci}}
 
-\item{se.min}{minimum value of sensitivity printed for
+\item{se_min}{minimum value of sensitivity printed for
 \code{what =} \verb{ROCci}.  Default: 0.8.}
 }
 \value{

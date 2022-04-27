@@ -8,9 +8,9 @@
   from = NULL,
   what = c("ROCci", "isROC"),
   ...,
-  conf.level = 0.95,
+  conf_level = 0.95,
   bootreps = 4000,
-  se.min = 0.6
+  se_min = 0.6
 )
 }
 \arguments{
@@ -22,13 +22,13 @@ are \verb{"ROCci"} and \verb{"isROC"}.}
 
 \item{...}{optional arguments to \code{get_what} methods.}
 
-\item{conf.level}{(optional) confidence level for \code{what =} \verb{"ROCci"}.
+\item{conf_level}{(optional) confidence level for \code{what =} \verb{"ROCci"}.
 Default: 09.5.}
 
 \item{bootreps}{the number of bootstrap replications for estimation of
 confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.}
 
-\item{se.min}{minimum value of sensitivity printed for
+\item{se_min}{minimum value of sensitivity printed for
 \code{what =} \verb{ROCci}.  Default: 0.6.}
 }
 \value{

@@ -7,10 +7,10 @@
 roc_ci(
   object,
   bootreps = 4000,
-  conf.level = 0.95,
+  conf_level = 0.95,
   progress = "none",
   thresholds = "local maximas",
-  se.min = 0.8
+  se_min = 0.8
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ roc_ci(
 
 \item{bootreps}{number of bootstrap replicates.  Default: 4000.}
 
-\item{conf.level}{confidence level for uncertainty intervals.
+\item{conf_level}{confidence level for uncertainty intervals.
 Default: 0.95.}
 
 \item{progress}{character-valued type of progress display
@@ -26,7 +26,7 @@ Default: 0.95.}
 
 \item{thresholds}{type of thresholds (see \code{help(pROC::ci.thresholds)}).}
 
-\item{se.min}{minimum value of sensitivity returned. Default: 0.8.}
+\item{se_min}{minimum value of sensitivity returned. Default: 0.8.}
 }
 \value{
 a data frame containing thresholds with sensititives, specificities

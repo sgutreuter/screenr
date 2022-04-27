@@ -217,15 +217,18 @@ ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
 }
 
 
-## Function ntpp.data.frame
+## Function ntpp.default
 ##
 #' Compute the Ratio of Total Tests to Positive Results from a Data Frame
 #'
 #' @description \code{ntpp.data.frame} computes the ratio of the total number of
 #' tests performed per positive test result from data frames.
 #'
-#' @param object a  dataframe containing columns \code{sensitivity},
-#' \code{specificity} and \code{prev}.
+#' @param se  a numeric vector of sensitivities in (0,1)
+#'
+#' @param sp a numeric vector of sensitivities in (0,1)
+#'
+#' @param prev a numeric vector of prevalences of the testing condition, in (0,1)
 #'
 #' @param ... optional arguments to \code{ntpp} methods.
 #'
@@ -246,17 +249,16 @@ ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
 #' specificity. The anticipated prevalence among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
+#' @importFrom dplyr between
 #' @export
-ntpp.data.frame <- function(object, ...){
-    if(!is.data.frame(object)) stop("object not a data frame")
-    if(!"sensitivity" %in% names(object))
-        stop("object does not include sensitivity")
-    if(!"specificity" %in% names(object))
-        stop("object does not include specificity")
-    if(!"prev" %in% names(object))
-        stop("object does not include prev")
-    result <- nnt_(object)
-    result
+ntpp.default <- function(se = NULL, sp = NULL, prev = NULL, ...){
+    rangecheck <- function(x, y, z, ll = 0.00001, ul = 0.9999){
+        tst <- c(dplyr::between(x, ll, ul), dplyr::between(y, ll, ul), dplyr::between(z, ll, ul))
+        any(!tst)
+    }
+    if(rangecheck(se, sp, prev)) stop("not all se, sp and prev are in (0,1)")
+    object <- data.frame(sensitivity = se, specificity = sp, prev = prev)
+    nnt_(object)
 }
 
 

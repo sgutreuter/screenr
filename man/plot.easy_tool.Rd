@@ -10,10 +10,10 @@
   plot_ci = TRUE,
   conf_level = 0.95,
   bootreps = 4000,
-  print.auc = TRUE,
-  partial.auc = c(0.8, 1),
-  partial.auc.focus = c("sensitivity", "specificity"),
-  partial.auc.correct = TRUE,
+  print_auc = TRUE,
+  partial_auc = c(0.8, 1),
+  partial_auc_focus = c("sensitivity", "specificity"),
+  partial_auc_correct = TRUE,
   type = "S"
 )
 }
@@ -30,19 +30,19 @@
 \item{bootreps}{the number of bootstrap replications for estimation of
 confidence intervals. Default: 4000.}
 
-\item{print.auc}{logical indicator for printing the area
+\item{print_auc}{logical indicator for printing the area
 under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.}
 
-\item{partial.auc}{One of \verb{FALSE} or a length two numeric vector
+\item{partial_auc}{One of \verb{FALSE} or a length two numeric vector
 of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
 of the interval over which to compute the partial AUC (pAUC). Ignored if
-\code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.}
+\code{print_auc = FALSE}. Default: \code{c(0.8, 1)}.}
 
-\item{partial.auc.focus}{one of \verb{"sensitivity"} or \verb{"specificity"},
+\item{partial_auc_focus}{one of \verb{"sensitivity"} or \verb{"specificity"},
 indicating the measure for which the partial AUC is to be computed. Default:
 \verb{"specificity"}.}
 
-\item{partial.auc.correct}{logical indictor for transformation of the pAUC
+\item{partial_auc_correct}{logical indictor for transformation of the pAUC
 to fall within the range from 0.5 (random guess) to 1.0 (perfect
 classification). Default: \verb{TRUE}.}
 

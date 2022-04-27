@@ -9,9 +9,9 @@
   what = c("glmpathObj", "ROCci", "cvROC", "isROC"),
   ...,
   model = c("minAIC", "minBIC"),
-  conf.level = 0.95,
+  conf_level = 0.95,
   bootreps = 4000,
-  se.min = 0.8
+  se_min = 0.8
 )
 }
 \arguments{
@@ -27,12 +27,12 @@ the component.}
 desired.  Valid values are \verb{"minAIC"} and \verb{"minBIC"}.
 Default: \verb{"minAIC"}.}
 
-\item{conf.level}{confidence level for \code{what =} \verb{"ROCci"}. Default: 0.95.}
+\item{conf_level}{confidence level for \code{what =} \verb{"ROCci"}. Default: 0.95.}
 
 \item{bootreps}{the number of bootstrap replications for estimation of
 confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.}
 
-\item{se.min}{minimum value of sensitivity printed for
+\item{se_min}{minimum value of sensitivity printed for
 \code{what =} \verb{ROCci}.  Default: 0.8.}
 }
 \value{

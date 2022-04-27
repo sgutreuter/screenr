@@ -23,16 +23,16 @@
 #' @param conf_level confidence level
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals. Default: 4000.
-#' @param print.auc logical indicator for printing the area
+#' @param print_auc logical indicator for printing the area
 #' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
-#' @param partial.auc One of \verb{FALSE} or a length two numeric vector
+#' @param partial_auc One of \verb{FALSE} or a length two numeric vector
 #' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
 #' of the interval over which to compute the partial AUC (pAUC). Ignored if
-#' \code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.
-#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{"specificity"},
+#' \code{print_auc = FALSE}. Default: \code{c(0.8, 1)}.
+#' @param partial_auc_focus one of \verb{"sensitivity"} or \verb{"specificity"},
 #' indicating the measure for which the partial AUC is to be computed. Default:
 #' \verb{"specificity"}.
-#' @param partial.auc.correct logical indictor for transformation of the pAUC
+#' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
 #' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
@@ -69,30 +69,30 @@
 #' @export
 plot.easy_tool <- function(x, ..., plot_ci = TRUE,
                            conf_level = 0.95, bootreps = 4000,
-                           print.auc = TRUE,
-                           partial.auc = c(0.8, 1),
-                           partial.auc.focus = c("sensitivity", "specificity"),
-                           partial.auc.correct = TRUE,
+                           print_auc = TRUE,
+                           partial_auc = c(0.8, 1),
+                           partial_auc_focus = c("sensitivity", "specificity"),
+                           partial_auc_correct = TRUE,
                            type =  "S"){
     if(!("easy_tool" %in% class(x)))
             stop("Object not easy_tool class")
     stopifnot(conf_level > 0 & conf_level < 1)
-    partial.auc.focus = match.arg(partial.auc.focus)
+    partial_auc_focus = match.arg(partial_auc_focus)
     roc_  <- x$ROC
-    if(is.logical(partial.auc)){
-        pROC::plot.roc(roc_, print.auc = print.auc, ci = plot_ci, type = type, ...)
+    if(is.logical(partial_auc)){
+        pROC::plot.roc(roc_, print.auc = print_auc, ci = plot_ci, type = type, ...)
         } else {
-        pROC::plot.roc(roc_, print.auc = print.auc, reuse.auc = FALSE,
-                       partial.auc = partial.auc,
-                       partial.auc.focus = partial.auc.focus,
-                       partial.auc.correct = partial.auc.correct,
+        pROC::plot.roc(roc_, print.auc = print_auc, reuse.auc = FALSE,
+                       partial.auc = partial_auc,
+                       partial.auc.focus = partial_auc_focus,
+                       partial.auc.correct = partial_auc_correct,
                        type =  type)
-        if(partial.auc.focus == "sensitivity") {
-            abline(h = partial.auc[1], lty = 2)
-            abline(h = partial.auc[2], lty = 2)
+        if(partial_auc_focus == "sensitivity") {
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
         } else {
-            abline(h = partial.auc[1], lty = 2)
-            abline(h = partial.auc[2], lty = 2)
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
         }
         }
     if(plot_ci){
@@ -123,16 +123,16 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @param conf_level confidence level. Default: 0.95.
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals. Default: 4000.
-#' @param print.auc logical indicator for printing the area
+#' @param print_auc logical indicator for printing the area
 #' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
-#' @param partial.auc One of \verb{FALSE} or a length two numeric vector
+#' @param partial_auc One of \verb{FALSE} or a length two numeric vector
 #' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
 #' of the interval over which to compute the partial AUC (pAUC). Ignored if
-#' \code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.
-#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{"specificity"},
+#' \code{print_auc = FALSE}. Default: \code{c(0.8, 1)}.
+#' @param partial_auc_focus one of \verb{"sensitivity"} or \verb{"specificity"},
 #' indicating the measure for which the partial AUC is to be computed. Default:
 #' \verb{"specificity"}.
-#' @param partial.auc.correct logical indictor for transformation of the pAUC
+#' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
 #' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
@@ -171,31 +171,31 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @export
 plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "minBIC"),
                                conf_level = 0.95, bootreps = 4000,
-                               print.auc = TRUE,
-                               partial.auc = c(0.8, 1),
-                               partial.auc.focus = c("sensitivity", "specificity"),
-                               partial.auc.correct = TRUE,
+                               print_auc = TRUE,
+                               partial_auc = c(0.8, 1),
+                               partial_auc_focus = c("sensitivity", "specificity"),
+                               partial_auc_correct = TRUE,
                                type =  "S"){
     if(!("lasso_screenr" %in% class(x)))
             stop("Object not lasso_screenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
     model <- match.arg(model)
-    partial.auc.focus = match.arg(partial.auc.focus)
+    partial_auc_focus = match.arg(partial_auc_focus)
     cvROC <- x$cvResults[[model]][["ROC"]]
     isROC <- x$isResults[[model]][["ROC"]]
     if(is.logical(partial.auc)) {
-        pROC::plot.roc(cvROC, print.auc = print.auc, ci = plot_ci, type = type, ...)
+        pROC::plot.roc(cvROC, print.auc = print_auc, ci = plot_ci, type = type, ...)
     } else {
-        pROC::plot.roc(cvROC, print.auc = print.auc, reuse.auc = FALSE,
-                       partial.auc = partial.auc,
-                       partial.auc.focus = partial.auc.focus,
-                       partial.auc.correct = partial.auc.correct, type = type, ...)
-        if(partial.auc.focus == "sensitivity") {
-            abline(h = partial.auc[1], lty = 2)
-            abline(h = partial.auc[2], lty = 2)
+        pROC::plot.roc(cvROC, print.auc = print_auc, reuse.auc = FALSE,
+                       partial.auc = partial_auc,
+                       partial.auc.focus = partial_auc_focus,
+                       partial.auc.correct = partial_auc_correct, type = type, ...)
+        if(partial_auc_focus == "sensitivity") {
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
         } else {
-            abline(h = partial.auc[1], lty = 2)
-            abline(h = partial.auc[2], lty = 2)
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
         }
     }
     if(plot_ci){
@@ -228,16 +228,16 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #' @param conf_level confidence level in the interval (0,1). Default: 0.95.
 #' @param bootreps number of bootstrap replications for estimation of confidence
 #' intervals. Default: 4000.
-#' @param print.auc logical indicator for printing the area
+#' @param print_auc logical indicator for printing the area
 #' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
-#' @param partial.auc One of \verb{FALSE} or a length two numeric vector
+#' @param partial_auc One of \verb{FALSE} or a length two numeric vector
 #' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
 #' of the interval over which to compute the out-of-sample partial AUC (pAUC).
-#' Ignored if \code{print.auc = FALSE}. Default: \code{c(0.8, 1)}.
-#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{"specificity"},
+#' Ignored if \code{print_auc = FALSE}. Default: \code{c(0.8, 1)}.
+#' @param partial_auc_focus one of \verb{"sensitivity"} or \verb{"specificity"},
 #' indicating the measure for which the out-of-sample partial AUC is to be computed.
 #' Default: \verb{"specificity"}.
-#' @param partial.auc.correct logical indictor for transformation of the pAUC
+#' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
 #' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
@@ -274,29 +274,29 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #' @export
 plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 bootreps = 4000,
-                                print.auc = TRUE,
-                                partial.auc = c(0.8, 1),
-                                partial.auc.focus = c("sensitivity", "specificity"),
-                                partial.auc.correct = TRUE,
+                                print_auc = TRUE,
+                                partial_auc = c(0.8, 1),
+                                partial_auc_focus = c("sensitivity", "specificity"),
+                                partial_auc_correct = TRUE,
                                 type =  "S"){
     if(!class(x) == "logreg_screenr") stop("x is not a logreg_screenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
-    partial.auc.focus = match.arg(partial.auc.focus)
-    if(is.logical(partial.auc)) {
-        pROC::plot.roc(x$CVroc, print.auc = print,auc, ci = plot_ci,
+    partial_auc_focus = match.arg(partial_auc_focus)
+    if(is.logical(partial_auc)) {
+        pROC::plot.roc(x$CVroc, print.auc = print_auc, ci = plot_ci,
                        type = type, ...)
     } else {
-        pROC::plot.roc(x$CVroc, print.auc = print.auc, reuse.auc = FALSE,
-                       partial.auc = partial.auc,
-                       partial.auc.focus = partial.auc.focus,
-                       partial.auc.correct = partial.auc.correct,
+        pROC::plot.roc(x$CVroc, print.auc = print_auc, reuse.auc = FALSE,
+                       partial.auc = partial_auc,
+                       partial.auc.focus = partial_auc_focus,
+                       partial.auc.correct = partial_auc_correct,
                        type = type)
-        if(partial.auc.focus == "sensitivity") {
-            abline(h = partial.auc[1], lty = 2)
-            abline(h = partial.auc[2], lty = 2)
+        if(partial_auc_focus == "sensitivity") {
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
         } else {
-            abline(h = partial.auc[1], lty = 2)
-            abline(h = partial.auc[2], lty = 2)
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
         }
     }
     if(plot_ci){
@@ -331,14 +331,27 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' on sensitivity and specificity.  Default: \verb{TRUE}. See also
 #' \code{\link[pROC]{ci.thresholds}}.
 #'
-#' @param print_auc logical indicator for printing the area
-#' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
-#'
 #' @param conf_level confidence level in the interval (0,1). Default is 0.95
 #' producing 95\% confidence intervals. Default: \verb{TRUE}.
 #'
 #' @param bootreps numeric-valued number of bootstrap replication for estimation
 #' of 95\% confidence intervals. Default: 4000.
+#'
+#' @param print_auc logical indicator for printing the area
+#' under the ROC curve (AUC) on the plot.  Default: \verb{TRUE}.
+#'
+#' @param partial_auc One of \verb{FALSE} or a length two numeric vector
+#' of the form \verb{c(a, b)} where \verb{a} and \verb{b} are the endpoints
+#' of the interval over which to compute the out-of-sample partial AUC (pAUC).
+#' Ignored if \code{print_auc = FALSE}. Default: \code{c(0.8, 1)}.
+#'
+#' @param partial_auc_focus one of \verb{"sensitivity"} or \verb{"specificity"},
+#' indicating the measure for which the out-of-sample partial AUC is to be computed.
+#' Default: \verb{"specificity"}.
+#'
+#' @param partial_auc_correct logical indictor for transformation of the pAUC
+#' to fall within the range from 0.5 (random guess) to 1.0 (perfect
+#' classification). Default: \verb{TRUE}.
 #'
 #' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
 #'
@@ -371,9 +384,31 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' @importFrom graphics plot
 #' @export
 plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
-                                print_auc = TRUE, type =  "S", bootreps = 4000){
+                                bootreps = 4000,
+                                print_auc = TRUE,
+                                partial_auc = c(0.8, 1),
+                                partial_auc_focus = c("sensitivity", "specificity"),
+                                partial_auc_correct = TRUE,
+                                type =  "S"){
     if(!class(x) == "simple_screenr") stop("x is not a simple_screenr object")
-    plt <- plot(x$ISroc, print.auc = print_auc, type = type, ...)
+    stopifnot(conf_level > 0 & conf_level < 1)
+    partial_auc_focus = match.arg(partial_auc_focus)
+        if(is.logical(partial_auc)) {
+            plt <- pROC::plot.roc(x$ISroc, print.auc = print_auc, type = type, ...)
+        } else {
+            pROC::plot.roc(x$ISroc, print.auc = print_auc, reuse.auc = FALSE,
+                       partial.auc = partial_auc,
+                       partial.auc.focus = partial_auc_focus,
+                       partial.auc.correct = partial_auc_correct,
+                       type = type)
+        if(partial_auc_focus == "sensitivity") {
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
+        } else {
+            abline(h = partial_auc[1], lty = 2)
+            abline(h = partial_auc[2], lty = 2)
+        }
+        }
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",

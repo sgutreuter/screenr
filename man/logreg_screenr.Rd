@@ -10,11 +10,11 @@ logreg_screenr(
   data = NULL,
   link = c("logit", "cloglog", "probit"),
   Nfolds = 10,
-  partial.auc = c(0.8, 1),
-  partial.auc.focus = "sensitivity",
-  partial.auc.correct = TRUE,
-  boot.n = 4000,
-  conf.level = 0.95,
+  partial_auc = c(0.8, 1),
+  partial_auc_focus = "sensitivity",
+  partial_auc_correct = TRUE,
+  boot_n = 4000,
+  conf_level = 0.95,
   seed = Sys.time(),
   ...
 )
@@ -36,24 +36,24 @@ regression.  Choices are \verb{"logit"}, \verb{"cloglog"} or
 \item{Nfolds}{number of folds used for \emph{k}-fold cross
 validation (minimum = 2, maximum = 100).  Default: 10.}
 
-\item{partial.auc}{either a logical \verb{FALSE} or a numeric vector of the
+\item{partial_auc}{either a logical \verb{FALSE} or a numeric vector of the
 form \code{c(left, right)} where left and right are numbers in the interval
 [0, 1] specifying the endpoints for computation of the partial area under the
-ROC curve (pAUC). The total AUC is computed if \code{partial.auc} = \verb{FALSE}.
+ROC curve (pAUC). The total AUC is computed if \code{partial_auc} = \verb{FALSE}.
 Default: \code{c(0.8, 1.0)}.}
 
-\item{partial.auc.focus}{one of \verb{"sensitivity"} or \verb{specificity},
-specifying for which the pAUC should be computed.  \code{partial.auc.focus} is
-ignored if \code{partial.auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.}
+\item{partial_auc_focus}{one of \verb{"sensitivity"} or \verb{specificity},
+specifying for which the pAUC should be computed.  \code{partial_auc_focus} is
+ignored if \code{partial_auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.}
 
-\item{partial.auc.correct}{logical value indicating whether the pAUC should be
-transformed the interval from 0.5 to 1.0. \code{partial.auc.correct} is
-ignored if \code{partial.auc} = \verb{FALSE}. Default: \verb{TRUE}).}
+\item{partial_auc_correct}{logical value indicating whether the pAUC should be
+transformed the interval from 0.5 to 1.0. \code{partial_auc_correct} is
+ignored if \code{partial_auc} = \verb{FALSE}. Default: \verb{TRUE}).}
 
-\item{boot.n}{Number of bootstrap replications for computation of confidence
+\item{boot_n}{Number of bootstrap replications for computation of confidence
 intervals for the (partial)AUC. Default: 4000.}
 
-\item{conf.level}{a number between 0 and 1 specifying the confidence level
+\item{conf_level}{a number between 0 and 1 specifying the confidence level
 for confidence intervals for the (partial)AUC. Default: 0.95.}
 
 \item{seed}{random-number generator seed for cross-validation data splitting.}
@@ -121,7 +121,7 @@ hold-out and bootstrap. Computational Statistics and Data Analysis.
 2009:53(11):3735-3745. \url{http://doi.org/10.1016/j.csda.2009.04.009}
 
 Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
-Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
+M昼㹣ller M. \code{pROC}: An open-source package for \code{R} and S+ to
 analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
 \url{http://doi.org/10.1186/1471-2105-12-77}
 }

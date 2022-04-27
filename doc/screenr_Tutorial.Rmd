@@ -249,7 +249,7 @@ sensitivities and specificities from the ROC curve. Instead, the
 numerical values can be obtained using:
 
 ```{r}
-roc_maximas <- get_what(from = uniobj1, what = "ROCci", se.min = 0.9)
+roc_maximas <- get_what(from = uniobj1, what = "ROCci", se_min = 0.9)
 print(roc_maximas)
 ```
 
@@ -339,8 +339,8 @@ class(new_roc)
 The `pROC` package provides a plot method for `roc`-class objects:
 
 ```{r, fig.width = 4, fig.height = 4}
-plot(new_roc, print.auc = TRUE, partial.auc =  c(0.8, 1.0),
-     partial.auc.focus = "sensitivity", partial.auc.correct = TRUE)
+plot(new_roc, print_auc = TRUE, partial_auc =  c(0.8, 1.0),
+     partial_auc_focus = "sensitivity", partial_auc_correct = TRUE)
 ```
 
 Note that the partial AUC is slightly smaller than the partial AUC from
@@ -350,7 +350,7 @@ information, including confidence intervals for sensitivity and
 specificity:
 
 ```{r}
-new_perf <- roc_ci(new_roc, se.min = 0.8)
+new_perf <- roc_ci(new_roc, se_min = 0.8)
 print(new_perf)
 ```
 

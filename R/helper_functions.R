@@ -10,42 +10,6 @@
 #################################################################################
 
 
-
-## Function keepfirst
-##
-#' Return Data Frame Rows Having Unique Values in Selected Columns
-#'
-#' @description \code{keepfirst} extracts those rows of a data frame which have
-#' unique values in selected columns.
-#'
-#' @param x character-valued column name along which the dataframe is sorted.
-#'
-#' @param colnames a character vector of column names  to identify uniqueness.
-#'
-#' @param data a data frame.
-#'
-#' @details
-#' The dataframe \code{data} is sorted, and then only those rows which are unique
-#' with respect to the values of selected columns.
-#'
-#' @return A data frame consisting of the rows of \code{data} which are
-#' unique with respect to \code{colnames}
-keepfirst <- function(x, colnames, data = NULL){
-    if(!("data.frame" %in% class(data))) stop("data argument must be a dataframe" )
-    data <- data[order(data[[x]]), ]
-    res <- data[1 ,]
-    for(i in 2:(nrow(data) - 1)){
-        if(all(data[i, colnames] ==
-               data[i + 1, colnames])){
-            next
-        } else {
-            res <- rbind(res, data[i + 1, ])
-        }
-    }
-    res
-}
-
-
 ## Function inverse_link
 ##
 #' Compute the Inverses of Binomial Link Functions
@@ -191,7 +155,7 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #'
 #' @param bootreps number of bootstrap replicates.  Default: 4000.
 #'
-#' @param conf.level confidence level for uncertainty intervals.
+#' @param conf_level confidence level for uncertainty intervals.
 #' Default: 0.95.
 #'
 #' @param progress character-valued type of progress display
@@ -199,21 +163,21 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #'
 #' @param thresholds type of thresholds (see \code{help(pROC::ci.thresholds)}).
 #'
-#' @param se.min minimum value of sensitivity returned. Default: 0.8.
+#' @param se_min minimum value of sensitivity returned. Default: 0.8.
 #'
 #' @return a data frame containing thresholds with sensititives, specificities
 #' and uncertainy intervals.
 #'
 #' @seealso \code{\link[pROC]{ci.thresholds}}
 #' @export
-roc_ci <- function(object, bootreps = 4000, conf.level = 0.95,
+roc_ci <- function(object, bootreps = 4000, conf_level = 0.95,
                    progress = "none", thresholds = "local maximas",
-                   se.min = 0.8) {
+                   se_min = 0.8) {
     if(!class(object) == "roc") stop("class(object) must be 'roc'" )
     ci_ <- pROC::ci.thresholds(object,
                                boot.n = bootreps,
                                progress = progress,
-                               conf.level = conf.level,
+                               conf.level = conf_level,
                                thresholds = thresholds)
     res <- cbind(ci_$sensitivity, ci_$specificity)
     threshold <- as.numeric(rownames(res))
@@ -221,7 +185,7 @@ roc_ci <- function(object, bootreps = 4000, conf.level = 0.95,
     rownames(res) <- 1:dim(res)[1]
     names(res) <- c("Threshold", "se.lcl", "Sensitivity",
                     "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-    res <- res[res$Sensitivity >= se.min, c(1, 3, 2, 4, 6, 5, 7)]
+    res <- res[res$Sensitivity >= se_min, c(1, 3, 2, 4, 6, 5, 7)]
     res[is.infinite(res[,1]), 1] <- 0
     res
 }
@@ -247,7 +211,7 @@ roc_ci <- function(object, bootreps = 4000, conf.level = 0.95,
 #' (\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). Default:
 #' \verb{"exact"}.
 #'
-#' @param conf.level confidence level, a numeric value between 0 and 1.
+#' @param conf_level confidence level, a numeric value between 0 and 1.
 #' Default: 0.95.
 #'
 #' @return a list containing components \code{table} and \code{ests}:
@@ -272,20 +236,20 @@ roc_ci <- function(object, bootreps = 4000, conf.level = 0.95,
 sens_spec_plus <- function(test = NULL, gold = NULL, data = NULL,
                            method = c("exact", "wilson", "agresti",
                                       "clopper-pearson", "jeffreys"),
-                           conf.level =  0.95){
+                           conf_level =  0.95){
     if(!is.data.frame(data)) stop("data must be a data.frame object")
     if(!all((data[[test]] %in% c(0, 1)) | is.na(data[[test]])))
         stop("Values of test must be 0, 1 or NA")
     if(!all((data[[gold]] %in% c(0, 1)) | is.na(data[[gold]])))
         stop("Values of gold must be 0, 1 or NA")
-    if(!(conf.level > 0 & conf.level < 1 )) stop("conf.level not in (0,1)")
+    if(!(conf_level > 0 & conf_level < 1 )) stop("conf.level not in (0,1)")
     cimethod <- match.arg(method)
     .dat <- data.frame(data[, c(test, gold)])
     .dat <- .dat[complete.cases(.dat), ]
     .tst <- ordered(.dat[[test]], levels = c(1, 0), labels = c("Pos", "Neg"))
     .gld <- ordered(.dat[[gold]], levels = c(1, 0), labels = c("Pos", "Neg"))
     .tbl <- table(.tst, .gld)
-    .res <- epiR::epi.tests(.tbl, method = cimethod, conf.level = conf.level)
+    .res <- epiR::epi.tests(.tbl, method = cimethod, conf.level = conf_level)
     .table <- .res$tab
     colnames(.table) <- c("      True +", "      True -", "     Total")
     .ests <- rbind(.res$detail$ap, .res$detail$tp, .res$detail$se,

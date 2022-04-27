@@ -36,24 +36,24 @@
 #' @param L2 (logical) switch controlling penalization using the \emph{L}2 norm of
 #' the parameters.  Default: \verb{TRUE}).
 #'
-#' @param partial.auc either a logical \verb{FALSE} or a numeric vector of the
+#' @param partial_auc either a logical \verb{FALSE} or a numeric vector of the
 #' form \code{c(left, right)} where left and right are numbers in the interval
 #' [0, 1] specifying the endpoints for computation of the partial area under the
-#' ROC curve (pAUC). The total AUC is computed if \code{partial.auc} = \verb{FALSE}.
+#' ROC curve (pAUC). The total AUC is computed if \code{partial_auc} = \verb{FALSE}.
 #' Default: \code{c(0.8, 1.0)}
 #'
-#' @param partial.auc.focus one of \verb{"sensitivity"} or \verb{specificity},
-#' specifying for which the pAUC should be computed.  \code{partial.auc.focus} is
-#' ignored if \code{partial.auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.
+#' @param partial_auc_focus one of \verb{"sensitivity"} or \verb{specificity},
+#' specifying for which the pAUC should be computed.  \code{partial_auc.focus} is
+#' ignored if \code{partial_auc} = \verb{FALSE}.  Default: \verb{"sensitivity"}.
 #'
-#' @param partial.auc.correct logical value indicating whether the pAUC should be
-#' transformed the interval from 0.5 to 1.0. \code{partial.auc.correct} is
-#' ignored if \code{partial.auc} = \verb{FALSE}. Default: \verb{TRUE}).
+#' @param partial_auc_correct logical value indicating whether the pAUC should be
+#' transformed the interval from 0.5 to 1.0. \code{partial_auc_correct} is
+#' ignored if \code{partial_auc} = \verb{FALSE}. Default: \verb{TRUE}).
 #'
-#' @param conf.level a number between 0 and 1 specifying the confidence level
+#' @param conf_level a number between 0 and 1 specifying the confidence level
 #' for confidence intervals for the (partial)AUC. Default: 0.95.
 #'
-#' @param boot.n number of bootstrap replications for computation of confidence
+#' @param boot_n number of bootstrap replications for computation of confidence
 #' intervals for the (partial)AUC. Default: 4000.
 #'
 #' @param standardize logical; if TRUE predictors are standardized to unit
@@ -157,10 +157,10 @@
 #' @importFrom stringr str_split
 #' @export
 lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
-                          partial.auc = c(0.8, 1.0),
-                          partial.auc.focus = "sensitivity",
-                          partial.auc.correct = TRUE,
-                          boot.n = 4000, conf.level = 0.95,
+                          partial_auc = c(0.8, 1.0),
+                          partial_auc_focus = "sensitivity",
+                          partial_auc_correct = TRUE,
+                          boot_n = 4000, conf_level = 0.95,
                           standardize = FALSE,
                           seed = Sys.time(), ... ){
     if(!inherits(formula, "formula")) stop("Specify a model formula")
@@ -193,11 +193,11 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     for(i in st) {
         phat <- as.vector(predict(res, newx = x, newy = y, s = i, type = "response"))
         rocx <- pROC::roc(y, phat,
-                   ci = TRUE, of = "auc", conf.level = conf.level,
-                   boot.n = boot.n,
-                   partial.auc = partial.auc,
-                   partial.auc.focus = partial.auc.focus,
-                   partial.auc.correct = partial.auc.correct)
+                   ci = TRUE, of = "auc", conf.level = conf_level,
+                   boot.n = boot_n,
+                   partial.auc = partial_auc,
+                   partial.auc.focus = partial_auc_focus,
+                   partial.auc.correct = partial_auc_correct)
         pROC <- rbind(pROC, c(as.numeric(rocx$auc), as.numeric(rocx$ci)[c(1, 3)]))
     }
     names(pROC) <- c("pAUC", "pAUClcl", "pAUCucl")
@@ -223,11 +223,11 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
         attr(isPreds, "Description") <- "In-sample predicted probabilities"
         isROC <- pROC::roc(isPreds$y, isPreds$pred_prob, auc = TRUE,
                            ci = TRUE, of = "auc",
-                           boot.n = boot.n,
-                           conf.level = conf.level,
-                           partial.auc = partial.auc,
-                           partial.auc.focus = partial.auc.focus,
-                           partial.auc.correct = partial.auc.correct)
+                           boot.n = boot_n,
+                           conf.level = conf_level,
+                           partial.auc = partial_auc,
+                           partial.auc.focus = partial_auc_focus,
+                           partial.auc.correct = partial_auc_correct)
         assign(paste0("min", i), list(Coefficients = parmEst,
                                       Preds = isPreds,
                                       ROC = isROC))
@@ -285,18 +285,18 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     attr(minBICcvCoef, "Description") <- "Out-of-sample coefficients from the BIC-best model"
     minAICcvROC <- pROC::roc(minAICcvPreds$y, minAICcvPreds$pred_prob,
                              auc = TRUE, ci = TRUE, of = "auc",
-                             conf.level = conf.level,
-                             boot.n = boot.n,
-                             partial.auc = partial.auc,
-                             partial.auc.focus = partial.auc.focus,
-                             partial.auc.correct = partial.auc.correct)
+                             conf.level = conf_level,
+                             boot.n = boot_n,
+                             partial.auc = partial_auc,
+                             partial.auc.focus = partial_auc_focus,
+                             partial.auc.correct = partial_auc_correct)
     minBICcvROC <- pROC::roc(minBICcvPreds$y, minBICcvPreds$pred_prob,
                              auc = TRUE, ci = TRUE, of = "auc",
-                             conf.level = conf.level,
-                             boot.n = boot.n,
-                             partial.auc = partial.auc,
-                             partial.auc.focus = partial.auc.focus,
-                             partial.auc.correct = partial.auc.correct)
+                             conf.level = conf_level,
+                             boot.n = boot_n,
+                             partial.auc = partial_auc,
+                             partial.auc.focus = partial_auc_focus,
+                             partial.auc.correct = partial_auc_correct)
     result <- list(
         Call = call,
         Prevalence = prev,

@@ -17,8 +17,6 @@ get_what.simple_screenr
                         An S3 Method for Extraction of Components from
                         'simple_screenr' Objects
 inverse_link            Compute the Inverses of Binomial Link Functions
-keepfirst               Return Data Frame Rows Having Unique Values in
-                        Selected Columns
 lasso_screenr           Fitting Screening Tools Using Lasso-Like
                         Regularization of Logistic Regression
 logreg_screenr          Fitting Screening Tools Using Ordinary Logistic
@@ -27,7 +25,7 @@ nnt_                    Compute the Ratio of Total Tests Performed Per
                         Postive Result
 ntpp                    An S3 Method to Compute the Ratio of Total
                         Tests to Positive Results
-ntpp.data.frame         Compute the Ratio of Total Tests to Positive
+ntpp.default            Compute the Ratio of Total Tests to Positive
                         Results from a Data Frame
 ntpp.easy_tool          Compute the Ratio of Total Tests to Positive
                         Results from 'easy_tool' Objects

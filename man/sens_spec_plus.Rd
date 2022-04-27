@@ -9,7 +9,7 @@ sens_spec_plus(
   gold = NULL,
   data = NULL,
   method = c("exact", "wilson", "agresti", "clopper-pearson", "jeffreys"),
-  conf.level = 0.95
+  conf_level = 0.95
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ coded as 0 for negative and 1 for positive.}
 (\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). Default:
 \verb{"exact"}.}
 
-\item{conf.level}{confidence level, a numeric value between 0 and 1.
+\item{conf_level}{confidence level, a numeric value between 0 and 1.
 Default: 0.95.}
 }
 \value{
