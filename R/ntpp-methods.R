@@ -30,8 +30,8 @@
 #' @seealso
 #' \code{\link{ntpp.lasso_screenr}}
 #' \code{\link{ntpp.logreg_screenr}}
-#' \code{\link{ntpp.data.frame}}
 #' \code{\link{ntpp.simple_screenr}}
+#' \code{\link{ntpp.default}}
 #'
 #' @export
 ntpp <- function(object, ...) {
@@ -70,12 +70,6 @@ ntpp <- function(object, ...) {
 #' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
 #' specificity. The anticipated prevalence among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
-#'
-#' @seealso
-#' \code{\link{ntpp.lasso_screenr}}
-#' \code{\link{ntpp.logreg_screenr}}
-#' \code{\link{ntpp.data.frame}}
-#' \code{\link{ntpp.simple_screenr}}
 #'
 #' @examples
 #' attach(uniobj1)
@@ -224,6 +218,8 @@ ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
 #' @description \code{ntpp.data.frame} computes the ratio of the total number of
 #' tests performed per positive test result from data frames.
 #'
+#' @param object unused, specify \code{se}, \code{sp} and \code{prev}
+#'
 #' @param se  a numeric vector of sensitivities in (0,1)
 #'
 #' @param sp a numeric vector of sensitivities in (0,1)
@@ -251,7 +247,7 @@ ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
 #'
 #' @importFrom dplyr between
 #' @export
-ntpp.default <- function(se = NULL, sp = NULL, prev = NULL, ...){
+ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
     rangecheck <- function(x, y, z, ll = 0.00001, ul = 0.9999){
         tst <- c(dplyr::between(x, ll, ul), dplyr::between(y, ll, ul), dplyr::between(z, ll, ul))
         any(!tst)

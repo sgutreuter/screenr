@@ -27,6 +27,6 @@ specificity. The anticipated prevalence among those screened out is given by
 \seealso{
 \code{\link{ntpp.lasso_screenr}}
 \code{\link{ntpp.logreg_screenr}}
-\code{\link{ntpp.data.frame}}
 \code{\link{ntpp.simple_screenr}}
+\code{\link{ntpp.default}}
 }

@@ -4,16 +4,18 @@
 \alias{ntpp.default}
 \title{Compute the Ratio of Total Tests to Positive Results from a Data Frame}
 \usage{
-\method{ntpp}{default}(se = NULL, sp = NULL, prev = NULL, ...)
+\method{ntpp}{default}(object = NULL, ..., se = NULL, sp = NULL, prev = NULL)
 }
 \arguments{
+\item{object}{unused, specify \code{se}, \code{sp} and \code{prev}}
+
+\item{...}{optional arguments to \code{ntpp} methods.}
+
 \item{se}{a numeric vector of sensitivities in (0,1)}
 
 \item{sp}{a numeric vector of sensitivities in (0,1)}
 
 \item{prev}{a numeric vector of prevalences of the testing condition, in (0,1)}
-
-\item{...}{optional arguments to \code{ntpp} methods.}
 }
 \value{
 a data frame containing the following columns:

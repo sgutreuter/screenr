@@ -183,7 +183,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
     partial_auc_focus = match.arg(partial_auc_focus)
     cvROC <- x$cvResults[[model]][["ROC"]]
     isROC <- x$isResults[[model]][["ROC"]]
-    if(is.logical(partial.auc)) {
+    if(is.logical(partial_auc)) {
         pROC::plot.roc(cvROC, print.auc = print_auc, ci = plot_ci, type = type, ...)
     } else {
         pROC::plot.roc(cvROC, print.auc = print_auc, reuse.auc = FALSE,

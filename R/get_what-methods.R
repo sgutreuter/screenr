@@ -95,8 +95,8 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 4000,
     res <- from[[what]]
     if(what == "ROCci") {
         roc_  <- from[["ROC"]]
-        res <- roc_ci(roc_, bootreps = bootreps, conf.level = conf_.level,
-                      se.min = se_min)
+        res <- roc_ci(roc_, bootreps = bootreps, conf_level = conf_level,
+                      se_min = se_min)
         res$Threshold <- round(res$Threshold + 0.01)
     }
     invisible(res)
@@ -184,7 +184,7 @@ get_what.lasso_screenr <- function(from = NULL,
             } else {
                 roc_  <- from[["cvResults"]][[model]][["ROC"]]
                 res <- roc_ci(roc_, bootreps = bootreps,
-                              conf.level = conf_level, se.min = se_min)
+                              conf_level = conf_level, se_min = se_min)
             }
         }
     }
@@ -265,7 +265,7 @@ get_what.logreg_screenr <- function(from = NULL,
             } else {
                 roc_  <-  from[["CVroc"]]
                 res <- roc_ci(roc_, bootreps = bootreps,
-                              conf.level = conf_level, se.min = se_min)
+                              conf_level = conf_level, se_min = se_min)
             }
         }
     }
@@ -334,7 +334,7 @@ get_what.simple_screenr <- function(from = NULL, what = c("ROCci", "isROC"), ...
         res <- from[[what]]
     } else {
         res <- roc_ci(from$ISroc, bootreps = bootreps,
-                      conf.level = conf_level, se.min = se_min)
+                      conf_level = conf_level, se_min = se_min)
     }
     res$Threshold <- round(res$Threshold + 0.01)
     invisible(res)

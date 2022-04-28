@@ -43,9 +43,3 @@ tool <- easy_tool(uniobj1, max = 3, crossval = TRUE)
 ntpp(tool)
 
 }
-\seealso{
-\code{\link{ntpp.lasso_screenr}}
-\code{\link{ntpp.logreg_screenr}}
-\code{\link{ntpp.data.frame}}
-\code{\link{ntpp.simple_screenr}}
-}
