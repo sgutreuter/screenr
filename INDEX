@@ -25,6 +25,8 @@ nnt_                    Compute the Ratio of Total Tests Performed Per
                         Postive Result
 ntpp                    An S3 Method to Compute the Ratio of Total
                         Tests to Positive Results
+ntpp.data.frame         Compute the Ratio of Total Tests to Positive
+                        Results from a Data Frame
 ntpp.default            Compute the Ratio of Total Tests to Positive
                         Results from a Data Frame
 ntpp.easy_tool          Compute the Ratio of Total Tests to Positive
@@ -61,6 +63,8 @@ rescale_to_int          Rescale Positive Vectors or Matrices to
 roc_ci                  Compute Bootstrap Confidence Limits for
                         Sensitivities and Specificities
 screenr                 screenr Package
+se_sp_max               Return dataframe rows for which specificity is
+                        the maximum for each sensitivity
 sens_spec_plus          Compute Sensitivity, specificity and a few
                         friends
 simple_screenr          An Overly Simple Approach to Test Screening

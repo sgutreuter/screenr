@@ -191,6 +191,32 @@ roc_ci <- function(object, bootreps = 4000, conf_level = 0.95,
 }
 
 
+## Function se_sp_max
+##
+#' Return dataframe rows for which specificity is the maximum for each sensitivity
+#'
+#' @description Given a dataframe containing multiple values of specificity for
+#' each value of sensitivity, return only the rows containing the largest
+#' specificity for each unique value of sensitivity.
+#'
+#' @param object a dataframe containing at least columns named \code{sensitivity}
+#' and \code{specificity}
+#'
+#' @return a dataframe which is a subset of \code{object} containing only those
+#' rows for which specificity was the maximum for each unique value of sensitivity.
+#'
+#' @import magrittr
+#' @importFrom dplyr group_by summarise arrange desc right_join
+se_sp_max <- function(object) {
+    sensitivity <- specificity <- NULL
+    mxse <- object %>%
+        dplyr::group_by(sensitivity) %>%
+        dplyr::summarise(specificity = max(specificity)) %>%
+        dplyr::arrange(dplyr::desc(sensitivity))
+    dplyr::right_join(object, mxse)
+}
+
+
 ## Function sens_spec_plus
 ##
 #' Compute Sensitivity, specificity and a few friends

@@ -55,6 +55,23 @@ The tutorial is recommended for first-time users:
 
 ``` r
     library(screenr)
+#> 
+#> Attaching package: 'screenr'
+#> The following object is masked _by_ '.GlobalEnv':
+#> 
+#>     uniobj1
+#> The following object is masked from 'package:purrr':
+#> 
+#>     set_names
+#> The following object is masked from 'package:tidyr':
+#> 
+#>     extract
+#> The following objects are masked from 'package:stats':
+#> 
+#>     cov, smooth, var
+#> The following objects are masked from 'package:base':
+#> 
+#>     library.dynam.unload, system.file
     vignette("screenr_Tutorial", package = "screenr")
 ```
 

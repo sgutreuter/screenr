@@ -593,20 +593,19 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1>Effects of screening on testing results</h1>
 <p>How will implementation of that screening tool affect testing? To help answer that question, we can compute the ratio of total number of tests performed to the anticipated number of positive test results and the anticipated prevalence among those who are screened <em>out</em> of testing. Effective screening will greatly reduce the prevalence among those who are screened out of testing and will have high sensitivity. Efficient screening will reduce the ratio of numbers of tests to positive test results. Both measures are obtained by using the <code>ntpp</code> (number of tests per positive) function:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">ntpp</span>(et_<span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="co">#&gt;    sensitivity specificity       prev      ntpp prev_untested</span></a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="co">#&gt; 1   1.00000000   0.0000000 0.01616667 61.855670           NaN</span></a>
-<a class="sourceLine" id="cb21-4" title="4"><span class="co">#&gt; 2   1.00000000   0.1404371 0.01616667 53.309278  0.0000000000</span></a>
-<a class="sourceLine" id="cb21-5" title="5"><span class="co">#&gt; 3   0.97938144   0.3726919 0.01616667 39.978947  0.0009082652</span></a>
-<a class="sourceLine" id="cb21-6" title="6"><span class="co">#&gt; 4   0.97938144   0.5537862 0.01616667 28.726316  0.0006114338</span></a>
-<a class="sourceLine" id="cb21-7" title="7"><span class="co">#&gt; 5   0.94845361   0.7064205 0.01616667 19.836957  0.0011976048</span></a>
-<a class="sourceLine" id="cb21-8" title="8"><span class="co">#&gt; 6   0.74226804   0.8488904 0.01616667 13.388889  0.0049642573</span></a>
-<a class="sourceLine" id="cb21-9" title="9"><span class="co">#&gt; 7   0.60824742   0.9295274 0.01616667  8.050847  0.0068778281</span></a>
-<a class="sourceLine" id="cb21-10" title="10"><span class="co">#&gt; 8   0.41237113   0.9705235 0.01616667  5.350000  0.0098513654</span></a>
-<a class="sourceLine" id="cb21-11" title="11"><span class="co">#&gt; 9   0.21649485   0.9905133 0.01616667  3.666667  0.0128313355</span></a>
-<a class="sourceLine" id="cb21-12" title="12"><span class="co">#&gt; 10  0.11340206   0.9976283 0.01616667  2.272727  0.0143933054</span></a>
-<a class="sourceLine" id="cb21-13" title="13"><span class="co">#&gt; 11  0.04123711   0.9996612 0.01616667  1.500000  0.0155155155</span></a>
-<a class="sourceLine" id="cb21-14" title="14"><span class="co">#&gt; 12  0.01030928   0.9998306 0.01616667  2.000000  0.0160053351</span></a>
-<a class="sourceLine" id="cb21-15" title="15"><span class="co">#&gt; 13  0.00000000   1.0000000 0.01616667       NaN  0.0161666667</span></a></code></pre></div>
+<a class="sourceLine" id="cb21-2" title="2"><span class="co">#&gt; Joining, by = c(&quot;sensitivity&quot;, &quot;specificity&quot;)</span></a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="co">#&gt;    sensitivity specificity       prev      ntpp prev_untested</span></a>
+<a class="sourceLine" id="cb21-4" title="4"><span class="co">#&gt; 1   1.00000000   0.1404371 0.01616667 53.309278  0.0000000000</span></a>
+<a class="sourceLine" id="cb21-5" title="5"><span class="co">#&gt; 2   0.97938144   0.5537862 0.01616667 28.726316  0.0006114338</span></a>
+<a class="sourceLine" id="cb21-6" title="6"><span class="co">#&gt; 3   0.94845361   0.7064205 0.01616667 19.836957  0.0011976048</span></a>
+<a class="sourceLine" id="cb21-7" title="7"><span class="co">#&gt; 4   0.74226804   0.8488904 0.01616667 13.388889  0.0049642573</span></a>
+<a class="sourceLine" id="cb21-8" title="8"><span class="co">#&gt; 5   0.60824742   0.9295274 0.01616667  8.050847  0.0068778281</span></a>
+<a class="sourceLine" id="cb21-9" title="9"><span class="co">#&gt; 6   0.41237113   0.9705235 0.01616667  5.350000  0.0098513654</span></a>
+<a class="sourceLine" id="cb21-10" title="10"><span class="co">#&gt; 7   0.21649485   0.9905133 0.01616667  3.666667  0.0128313355</span></a>
+<a class="sourceLine" id="cb21-11" title="11"><span class="co">#&gt; 8   0.11340206   0.9976283 0.01616667  2.272727  0.0143933054</span></a>
+<a class="sourceLine" id="cb21-12" title="12"><span class="co">#&gt; 9   0.04123711   0.9996612 0.01616667  1.500000  0.0155155155</span></a>
+<a class="sourceLine" id="cb21-13" title="13"><span class="co">#&gt; 10  0.01030928   0.9998306 0.01616667  2.000000  0.0160053351</span></a>
+<a class="sourceLine" id="cb21-14" title="14"><span class="co">#&gt; 11  0.00000000   1.0000000 0.01616667       NaN  0.0161666667</span></a></code></pre></div>
 <p>After screening out unicorns having score less than 3 (row 4, as identified by sensitivity and specificity), the prevalence of UIV among the <em>untested</em> should be approximately 0.0006 (0.06%). In contrast, the prevalence of UIV among all subjects in the training data is 0.0162.</p>
 <p>The ratio of total tests to positive results is 28.7 when testing unicorns with a score of at least 3. Without screening, in contrast, an average of approximately 61.7 would need to be tested in order to detect a single infection.</p>
 </div>
