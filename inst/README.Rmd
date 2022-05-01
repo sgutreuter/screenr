@@ -39,7 +39,7 @@ Open an R session and do:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("sgutreuter/screenr" )
+devtools::install_github("sgutreuter/screenr", build_vignettes = TRUE)
 ```
 **or**
 
@@ -51,7 +51,7 @@ devtools::install_github("sgutreuter/screenr" )
 select **Download ZIP** and save the zip archive in a location of your
 choice.
 
-3. Unzip the archive into a directory named screenr.
+3. Unzip the archive into an empty temporary directory.
 
 4. Open a shell/terminal in the directory containing the unzipped
 screenr directory.
