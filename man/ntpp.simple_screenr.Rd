@@ -15,7 +15,8 @@
 the prevalence is obtained from \code{object}.}
 }
 \value{
-A data frame containing the following columns:
+\code{ntpp.simple_screenr} returns data frame containing the following
+columns:
 \describe{
 \item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
 \item{\verb{specificity}}{The specificity (proportion) of the screener.}

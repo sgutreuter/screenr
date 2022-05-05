@@ -12,6 +12,17 @@ per test positive test results.}
 
 \item{...}{additional arguments.}
 }
+\value{
+\code{ntpp} returns a dataframe containing the following columns:
+\describe{
+\item{\verb{sensitivity}}{The sensitivity (proportion) of the screener.}
+\item{\verb{specificity}}{The specificity (proportion) of the screener.}
+\item{\verb{ntpp}}{the number of tests required to discover
+a single positive test result.}
+\item{\verb{prev_untested}}{The prevalence proportion of the test
+condition among those who are screened out of testing.}
+}
+}
 \description{
 \code{ntpp} computes the ratio of the total number of tests
 performed per positive test result.

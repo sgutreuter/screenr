@@ -18,9 +18,9 @@
 are the default.}
 }
 \value{
-a \emph{p} x 2 matrix of estimated coefficients (or odds ratios)
-from the AIC- and BIC-best logistic regression models, where \emph{p} is
-the number of coefficients.
+\code{coef.lasso_screenr} returns a \emph{p} x 2 matrix of
+estimated coefficients (or odds ratios) from the AIC- and BIC-best
+logistic regression models, where \emph{p} is the number of coefficients.
 }
 \description{
 \code{coef.lasso_screenr} extracts the logistic model parameter estimates

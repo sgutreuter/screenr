@@ -64,8 +64,8 @@ variance.  Default: FALSE (sensible for binary and logical predictors).}
 \code{\link[pROC]{roc}}, \code{\link[pROC]{auc}} or \code{\link[pROC]{ci}} .}
 }
 \value{
-Return (invisibly) an object of class \code{lasso_screenr} containing
-the elements:
+\code{lasso_screenr} returns (invisibly) an object of class \code{lasso_screenr}
+containing the components:
 \describe{
 \item{\code{Call}}{The function call.}
 \item{\code{Prevalence}}{Prevalence of the binary response variable.}

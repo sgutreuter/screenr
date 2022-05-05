@@ -13,6 +13,9 @@ get_what(from, what, ...)
 
 \item{...}{additional arguments.}
 }
+\value{
+\code{get_what} returns the object specified by \code{what}.
+}
 \description{
 \code{get_what} extracts components from objects.
 }

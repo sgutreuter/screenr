@@ -103,7 +103,7 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
         max  <- 10
     }
     call <- match.call()
-    if(class(object) == "lasso_screenr") {
+    if(inherits(object, "lasso_screenr")) {
         coef <- coef.lasso_screenr(object, intercept = FALSE, ...)
         if(model == "minAIC") {
             coef <- coef[, 1]

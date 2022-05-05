@@ -43,7 +43,8 @@
 #' @param conf_level a number between 0 and 1 specifying the confidence level
 #' for confidence intervals for the (partial)AUC. Default: 0.95.
 #'
-#' @return An object of class \code{simple_screenr} containing the elements:
+#' @return \code{simple_screenr} returns (invisibly) an object of class
+#' \code{simple_screenr} containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}

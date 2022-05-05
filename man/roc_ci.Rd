@@ -29,8 +29,8 @@ Default: 0.95.}
 \item{se_min}{minimum value of sensitivity returned. Default: 0.8.}
 }
 \value{
-a data frame containing thresholds with sensititives, specificities
-and uncertainy intervals.
+\code{roc_ci} returns a dataframe containing thresholds with
+their sensititives, specificities and uncertainy intervals.
 }
 \description{
 \code{roc_ci} computes bootstrap confidence intervals from

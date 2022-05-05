@@ -22,8 +22,8 @@
 #' @param link (character) name of the link function (one of \verb{"logit"},
 #' \verb{"cloglog"} or \verb{"probit"}).
 #'
-#' @return A numeric vector containing the inverse of the link function for the
-#' linear predictor.
+#' @return \code{inverse_link} returns a numeric vector containing the inverse
+#' of the link function for the linear predictor.
 #'
 #' @details
 #' \code{inverse_link} returns the inverses of logit, cloglog and probit link
@@ -32,9 +32,6 @@
 #' The \code{predict} methods are a better way to obtain predicted values.
 #'
 #' @seealso \code{\link[screenr]{predict.logreg_screenr}}
-#'
-#' @note \code{inverse_link} may not be included in future versions of the \code{screenr}
-#' package.
 #'
 #' @examples
 #' ## Make predictions of probability of infection from new observations
@@ -66,25 +63,30 @@ inverse_link <- function(lp = NULL, link = c("logit", "cloglog", "probit")){
 }
 
 
-
 ## Function nnt_
 ##
 #' Compute the Ratio of Total Tests Performed  Per Postive Result
 #'
-#' @description \code{nnt_} computes the anticipated average number of tests
-#' performed in order to observe a positive test result.
+#' @description \code{nnt_} computes the anticipated average number of
+#' tests performed in order to observe a positive test result.
 #'
-#' @param dframe a data frame containing columns \code{sensitivity},
-#' \code{specificity} and \code{prev}.
+#' @param dframe a dataframe containing columns \code{sensitivities},
+#' \code{specificities} and \code{prev}.
+#'
+#' @return \code{nnt_} returns adataframe containing sensitivity,
+#' specificity, the anticipated
+#' average number of tests required to observe a single positive test
+#' result \code{ntpp}, and the prevalence among those screened out
+#' of testing \code{pre_untested}.
 #'
 #' @importFrom dplyr between
 nnt_ <- function(dframe) {
-    se <- dframe$sensitivity
-    sp <- dframe$specificity
+    se <- dframe$sensitivities
+    sp <- dframe$specificities
     pv <- dframe$prev
     if(!all(c(dplyr::between(sp, 0, 1 ), dplyr::between(se, 0, 1 ),
               dplyr::between(pv, 0, 1 )))) {
-        stop("sensitivity, specificity and prev must be between 0 and 1")
+        stop("sensitivities, specificities and prev must be between 0 and 1")
     }
     Etpp <- ((se * pv) + (1 - sp) * (1 - pv)) / (se * pv)
     Epu <- ((1 - se) * pv) / ((pv * (1 - se)) + (sp * (1 - pv) ))
@@ -108,14 +110,16 @@ nnt_ <- function(dframe) {
 #' @param max the value of largest element in the rescaled integer-valued
 #' vector.
 #'
-#' @param colwise (logical) rescale the matrix by column if \verb{TRUE} (the default) or
-#' by row if \verb{FALSE}.
+#' @param colwise (logical) rescale the matrix by column if \verb{TRUE}
+#' (the default) or by row if \verb{FALSE}.
 #'
-#' @return A matrix of integers corresponding to \code{x} in which smallest
-#' \emph{non-zero} element in each column/row is 1 and the largest element is \code{max}. Any
-#' elements having value zero are unchanged. If \code{x} is a vector then the result is
-#' a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
-#' the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}.
+#' @return \code{rescale_to_int} returns a matrix of integers corresponding
+#' to \code{x} in which smallest \emph{non-zero} element in each column/row
+#' is 1 and the largest element is \code{max}. Any elements having value zero
+#' are unchanged. If \code{x} is a vector then the result is an \emph{r} x 1
+#' matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
+#' the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of
+#' columns in \code{x}.
 #'
 #' @seealso \code{\link[scales]{rescale}}
 #'
@@ -165,27 +169,27 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #'
 #' @param se_min minimum value of sensitivity returned. Default: 0.8.
 #'
-#' @return a data frame containing thresholds with sensititives, specificities
-#' and uncertainy intervals.
+#' @return \code{roc_ci} returns a dataframe containing thresholds with
+#' their sensititives, specificities and uncertainy intervals.
 #'
 #' @seealso \code{\link[pROC]{ci.thresholds}}
 #' @export
 roc_ci <- function(object, bootreps = 4000, conf_level = 0.95,
                    progress = "none", thresholds = "local maximas",
                    se_min = 0.8) {
-    if(!class(object) == "roc") stop("class(object) must be 'roc'" )
+    if(!inherits(object, "roc")) stop("class(object) must be 'roc'" )
     ci_ <- pROC::ci.thresholds(object,
                                boot.n = bootreps,
                                progress = progress,
                                conf.level = conf_level,
                                thresholds = thresholds)
-    res <- cbind(ci_$sensitivity, ci_$specificity)
-    threshold <- as.numeric(rownames(res))
-    res <- data.frame(cbind(threshold, res))
+    res <- data.frame(cbind(ci_$sensitivity, ci_$specificity))
+    thresholds <- as.numeric(rownames(res))
+    res <- data.frame(thresholds = thresholds, res)
     rownames(res) <- 1:dim(res)[1]
-    names(res) <- c("Threshold", "se.lcl", "Sensitivity",
-                    "se.ucl", "sp.lcl", "Specificity", "sp.ucl")
-    res <- res[res$Sensitivity >= se_min, c(1, 3, 2, 4, 6, 5, 7)]
+    names(res) <- c("thresholds", "se.lcl", "sensitivities",
+                    "se.ucl", "sp.lcl", "specificities", "sp.ucl")
+    res <- res[res$sensitivities >= se_min, c(1, 3, 2, 4, 6, 5, 7)]
     res[is.infinite(res[,1]), 1] <- 0
     res
 }
@@ -199,20 +203,24 @@ roc_ci <- function(object, bootreps = 4000, conf_level = 0.95,
 #' each value of sensitivity, return only the rows containing the largest
 #' specificity for each unique value of sensitivity.
 #'
-#' @param object a dataframe containing at least columns named \code{sensitivity}
-#' and \code{specificity}
+#' @param object a dataframe containing at least columns named \code{sensitivities}
+#' and \code{specificities}
 #'
-#' @return a dataframe which is a subset of \code{object} containing only those
-#' rows for which specificity was the maximum for each unique value of sensitivity.
+#' @return \code{se_sp_max} returns a dataframe which is a subset of \code{object}
+#' containing only those rows for which specificity was the maximum for each
+#' unique value of sensitivity.
 #'
 #' @import magrittr
-#' @importFrom dplyr group_by summarise arrange desc right_join
+#' @importFrom dplyr group_by summarise arrange desc right_join distinct
 se_sp_max <- function(object) {
-    sensitivity <- specificity <- NULL
+    stopifnot(is.data.frame(object))
+    stopifnot(all(c("sensitivities", "specificities") %in% names(object)))
+    sensitivities <- specificities <- NULL
+    object <- dplyr::distinct(object)
     mxse <- object %>%
-        dplyr::group_by(sensitivity) %>%
-        dplyr::summarise(specificity = max(specificity)) %>%
-        dplyr::arrange(dplyr::desc(sensitivity))
+        dplyr::group_by(sensitivities) %>%
+        dplyr::summarise(specificities = max(specificities)) %>%
+        dplyr::arrange(dplyr::desc(sensitivities))
     dplyr::right_join(object, mxse)
 }
 
@@ -240,7 +248,8 @@ se_sp_max <- function(object) {
 #' @param conf_level confidence level, a numeric value between 0 and 1.
 #' Default: 0.95.
 #'
-#' @return a list containing components \code{table} and \code{ests}:
+#' @return \code{sens_spec_plus} returns a list containing components
+#' \code{table} and \code{ests}:
 #' \describe{
 #' \item{\code{table}}{a 2 x 2 table which is the anti-transpose of the
 #' result produced by \code{base::table(gold, test)}.}

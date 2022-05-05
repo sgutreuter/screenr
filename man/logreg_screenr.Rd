@@ -62,7 +62,8 @@ for confidence intervals for the (partial)AUC. Default: 0.95.}
 or \code{pROC::roc}.}
 }
 \value{
-An object of class logreg_screenr containing the elements:
+\code{logreg_screenr} returns an object of class logreg_screenr
+containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
 \item{\code{formula}}{The formula object.}

@@ -32,8 +32,8 @@
 #' \code{phat_minBIC} from the models that produced the minimum AIC and BIC,
 #' respectively.
 #'
-#' @details This method is a convenience wrapper for \
-#' code{`glmpath::predict.glmpath`}.
+#' @details This method is a convenience wrapper for
+#' \code{`glmpath::predict.glmpath`}.
 #'
 #' @import glmpath
 #' @importFrom stats predict

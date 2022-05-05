@@ -18,8 +18,9 @@
 are the default.}
 }
 \value{
-A \emph{p} x 1 matrix of estimated coefficients (or odds ratios),
-where \emph{p} is the number of coefficients.
+\code{coef.logreg_screenr} returns a \emph{p} x 2 matrix of
+estimated coefficients (or odds ratios) from the AIC- and BIC-best
+logistic regression models, where \emph{p} is the number of coefficients.
 }
 \description{
 \code{coef.logreg_screenr} extracts the logistic model parameter estimates

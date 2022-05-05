@@ -59,7 +59,8 @@
 #' @param ... additional arguments passsed to or from other \code{stats::glm}
 #' or \code{pROC::roc}.
 #'
-#' @return An object of class logreg_screenr containing the elements:
+#' @return \code{logreg_screenr} returns an object of class logreg_screenr
+#' containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{formula}}{The formula object.}

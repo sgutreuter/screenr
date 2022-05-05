@@ -36,7 +36,8 @@ confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.}
 \code{what =} \verb{ROCci}.  Default: 0.8.}
 }
 \value{
-The selected component is returned invisibly.
+\code{get_what.lasso_screenr} returns (invisibly) the object specified
+by \code{what}.
 }
 \description{
 \code{get_what.lasso_screenr} extracts components from \code{lasso_screenr}-class

@@ -13,7 +13,8 @@
 \item{...}{optional arguments to \code{ntpp} methods.}
 }
 \value{
-a data frame containing the following columns:
+\code{ntpp.easy_tool} returns a data frame containing the
+following columns:
 \describe{
 \item{\code{sensitivity}}{the sensitivity (proportion)}
 \item{\code{specificity}}{the specificity (proportion)}

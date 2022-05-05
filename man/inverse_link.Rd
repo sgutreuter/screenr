@@ -13,8 +13,8 @@ inverse_link(lp = NULL, link = c("logit", "cloglog", "probit"))
 \verb{"cloglog"} or \verb{"probit"}).}
 }
 \value{
-A numeric vector containing the inverse of the link function for the
-linear predictor.
+\code{inverse_link} returns a numeric vector containing the inverse
+of the link function for the linear predictor.
 }
 \description{
 \code{inverse_link} returns the inverse of logit, cloglog and
@@ -25,10 +25,6 @@ probit link functions for a linear predictor
 functions, and is provided as a (laborious) way to compute predicted values
 from the \verb{ModelFit} component of \code{logreg_screenr}-class objects.
 The \code{predict} methods are a better way to obtain predicted values.
-}
-\note{
-\code{inverse_link} may not be included in future versions of the \code{screenr}
-package.
 }
 \examples{
 ## Make predictions of probability of infection from new observations

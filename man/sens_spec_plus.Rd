@@ -29,7 +29,8 @@ coded as 0 for negative and 1 for positive.}
 Default: 0.95.}
 }
 \value{
-a list containing components \code{table} and \code{ests}:
+\code{sens_spec_plus} returns a list containing components
+\code{table} and \code{ests}:
 \describe{
 \item{\code{table}}{a 2 x 2 table which is the anti-transpose of the
 result produced by \code{base::table(gold, test)}.}

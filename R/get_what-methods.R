@@ -22,6 +22,8 @@
 #'
 #' @param ... additional arguments.
 #'
+#' @return \code{get_what} returns the object specified by \code{what}.
+#'
 #' @seealso \code{\link{get_what.easy_tool}}, \code{\link{get_what.lasso_screenr}},
 #' \code{\link{get_what.logreg_screenr}} and \code{\link{get_what.simple_screenr}}.
 #' @export
@@ -55,7 +57,8 @@ get_what <- function(from, what, ...) {
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
-#' @return The selected component is returned invisibly.
+#' @return \code{get_what.easy_tool} returns (invisibly) the object specified
+#' by \code{what}.
 #'
 #' @details
 #' \code{get_what} is provided to enable easy extraction of components that
@@ -90,8 +93,8 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 4000,
                              conf_level = 0.95, se_min = 0.8){
     if(!"easy_tool" %in% class(from))
         stop("Object not easy_tool class")
-    if(!what %in% c("QuestionWeights", "Call", "ROC", "Scores", "ROCci"))
-        stop("Invalid what argument; must be one of 'Qweights', 'Call', 'ROC', 'Scores', 'ROCci'")
+    if(!what %in% c("QuestionWeights", "Call", "ROC", "Scores"))
+        stop("Invalid what argument; must be one of 'Qweights', 'Call', 'ROC', 'Scores'")
     res <- from[[what]]
     if(what == "ROCci") {
         roc_  <- from[["ROC"]]
@@ -131,7 +134,8 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 4000,
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
-#' @return The selected component is returned invisibly.
+#' @return \code{get_what.lasso_screenr} returns (invisibly) the object specified
+#' by \code{what}.
 #'
 #' @details
 #' \code{get_what} is provided to enable easy extraction of components that are
@@ -217,7 +221,8 @@ get_what.lasso_screenr <- function(from = NULL,
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
-#' @return The selected component is returned invisibly.
+#' @return \code{get_what.logreg_screenr} returns (invisibly) the object specified
+#' by \code{what}.
 #'
 #' @details
 #' \code{get_what} is provided to enable easy extraction of components for those
@@ -298,7 +303,8 @@ get_what.logreg_screenr <- function(from = NULL,
 #'
 #' @param ... optional arguments to \code{get_what} methods.
 #'
-#' @return The selected component is returned invisibly.
+#' @return \code{get_what.simple_screenr} returns (invisibly) the object specified
+#' by \code{what}.
 #'
 #' @details
 #' \code{get_what} is provided to enable easy extraction of components for those

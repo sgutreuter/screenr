@@ -18,7 +18,8 @@
 \item{prev}{a numeric vector of prevalences of the testing condition, in (0,1)}
 }
 \value{
-a data frame containing the following columns:
+\code{ntpp.default} returns a data frame containing the
+following columns:
 \describe{
 \item{\code{sensitivity}}{the sensitivity (proportion)}
 \item{\code{specificity}}{the specificity (proportion)}

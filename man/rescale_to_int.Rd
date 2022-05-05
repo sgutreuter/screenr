@@ -12,15 +12,17 @@ rescale_to_int(x, max, colwise = TRUE)
 \item{max}{the value of largest element in the rescaled integer-valued
 vector.}
 
-\item{colwise}{(logical) rescale the matrix by column if \verb{TRUE} (the default) or
-by row if \verb{FALSE}.}
+\item{colwise}{(logical) rescale the matrix by column if \verb{TRUE}
+(the default) or by row if \verb{FALSE}.}
 }
 \value{
-A matrix of integers corresponding to \code{x} in which smallest
-\emph{non-zero} element in each column/row is 1 and the largest element is \code{max}. Any
-elements having value zero are unchanged. If \code{x} is a vector then the result is
-a \emph{r} x 1 matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
-the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of columns in \code{x}.
+\code{rescale_to_int} returns a matrix of integers corresponding
+to \code{x} in which smallest \emph{non-zero} element in each column/row
+is 1 and the largest element is \code{max}. Any elements having value zero
+are unchanged. If \code{x} is a vector then the result is an \emph{r} x 1
+matrix, where \emph{r} is the number of elements in \code{x}.  Otherwise
+the result is a \emph{r} x \emph{c} matrix where \emph{c} is the number of
+columns in \code{x}.
 }
 \description{
 \code{rescale_to_int} rescales the \emph{non-zero} elements of

@@ -28,8 +28,8 @@ respectively.
 positive test results from new data.
 }
 \details{
-This method is a convenience wrapper for \
-code{`glmpath::predict.glmpath`}.
+This method is a convenience wrapper for
+\code{`glmpath::predict.glmpath`}.
 }
 \examples{
 attach(uniobj1)

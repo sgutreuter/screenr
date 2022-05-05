@@ -37,14 +37,13 @@ factors for test positivity can be identified.
 
 This vignette demonstrates the development and validation of such a
 screening tool using lasso-like *L*1
-[regularization](https://towardsdatascience.com/regularization-in-machine-learning-76441ddcf99a) [2] of logistic
-models, as implemented in the glmpath package [3].  The screenr
-package also supports maximum-likelihood estimation of logistic model
-parameters, but the regularization approach is simpler to use, selects
-predictor covariates automatically to prevent over-fitting, is robust to
-correlations among the predictors, and handles any separation of
-outcomes that might exist for some predictor(s).  Model performance is
-evaluated using receiver-operating characteristics [4,5].
+[regularization](https://towardsdatascience.com/regularization-in-machine-learning-76441ddcf99a)
+[2] of logistic models, as implemented in the glmpath package
+[3]. Regularization enables robust model selection, but the parameter
+estimates are biased toward zero.  Therefore one might choose to
+re-fit the model selected by regularization using maximum-likelihood
+estimation.  Model performance is evaluated using receiver-operating
+characteristics [4,5].
 
 
 # An (Artificial) Example {-}
@@ -110,7 +109,7 @@ steps:
 In practice, unfortunately, the third step is sometimes omitted due to
 resource limitations.
 
-## Model fitting
+## Model selection
 
 The first step is estimation of the logistic-model parameters from the
 training data.  A method known as *L*1 regularization has desirable
@@ -209,6 +208,38 @@ for future use**, for example:
 saveRDS(uniobj1, file = "uniobj1.rds" )
 ```
 
+## Refitting the final model
+
+Although one can use the results from the call to `lasso_screenr`
+as contained in `uniobj1`, the logistic model parameter estimates
+produced by regularization are biased toward zero.  Therefore one
+might choose to re-fit the selected model using ordinary logistic
+modeling as implemented in `logreg_screenr`.  We can refit the
+AIC-best model using:
+
+```{r, logreg_screenr}
+uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,
+                         data = unicorns, Nfolds = 10, seed = 123)
+```
+
+Note that the variable `Q4` was excluded from the formula.
+Henceforth, this refitted final model will be used to validate screening.
+
+Again, the logit-scale maximum-likelihood estimates from the AIC-best model
+which was selected using regularization are obtained using:
+
+```{r, coef-logreg_screenr}
+coef(uniobj2)
+```
+
+One can also obtain the adjusted odds ratios and/or omit the
+intercept.  For example, the adjusted odds ratios for the seven
+predictors can be obtained using:
+
+```{r, or-logreg_screenr}
+coef(uniobj2, or = TRUE, intercept = FALSE)
+```
+
 ## Selection of a screening threshold {-}
 
 The next task is identifying whether sufficiently effective pre-test
@@ -232,7 +263,7 @@ in _decreasing_ order. The ROC curves for the unicorns are displayed
 using the `R` code
 
 ```{r, lasso-plot, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
-plot(uniobj1, model = "minAIC")
+plot(uniobj2, model = "minAIC")
 ```
 
 which plots the overly-optimistic in-sample ROC and the
@@ -249,7 +280,7 @@ sensitivities and specificities from the ROC curve. Instead, the
 numerical values can be obtained using:
 
 ```{r, roc-maximas-lasso}
-roc_maximas <- get_what(from = uniobj1, what = "ROCci", se_min = 0.9)
+roc_maximas <- get_what(from = uniobj2, what = "ROCci", se_min = 0.9)
 print(roc_maximas)
 ```
 
@@ -275,7 +306,7 @@ new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         Q1 = c(0, 0), Q2 = c(0, 0), Q3 = c(0, 1),
 						Q4 = c(0, 0), Q5 = c(0, 1), Q6 = c(0, 0),
 						Q7 = c(0, 0))
-new <- predict(uniobj1,  newdata = new_corns )
+new <- predict(uniobj2,  newdata = new_corns )
 print(new)
 ```
 
@@ -311,7 +342,7 @@ The `predict` method provides the means to predict test-positivity among
 the new subjects:
 
 ```{r, new-preds}
-new_preds <- predict(uniobj1, newdata = val_data)
+new_preds <- predict(uniobj2, newdata = val_data)
 head(new_preds)
 ```
 
@@ -331,7 +362,7 @@ is again measured using the ROC.  The ROC for testing in the new
 subjects is obtained using the `roc` function from the `pROC` package:
 
 ```{r, new-roc}
-new_roc <- pROC::roc(testresult ~ phat_minAIC, data = new_preds, auc = TRUE)
+new_roc <- pROC::roc(testresult ~ phat, data = new_preds, auc = TRUE)
 class(new_roc)
 ```
 
@@ -402,13 +433,13 @@ We can explore this strategy for UIV screening in unicorns using the
 `easy_tool` function:
 
 ```{r, make-et3}
-et_3 <- easy_tool(uniobj1, max = 3, model = "minAIC", crossval = TRUE)
+et_3 <- easy_tool(uniobj2, max = 3, model = "minAIC", crossval = TRUE)
 class(et_3)
 ```
-Recall that `uniobj1` contains the results of lasso estimation. The
+Recall that `uniobj2` contains the results of maximum-likelihood estimation. The
 argument `max` represents *m*, in this case 3. The remaining arguments
 specify creation of question weights from the AIC-best model, with
-performance base on the cross-validated results in `uniobj1`.  The
+performance base on the cross-validated results in `uniobj2`.  The
 resulting object, `et_3`, is of class `easy_tool`.
 
 Methods for that class are found by executing:

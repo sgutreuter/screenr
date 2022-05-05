@@ -7,10 +7,17 @@
 nnt_(dframe)
 }
 \arguments{
-\item{dframe}{a data frame containing columns \code{sensitivity},
-\code{specificity} and \code{prev}.}
+\item{dframe}{a dataframe containing columns \code{sensitivities},
+\code{specificities} and \code{prev}.}
+}
+\value{
+\code{nnt_} returns adataframe containing sensitivity,
+specificity, the anticipated
+average number of tests required to observe a single positive test
+result \code{ntpp}, and the prevalence among those screened out
+of testing \code{pre_untested}.
 }
 \description{
-\code{nnt_} computes the anticipated average number of tests
-performed in order to observe a positive test result.
+\code{nnt_} computes the anticipated average number of
+tests performed in order to observe a positive test result.
 }

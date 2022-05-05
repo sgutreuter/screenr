@@ -88,8 +88,8 @@
 #' \url{https://machinelearningmastery.com/k-fold-cross-validation/}.
 #'
 #' @return
-#' Return (invisibly) an object of class \code{lasso_screenr} containing
-#' the elements:
+#' \code{lasso_screenr} returns (invisibly) an object of class \code{lasso_screenr}
+#' containing the components:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{Prevalence}}{Prevalence of the binary response variable.}

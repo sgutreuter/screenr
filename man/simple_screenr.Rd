@@ -43,7 +43,8 @@ ignored if \code{partial\_auc} = \verb{FALSE}. Default: \verb{TRUE}).}
 for confidence intervals for the (partial)AUC. Default: 0.95.}
 }
 \value{
-An object of class \code{simple_screenr} containing the elements:
+\code{simple_screenr} returns (invisibly) an object of class
+\code{simple_screenr} containing the elements:
 \describe{
 \item{\code{Call}}{The function call.}
 \item{\code{Prevalence}}{Prevalence of the test condition in the training sample.}

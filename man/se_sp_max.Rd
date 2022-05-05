@@ -7,12 +7,13 @@
 se_sp_max(object)
 }
 \arguments{
-\item{object}{a dataframe containing at least columns named \code{sensitivity}
-and \code{specificity}}
+\item{object}{a dataframe containing at least columns named \code{sensitivities}
+and \code{specificities}}
 }
 \value{
-a dataframe which is a subset of \code{object} containing only those
-rows for which specificity was the maximum for each unique value of sensitivity.
+\code{se_sp_max} returns a dataframe which is a subset of \code{object}
+containing only those rows for which specificity was the maximum for each
+unique value of sensitivity.
 }
 \description{
 Given a dataframe containing multiple values of specificity for
