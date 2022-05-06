@@ -70,14 +70,18 @@
 #' Park-Hastie regularization is is similar to the conventional lasso and the
 #' elastic net. It differs from the lasso with the inclusion of a very small,
 #' \emph{fixed} (\verb{1e-5}) penalty on the \emph{L}2 norm of the parameter
-#' vector, and
-#' differs from the elastic net in that the \emph{L}2 penalty is
+#' vector, and differs from the elastic net in that the \emph{L}2 penalty is
 #' fixed.  Like the elastic net, the Park-Hastie regularization is robust to
 #' highly correlated predictors. The \emph{L}2 penalization can be turned off
 #' (\code{L2 = FALSE}), in which case the regularization is similar to the
 #' coventional lasso. Like all \emph{L}1 regularizers, the Park-Hastie
 #' algorithm automatically "deletes" covariates by shrinking their parameter
 #' estimates to 0.
+#'
+#' The coefficients produced by \emph{L}1 regularization are biased toward
+#' zero.  Therefore one might consider refitting the model selected by
+#' regularization using maximum-likelihood estimation as implemented in
+#' \code{logreg_screenr}.
 #'
 #' The receiver-operating characteristics are computed using the \code{pROC}
 #' package.

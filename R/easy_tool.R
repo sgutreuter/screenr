@@ -124,6 +124,7 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
         }
     } else {
         coef <- coef.logreg_screenr(object, intercept = FALSE, ...)
+        coef <- coef$estimate
         if(crossval == TRUE ){
             Nfolds <- object$Nfolds
             X_ho <- object$X_ho
@@ -133,7 +134,7 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
         } else {
             r_ <- as.character(object$formula)[2]
             d_ <- object$ModelFit$data
-            X_ <- as.matrix(d_[ , !(names(d_) %in% r_ )])  ## Trouble with x
+            X_ <- as.matrix(d_[ , !(names(d_) %in% r_ )])
             parms <- coef
             resp <- d_[[r_]]
             fold <- rep(NA, length(resp))

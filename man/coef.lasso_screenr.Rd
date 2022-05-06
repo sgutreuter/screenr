@@ -18,17 +18,19 @@
 are the default.}
 }
 \value{
-\code{coef.lasso_screenr} returns a \emph{p} x 2 matrix of
+\code{coef.lasso_screenr} returns a dataframe containing the
 estimated coefficients (or odds ratios) from the AIC- and BIC-best
 logistic regression models, where \emph{p} is the number of coefficients.
 }
 \description{
-\code{coef.lasso_screenr} extracts the logistic model parameter estimates
-from \code{lasso_screenr}-class objects.
+\code{coef.lasso_screenr} returns the regularized logistic model parameter
+estimates from the AIC- and BIC-best fits from \code{lasso_screenr}-class
+objects.
 }
 \details{
 \code{coef.lasso_screenr} extracts the estimated coefficients from
-\code{lasso_screenr} objects.
+\code{lasso_screenr} objects.  Regularization does not support estimation
+of confidence limits.
 }
 \examples{
 attach(uniobj1)

@@ -93,14 +93,14 @@ get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 4000,
                              conf_level = 0.95, se_min = 0.8){
     if(!"easy_tool" %in% class(from))
         stop("Object not easy_tool class")
-    if(!what %in% c("QuestionWeights", "Call", "ROC", "Scores"))
-        stop("Invalid what argument; must be one of 'Qweights', 'Call', 'ROC', 'Scores'")
+    if(!what %in% c("QuestionWeights", "Call", "ROC", "ROCci", "Scores"))
+        stop("what must be one of 'QuestionWeights', 'Call', 'ROC', 'ROCci', 'Scores'")
     res <- from[[what]]
     if(what == "ROCci") {
         roc_  <- from[["ROC"]]
         res <- roc_ci(roc_, bootreps = bootreps, conf_level = conf_level,
                       se_min = se_min)
-        res$Threshold <- round(res$Threshold + 0.01)
+        res$thresholds <- round(res$thresholds + 0.01)
     }
     invisible(res)
 }
