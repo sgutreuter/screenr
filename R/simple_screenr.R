@@ -74,7 +74,7 @@
 #' \url{http://dx.doi.org/10.1097/QAD.0000000000000959}
 #'
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
-#' Müller M. \code{pROC}: An open-source package for \code{R} and S+ to
+#' Muller M. \code{pROC}: An open-source package for \code{R} and S+ to
 #' analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
 #'

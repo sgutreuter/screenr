@@ -92,7 +92,7 @@
 easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
                       crossval = TRUE, ...) {
     model  <- match.arg(model)
-    if(!class(object) %in% c("lasso_screenr", "logreg_screenr"))
+    if(!inherits(object, c("lasso_screenr", "logreg_screenr")))
         stop("object not of class lasso_screenr or logreg_screenr")
     if(max < 2) {
         max <- 2

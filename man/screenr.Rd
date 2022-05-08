@@ -8,15 +8,16 @@
 The \code{screenr} package enables construction of binary test-screening
 tools.  It is designed to enable those with only a basic familiarity with
 \code{R} to develop, validate and implement screening tools for diagnostic
-tests.
+tests.  \code{screenr} integrates the capabilities of the \code{glm},
+\code{glmpath} and \code{pROC} packages for convenience and ease of use.
 
 Consider the situation where a diagnostic test for some condition is
 relatively expensive, and the condition is rare.  In that case, universal
 testing would not be efficient in terms of the yield of postive results per
-test performed.  Now suppose that responses to a set of simple questions may
-be predictive of the condition.  Package \code{screenr} enables estimation of
-thresholds for making decisions about when to test in order to screen
-in/out individuals based on Receiver Operating Characteristics (ROC)
+test performed.  Now suppose that responses to a set of simple screening
+questions may be predictive of the condition.  Package \code{screenr} enables
+estimation of thresholds for making decisions about when to test in order to
+screen in/out individuals based on Receiver Operating Characteristics (ROC)
 estimated from an initial sample.  The choice of a particular screening
 threshold is left to the user, and should be based on careful consideration
 of application-specific tradeoffs between sensitivity and specificity.
@@ -30,25 +31,28 @@ The pdf versions of the package manual and the tutorial are available at
 \details{
 The high-level functions in the \code{screenr} package are:
 \describe{
-\item{\code{\link{lasso_screenr}}}{Test-screening based on GLM path regularization
-of logistic regression models}
-\item{\code{\link{logreg_screenr}}}{Test-screening based maximum-likelhood estimation
-of logistic regression models}
+\item{\code{\link{lasso_screenr}}}{Selection of logistic models based on GLM
+path regularization}
+\item{\code{\link{logreg_screenr}}}{Test-screening based maximum-likelhood
+estimation of logistic models}
 \item{\code{\link{easy_tool}}}{Easy implementation of test-screening tools}
-\item{\code{\link{simple_screenr}}}{Simple un-optimized test-screening}
-\item{\code{\link{rescale_to_int}}}{Rescale a strictly positive vector of real numbers
-to integers}
+\item{\code{\link{simple_screenr}}}{(To)simple un-optimized test-screening}
+\item{\code{\link{rescale_to_int}}}{Rescale a strictly positive vector of
+real numbers to integers}
 \item{\code{\link{sens_spec_plus}}}{Sensitivity, specificity and friends}
 }
 
-There are \code{plot}, \code{print}, \code{summary}, \code{predict},
-\code{get_what}, and \code{ntpp} methods for the objects produced by
-\code{lasso_screenr}, \code{logreg_screenr}, \code{simple_screenr}
-and \code{easy_tool}. In addition, there is a \code{coef} method for
-\code{lasso_screenr} and \code{logreg_screenr} objects.
+\code{screenr} provides the usual \code{plot}, \code{print}, \code{summary},
+\code{predict} methods for the objects produced by \code{lasso_screenr},
+\code{logreg_screenr}, \code{simple_screenr} and \code{easy_tool}, and also
+\code{coef} methods for \code{lasso_screenr} and \code{logreg_screenr} objects.
+\code{screenr} also provides \code{get_what} methods to extract object
+components, and \code{ntpp} methods for computation of the average number of
+tests required to detect a single positive result and the residual
+positivity among those screened out of testing.
 }
 \note{
-The canonical source for \code{screenr} is
+The canonical source repository for \code{screenr} is
 \url{https://github.com/sgutreuter/screenr}
 }
 \author{
