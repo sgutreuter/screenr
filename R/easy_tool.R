@@ -106,9 +106,9 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
     if(inherits(object, "lasso_screenr")) {
         coef <- coef.lasso_screenr(object, intercept = FALSE, ...)
         if(model == "minAIC") {
-            coef <- coef[, 1]
+            coef <- data.frame(covariate = rownames(coef), estimate = coef[, 1])
         } else {
-            coef <- coef[, 2]
+            coef <- data.frame(covariate = rownames(coef), estimate = coef[, 2])
         }
         if(crossval == TRUE) {
             Nfolds <- object$cvResults$Nfolds
@@ -124,7 +124,6 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
         }
     } else {
         coef <- coef.logreg_screenr(object, intercept = FALSE, ...)
-        coef <- coef$estimate
         if(crossval == TRUE ){
             Nfolds <- object$Nfolds
             X_ho <- object$X_ho
@@ -141,7 +140,8 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
         }
     }
     resp <- data.frame(fold = fold, resp = resp)
-    QuestionWeights <- rescale_to_int(coef, max = max)
+    QuestionWeights <- matrix(rescale_to_int(coef$estimate, max = max), ncol = 1,
+                              dimnames = list(coef$covariate, "weight"))
     scframe <- data.frame(NULL)
     if(crossval == TRUE){
         for(i in 1:Nfolds) {
@@ -159,7 +159,7 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
             attr(scframe, "Type") <- "Cross-validated scores"
         }
     } else {
-        pv <- as.matrix(parms, ncol =  1)
+        pv <- as.matrix(parms$estimate, ncol =  1)
         pv[pv < 0] <- 0
         Qwts <- rescale_to_int(pv, max = max)
         scores <- X_ %*% Qwts

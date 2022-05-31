@@ -35,7 +35,7 @@ new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
                         Q7 = c(0, 1))
 mfit <- get_what(from = uniobj2 , what = "ModelFit")
 coefs <- mfit$coefficients
-lp <- as.matrix(cbind(rep(1, nrow(new_corns)), new_corns[, 3:9])) \%*\%
+lp <- as.matrix(cbind(rep(1, nrow(new_corns)), new_corns[, 3:8])) \%*\%
            as.matrix(coefs, ncol =  1)
 (preds <- inverse_link(lp, link = "logit"))
 ## Note that only the predicted values are returned.

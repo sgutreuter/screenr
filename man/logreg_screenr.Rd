@@ -111,7 +111,7 @@ Careful manual model selection is required with \code{logreg_screenr}.
 \dontrun{
 data(unicorns)
 help(unicorns)
-uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
+uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,
                            data = unicorns, link = "logit", Nfolds = 10)
 summary(uniobj2)
 }

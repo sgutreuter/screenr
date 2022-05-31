@@ -99,7 +99,7 @@ predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
 #' ## Get some new observations
 #' new_corns <- data.frame(ID = c("Alice D.", "Bernie P."),
 #'                         testresult = c(NA, NA), Q1 = c(0, 0), Q2 = c(0, 0),
-#'                         Q3 = c(0, 0), Q4 = c(0, 0), Q5 = c(0, 1), Q6 = c(0, 1 ),
+#'                         Q3 = c(0, 0), Q5 = c(0, 1), Q6 = c(0, 1 ),
 #'                         Q7 = c(0, 1))
 #' ## Predict the probabilities of testing positive for the new subjects
 #' print(predict(uniobj2, newdata = new_corns))
