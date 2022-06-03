@@ -2,7 +2,7 @@
 % Please edit documentation in R/print-methods.R
 \name{print.easy_tool}
 \alias{print.easy_tool}
-\title{A Print Method for \code{easy_tool}-Class Objects}
+\title{An S3 Print Method for \code{screenr} Objects}
 \usage{
 \method{print}{easy_tool}(x, ...)
 }
@@ -17,7 +17,4 @@
 \examples{
 attach(uniobj1)
 print(uniobj1)
-}
-\seealso{
-\code{get_what.easy_tool(from, what)} for \code{what =} \verb{"ROCci"}.
 }

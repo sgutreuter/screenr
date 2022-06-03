@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary-methods.R
 \name{summary.simple_screenr}
 \alias{summary.simple_screenr}
-\title{A Summary Method for \code{simple_screenr}-Class Objects}
+\title{An S3 Summary Method for \code{screenr} Objects}
 \usage{
 \method{summary}{simple_screenr}(object, ...)
 }

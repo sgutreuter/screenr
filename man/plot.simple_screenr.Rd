@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-methods.R
 \name{plot.simple_screenr}
 \alias{plot.simple_screenr}
-\title{Plot ROC Curves from \code{simple_screenr}-Class Objects}
+\title{An S3 Method to Plot ROC Curves}
 \usage{
 \method{plot}{simple_screenr}(
   x,

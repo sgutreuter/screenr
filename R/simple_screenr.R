@@ -59,12 +59,13 @@
 #' \code{simple_screenr} computes the in-sample (\emph{overly optimistic})
 #' performances for development of a very simple test screening tool based on
 #' the sums of affirmative questionnaire responses.  \code{simpleScreener} is
-#' not optimized and is intended only for comparision with \code{lasso_screenr} or
-#' \code{logreg_screenr}, either of which will almost certainly out-perform
-#' \code{simple_screenr}.
+#' \emph{not} optimized and is intended only for comparision with \code{lasso_screenr},
+#' \code{logreg_screenr} or \code{gee_screenr}, any of which will almost
+#' certainly out-perform \code{simple_screenr}.
 #'
-#' @seealso \code{\link{easy_tool}} for a better approach to simplification
-#' using the results from \code{lasso_screenr} or \code{logreg_screenr}.
+#' @seealso \code{\link[screenr]{easy_tool}} for a better approach to simplification
+#' using the results from \code{lasso_screenr}, \code{logreg_screenr} or
+#' \code{gee_screenr}.
 #'
 #' @references
 #' Bandason T, McHugh G, Dauya E, Mungofa S, Munyati SM, Weiss HA, Mujuru H,
@@ -82,6 +83,7 @@
 #' data(unicorns)
 #' toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
 #'                            data = unicorns)
+#' methods(class = class(toosimple))
 #' summary(toosimple)
 #'
 #' @seealso \code{\link{lasso_screenr}}, \code{\link{logreg_screenr}}
@@ -92,7 +94,7 @@ simple_screenr <- function(formula, data, partial_auc = c(0.8, 1.0),
                           partial_auc_focus = "sensitivity",
                           partial_auc_correct = TRUE,
                           conf_level = 0.95){
-    warning("WARNING! WARNING! WARNING! simple_screenr is suboptimal and is provided only for comparison with other methods." )
+    warning("WARNING! WARNING! WARNING! simple_screenr is suboptimal and is provided only for comparison with other methods.")
     mf <- match.call(expand.dots = FALSE)
     call <- match.call( )
     m <- match(c("formula", "data"), names(mf), 0L)

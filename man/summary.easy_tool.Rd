@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary-methods.R
 \name{summary.easy_tool}
 \alias{summary.easy_tool}
-\title{A Summary Method for \code{easy_tool}-Class Objects}
+\title{An S3 Summary Method for \code{screenr} Objects}
 \usage{
 \method{summary}{easy_tool}(object, ...)
 }
@@ -12,17 +12,11 @@
 \item{...}{optional arguments passed to \code{summary} methods.}
 }
 \value{
-a dataframe containing the summary, including the Df, Deviance,
-AIC and BIC for each step along the GLM path for which the active set
-changed.
+Nothing.  A summary is printed as a side effect.
 }
 \description{
 \code{summary.easy_tool} provides a summary method for
 \code{easy-tool}-class objects.
-}
-\details{
-This is essentially a wrapper for \code{glmpath::summary.glmpath}
-provided for \code{lasso_screenr} objects.
 }
 \examples{
 attach(uniobj1)

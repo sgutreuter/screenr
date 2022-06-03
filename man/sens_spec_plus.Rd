@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{sens_spec_plus}
 \alias{sens_spec_plus}
-\title{Compute Sensitivity, specificity and a few friends}
+\title{Compute Sensitivity, Specificity and a Few Friends}
 \usage{
 sens_spec_plus(
   test = NULL,
@@ -50,6 +50,7 @@ Gold <- rbinom(20, 1, 0.50)
 Test <- Gold; Test[c(3, 5, 9, 12, 16)] <- 1 - Test[c(3, 5, 9, 12, 16)]
 dat <- data.frame(Gold = Gold, Test = Test)
 sens_spec_plus(test = "Test", gold = "Gold", data = dat)
+
 }
 \seealso{
 \code{\link[epiR]{epi.tests}}

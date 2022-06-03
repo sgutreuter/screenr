@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-methods.R
 \name{plot.logreg_screenr}
 \alias{plot.logreg_screenr}
-\title{Plot ROC Curves from \code{logreg_screenr}-Class Objects}
+\title{An S3 Method to Plot ROC Curves}
 \usage{
 \method{plot}{logreg_screenr}(
   x,

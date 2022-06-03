@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict-methods.R
 \name{predict.easy_tool}
 \alias{predict.easy_tool}
-\title{A Prediction Method for \code{easy_tool}-Class Objects}
+\title{An S3 Method to Compute Simplified Screening Scores}
 \usage{
 \method{predict}{easy_tool}(object = NULL, ..., newdata = NULL)
 }

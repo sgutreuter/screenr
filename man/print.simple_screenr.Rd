@@ -2,7 +2,7 @@
 % Please edit documentation in R/print-methods.R
 \name{print.simple_screenr}
 \alias{print.simple_screenr}
-\title{A Print Method for \code{simple_screenr}-Class Objects}
+\title{An S3 Print Method for \code{screenr} Objects}
 \usage{
 \method{print}{simple_screenr}(x, ...)
 }
@@ -25,7 +25,4 @@ toosimple <- simple_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6,
                           data = unicorns)
 print(toosimple)
 
-}
-\seealso{
-\code{get_what.simple_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 }

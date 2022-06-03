@@ -25,7 +25,8 @@ condition among those who are screened out of testing.}
 }
 \description{
 \code{ntpp} computes the ratio of the total number of tests
-performed per positive test result.
+performed per positive test result and the anticipated fraction of the
+untested (those screened out of testing) who would actually test positive.
 }
 \details{
 The anticipated number of tests required to detect a single positive
@@ -35,9 +36,8 @@ where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
 specificity. The anticipated prevalence among those screened out is given by
 \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 }
-\seealso{
-\code{\link{ntpp.lasso_screenr}}
-\code{\link{ntpp.logreg_screenr}}
-\code{\link{ntpp.simple_screenr}}
-\code{\link{ntpp.default}}
+\examples{
+attach(uniobj2)
+ntpp(uniobj2)
+
 }

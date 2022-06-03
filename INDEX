@@ -2,8 +2,17 @@ coef.lasso_screenr      An S3 Method to Extract Coefficients from
                         'lasso_screenr' Objects
 coef.logreg_screenr     An S3 Method to Extract Coefficients from
                         'logreg_screenr' Objects
-easy_tool               Simplifying Screening from 'lasso_screenr' or
+confint.gee_screenr     An S3 Method to Compute Confidence Limits from
+                        'gee_screenr' Objects
+confint.geeglm          An S3 Method to Compute Confidence Limits from
+                        'geepack::geeglm' Objects.
+confint.logreg_screenr
+                        An S3 Method to Compute Confidence Limits from
                         'logreg_screenr' Objects
+easy_tool               Simplifying Screening from 'lasso_screenr',
+                        'logreg_screenr' and 'gee_screenr' Objects
+gee_screenr             Fitting Screening Tools Using GEE Estimation of
+                        Logistic Models
 get_what                S3 Methods for Extraction of Object Components
 get_what.easy_tool      An S3 Method for Extraction of Components from
                         'easy_tool' Objects
@@ -18,66 +27,59 @@ get_what.simple_screenr
                         'simple_screenr' Objects
 inverse_link            Compute the Inverses of Binomial Link Functions
 lasso_screenr           Fitting Screening Tools Using Lasso-Like
-                        Regularization of Logistic Regression
+                        Regularization of Logistic Models
 logreg_screenr          Fitting Screening Tools Using Ordinary Logistic
-                        Regression
+                        Models
 nnt_                    Compute the Ratio of Total Tests Performed Per
                         Postive Result
 ntpp                    An S3 Method to Compute the Ratio of Total
                         Tests to Positive Results
-ntpp.data.frame         Compute the Ratio of Total Tests to Positive
-                        Results from a Data Frame
-ntpp.default            Compute the Ratio of Total Tests to Positive
-                        Results from a Data Frame
-ntpp.easy_tool          Compute the Ratio of Total Tests to Positive
-                        Results from 'easy_tool' Objects
-ntpp.lasso_screenr      Compute the Ratio of Total Tests to Positive
-                        Results from 'lasso_screenr' Objects
-ntpp.logreg_screenr     Compute the Ratio of Total Tests to Positive
-                        Results from 'logreg_screenr' Objects
-ntpp.simple_screenr     Compute the Ratio of Total Tests to Positive
-                        Results from 'simple_screenr' Objects
-plot.easy_tool          Plot ROC Curves from 'easy_tool'-Class Objects
-plot.lasso_screenr      Plot ROC Curves from 'lasso_screenr'-Class
-                        Objects
-plot.logreg_screenr     Plot ROC Curves from 'logreg_screenr'-Class
-                        Objects
-plot.simple_screenr     Plot ROC Curves from 'simple_screenr'-Class
-                        Objects
-predict.easy_tool       A Prediction Method for 'easy_tool'-Class
-                        Objects
-predict.lasso_screenr   A Prediction Method for 'lasso_screenr'-Class
-                        Objects
+ntpp.data.frame         An S3 Method to Compute the Ratio of Total
+                        Tests to Positive Results
+ntpp.default            An S3 Method to Compute the Ratio of Total
+                        Tests to Positive Results
+ntpp.easy_tool          An S3 Method to Compute the Ratio of Total
+                        Tests to Positive Results
+ntpp.lasso_screenr      An S3 Method to Compute the Ratio of Total
+                        Tests to Positive Results
+ntpp.logreg_screenr     An S3 Method to Compute the Ratio of Total
+                        Tests to Positive Results
+ntpp.simple_screenr     An S3 Method to Compute the Ratio of Total
+                        Tests to Positive Results
+plot.easy_tool          An S3 Method to Plot ROC Curves
+plot.lasso_screenr      An S3 Method to Plot ROC Curves
+plot.logreg_screenr     An S3 Method to Plot ROC Curves
+plot.simple_screenr     An S3 Method to Plot ROC Curves
+predict.easy_tool       An S3 Method to Compute Simplified Screening
+                        Scores
+predict.lasso_screenr   An S3 Method to Compute Predicted Probabilities
+                        of Positive Test Results
 predict.logreg_screenr
-                        A Prediction Method for 'logreg_screenr'-Class
-                        Objects
-print.easy_tool         A Print Method for 'easy_tool'-Class Objects
-print.lasso_screenr     A Print Method for 'lasso_screenr'-Class
-                        Objects
-print.logreg_screenr    A Print Method for 'logreg_screenr'-Class
-                        Objects
-print.simple_screenr    A Print Method for 'simple_screenr'-Class
-                        Objects
+                        An S3 Method to Compute Predicted Probabilities
+                        of Positive Test Results
+print.easy_tool         An S3 Print Method for 'screenr' Objects
+print.lasso_screenr     An S3 Print Method for 'screenr' Objects
+print.logreg_screenr    An S3 Print Method for 'screenr' Objects
+print.simple_screenr    An S3 Print Method for 'screenr' Objects
 rescale_to_int          Rescale Positive Vectors or Matrices to
                         Integers
 roc_ci                  Compute Bootstrap Confidence Limits for
                         Sensitivities and Specificities
 screenr                 screenr Package
-se_sp_max               Return dataframe rows for which specificity is
-                        the maximum for each sensitivity
-sens_spec_plus          Compute Sensitivity, specificity and a few
-                        friends
+se_sp_max               Return a Simplified Dataframe of Sensitivity
+                        and Specificity
+sens_spec_plus          Compute Sensitivity, Specificity and a Few
+                        Friends
 simple_screenr          An Overly Simple Approach to Test Screening
-summary.easy_tool       A Summary Method for 'easy_tool'-Class Objects
-summary.lasso_screenr   A Summary Method for 'lasso_screenr'-Class
-                        Objects
+summary.easy_tool       An S3 Summary Method for 'screenr' Objects
+summary.gee_screenr     An S3 Summary Method for 'screenr' Objects
+summary.lasso_screenr   An S3 Summary Method for 'screenr' Objects
 summary.logreg_screenr
-                        A Summary Method for 'logreg_screenr'-Class
-                        Objects
+                        An S3 Summary Method for 'screenr' Objects
 summary.simple_screenr
-                        A Summary Method for 'simple_screenr'-Class
-                        Objects
+                        An S3 Summary Method for 'screenr' Objects
 unicorns                UIV Testing Training Data on Unicorns
 uniobj1                 A 'lasso_screenr object'
 uniobj2                 A 'logreg_screenr object'
+uniobj3                 A 'gee_screenr object'
 val_data                UIV Test Validation Data on Unicorns

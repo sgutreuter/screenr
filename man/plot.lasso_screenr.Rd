@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-methods.R
 \name{plot.lasso_screenr}
 \alias{plot.lasso_screenr}
-\title{Plot ROC Curves from \code{lasso_screenr}-Class Objects}
+\title{An S3 Method to Plot ROC Curves}
 \usage{
 \method{plot}{lasso_screenr}(
   x,

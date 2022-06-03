@@ -12,29 +12,33 @@
 
 ## Function easy_tool
 ##
-#' Simplifying Screening from \code{lasso_screenr} or \code{logreg_screenr} Objects
+#' Simplifying Screening from \code{lasso_screenr}, \code{logreg_screenr} and
+#' \code{gee_screenr} Objects
 #'
 #' @description
 #' \code{easy_tool} rescales model coefficients to whole numbers ranging from
-#' 1 to \code{max} (\code{QuestionWeights}). Those rescaled and rounded
-#' coefficients can be used as weights for each screening question in a
-#' simplified model-based screening tool. The test screening score is the sum
-#' of the weights for each subject.
+#' 1 to \code{max}. Those rescaled and rounded
+#' coefficients can be used as weights (\code{QuestionWeights}) for each
+#' screening question in a simplified model-based screening tool. The test
+#' screening score for a subject is the sum of the weights for their positive
+#' question responses.
 #'
 #' @param object an object of class \code{lasso_screenr} or
 #' \code{logreg_screenr}.
 #'
-#' @param max (numeric) the desired maximum value for the response weights
-#' (default is 3).
+#' @param max (numeric) the desired maximum value for the response weights.
+#' Default: 3.
 #'
 #' @param model (for \verb{lasso_screenr} objects only) the desired basis
-#' model. Valid options are \verb{"minAIC"} (the default) and \verb{"minBIC"}.
+#' model. Valid options are \verb{"minAIC"} and \verb{"minBIC"}, specifying
+#' the models that produced the smallest AIC and BIC values, respectively.
+#' Default: \verb{minAIC}
 #'
 #' @param crossval a (logical) indicator for cross-validated (\verb{TRUE}) or
-#' in-sample (\verb{FALSE}) performance evaluation.
+#' in-sample (\verb{FALSE}) performance evaluation. Default: \verb{TRUE}.
 #'
 #' @param ... additional arguments passed to \code{coef.lasso_screenr} or
-#' \code{coef.logreg_screenr}
+#' \code{coef.logreg_screenr}.
 #'
 #' @return
 #' \code{easy_tool} returns (invisibly) an object of class \code{easy_tool}
@@ -72,22 +76,29 @@
 #' manual scoring and the degree to which the ROC from the re-scaling matches the
 #' ROC from the model. Small values of \code{max} make manual scoring easy, and
 #' sufficiently large values will match the screening performance of the model
-#' fit. A value of \verb{3} may be a reasonable compromise. It is prudent to
+#' fit. It is prudent to
 #' compare the ROCs from a few values of \code{max} with the ROC from the model
 #' and base the final choice on the trade-off between ease of manual scoring and
 #' the desired combination of sensitivity and specificity.
 #'
-#' @note Execute \code{methods(class = "easy_tool")} to see available methods.
-#'
 #' @seealso
-#' \code{\link{rescale_to_int}}, \code{\link{ntpp.easy_tool}},
-#' \code{\link{plot.easy_tool}}, \code{\link{print.easy_tool}} and
-#' \code{\link{summary.easy_tool}}
+#' \code{\link[screenr]{rescale_to_int}}, \code{\link[screenr]{ntpp.easy_tool}},
+#' \code{\link[screenr]{plot.easy_tool}}, \code{\link[screenr]{print.easy_tool}} and
+#' \code{\link[screenr]{summary.easy_tool}}
+#'
+#' @references
+#'
+#' Teferi W, Gutreuter S, Bekele A et al. Adapting strategies for effective and
+#' efficient pediatric HIV case finding: Risk screening tool for testing children
+#' presenting at high-risk entry points. BMC Infectious Diseases. 2022; 22:480.
+#' \url{http://doi.org/10.1186/s12879-022-07460-w}
 #'
 #' @examples
 #' attach(uniobj1)
 #' tool <- easy_tool(uniobj1, max = 3)
-#' class(tool)
+#' methods(class = "easy_tool")
+#' summary(tool)
+#'
 #' @export
 easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
                       crossval = TRUE, ...) {

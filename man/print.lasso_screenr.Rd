@@ -2,7 +2,7 @@
 % Please edit documentation in R/print-methods.R
 \name{print.lasso_screenr}
 \alias{print.lasso_screenr}
-\title{A Print Method for \code{lasso_screenr}-Class Objects}
+\title{An S3 Print Method for \code{screenr} Objects}
 \usage{
 \method{print}{lasso_screenr}(x, ...)
 }
@@ -18,7 +18,4 @@
 \examples{
 attach(uniobj1)
 print(uniobj1)
-}
-\seealso{
-\code{get_what.lasso_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 }

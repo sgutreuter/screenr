@@ -2,7 +2,7 @@
 % Please edit documentation in R/ntpp-methods.R
 \name{ntpp.easy_tool}
 \alias{ntpp.easy_tool}
-\title{Compute the Ratio of Total Tests to Positive Results from \code{easy_tool} Objects}
+\title{An S3 Method to Compute the Ratio of Total Tests to Positive Results}
 \usage{
 \method{ntpp}{easy_tool}(object, ..., prev = NULL)
 }
@@ -28,7 +28,8 @@ condition among those who are screened out of testing.}
 }
 \description{
 \code{ntpp.easy_tool} computes the ratio of the total number of
-tests performed per positive test result from \code{easy_tool}-class objects.
+tests performed per positive test result and the anticipated fraction of the
+untested (those screened out of testing) who would actually test positive.
 }
 \details{
 The anticipated number of tests required to detect a single positive

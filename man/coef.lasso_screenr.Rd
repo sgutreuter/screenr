@@ -17,11 +17,6 @@
 \item{or}{return odds ratios if \verb{TRUE}; logit-scale coefficients
 are the default.}
 }
-\value{
-\code{coef.lasso_screenr} returns a dataframe containing the
-estimated coefficients (or odds ratios) from the AIC- and BIC-best
-logistic regression models, where \emph{p} is the number of coefficients.
-}
 \description{
 \code{coef.lasso_screenr} returns the regularized logistic model parameter
 estimates from the AIC- and BIC-best fits from \code{lasso_screenr}-class
@@ -29,8 +24,7 @@ objects.
 }
 \details{
 \code{coef.lasso_screenr} extracts the estimated coefficients from
-\code{lasso_screenr} objects.  Regularization does not support estimation
-of confidence limits.
+\code{lasso_screenr} objects.
 }
 \examples{
 attach(uniobj1)

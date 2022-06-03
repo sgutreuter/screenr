@@ -2,7 +2,7 @@
 % Please edit documentation in R/lasso_screenr.R
 \name{lasso_screenr}
 \alias{lasso_screenr}
-\title{Fitting Screening Tools Using Lasso-Like Regularization of Logistic Regression}
+\title{Fitting Screening Tools Using Lasso-Like Regularization of Logistic Models}
 \usage{
 lasso_screenr(
   formula,
@@ -110,6 +110,11 @@ which produced the minimum AIC and minimum BIC.  Execute
 \code{methods(class = "lasso_screenr")} to identify available methods.
 }
 \details{
+The results provide information from
+which to choose a probability threshold above which individual out-of-sample
+probabilies indicate the need to perform a diagnostic test.  Out-of-sample
+performance is estimated using \emph{k}-fold cross validation.
+
 \code{lasso_screenr} uses the \emph{L}1 path regularizer of
 Park and Hastie (2007), as implemented in the \code{glmpath} package.
 Park-Hastie regularization is is similar to the conventional lasso and the
@@ -131,6 +136,14 @@ regularization using maximum-likelihood estimation as implemented in
 The receiver-operating characteristics are computed using the \code{pROC}
 package.
 
+By default, the \emph{partial} area under the ROC curve is computed from
+that portion of the curve for which sensitivity is in the closed interval
+[0.8, 1.0]. However, the total AUC can be obtained using the argument
+\code{partial_auc = FALSE}.  Partial areas can be computed for either
+ranges of sensitivity or specificity using the arguments
+\code{partial_auc_focus} and \code{partial_auc}.  By default, partial areas
+are standardized.
+
 Out-of-sample performance is estimated using \emph{k}-fold cross-validation.
 For a gentle but Python-centric introduction to \emph{k}-fold cross-validation,
 see
@@ -139,9 +152,9 @@ see
 \examples{
 \dontrun{
 data(unicorns)
-help(unicorns)
 uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                           data = unicorns, Nfolds = 10)
+methods(class = class(uniobj1))
 summary(uniobj1)
 }
 
@@ -159,8 +172,13 @@ Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
 Muller M. \code{pROC}: An open-source package for \code{R} and S+ to
 analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
 \url{http://doi.org/10.1186/1471-2105-12-77}
+
+Teferi W, Gutreuter S, Bekele A et al. Adapting strategies for effective and
+efficient pediatric HIV case finding: Risk screening tool for testing children
+presenting at high-risk entry points. BMC Infectious Diseases. 2022; 22:480.
+\url{http://doi.org/10.1186/s12879-022-07460-w}
 }
 \seealso{
-\code{\link[glmpath]{glmpath}}, \code{\link[pROC]{roc}},
-\code{\link[pROC]{auc}}
+\code{\link[glmpath]{glmpath}}, \code{\link[pROC]{roc}} and
+\code{\link[pROC]{auc}}.
 }

@@ -4,7 +4,7 @@
 \alias{coef.logreg_screenr}
 \title{An S3 Method to Extract Coefficients from \code{logreg_screenr} Objects}
 \usage{
-\method{coef}{logreg_screenr}(object, ..., intercept = TRUE, or = FALSE, conf_level = 0.95, digits = 4)
+\method{coef}{logreg_screenr}(object, ..., intercept = TRUE, or = FALSE, digits = 4)
 }
 \arguments{
 \item{object}{an object of class \code{logreg_screenr}.}
@@ -17,27 +17,22 @@
 \item{or}{return odds ratios if \verb{TRUE}. Default: FALSE (returns
 logit-scale coefficients).}
 
-\item{conf_level}{confidence level for profile-likelihood confidence
-intervals. Default: 0.95.}
-
 \item{digits}{number of decimal places to be printed. Default: 4.}
 }
 \value{
 \code{coef.logreg_screenr} returns a dataframe containing the
-estimated coefficients (or odds ratios) and their profile-likelihood
-lower and upper confidence limits (lcl and ucl, respectively).
+estimated coefficients (or odds ratios).
 }
 \description{
 \code{coef.logreg_screenr} returns the logistic model parameter estimates
-from and profile-likelihood confidence limits from \code{logreg_screenr}-class
-objects.
-}
-\details{
-\code{coef.logreg_screenr} extracts the estimated coefficients from
-\code{logreg_screenr} objects.
+from \code{logreg_screenr}-class objects.
 }
 \examples{
 attach(uniobj2)
 coef(uniobj2, or = TRUE)
 
+}
+\seealso{
+\code{\link[screenr]{confint.logreg_screenr}} and
+\code{\link[screenr]{confint.gee_screenr}}
 }

@@ -31,8 +31,10 @@
 #' path regularization}
 #' \item{\code{\link{logreg_screenr}}}{Test-screening based maximum-likelhood
 #' estimation of logistic models}
+#' \item{\code{\link{gee_screenr}}}{Test-screening based GEE estimation
+#' of logistic models accounting for cluster sampling}
 #' \item{\code{\link{easy_tool}}}{Easy implementation of test-screening tools}
-#' \item{\code{\link{simple_screenr}}}{(To)simple un-optimized test-screening}
+#' \item{\code{\link{simple_screenr}}}{(Too) simple un-optimized test-screening}
 #' \item{\code{\link{rescale_to_int}}}{Rescale a strictly positive vector of
 #' real numbers to integers}
 #' \item{\code{\link{sens_spec_plus}}}{Sensitivity, specificity and friends}
@@ -40,12 +42,21 @@
 #'
 #' \code{screenr} provides the usual \code{plot}, \code{print}, \code{summary},
 #' \code{predict} methods for the objects produced by \code{lasso_screenr},
-#' \code{logreg_screenr}, \code{simple_screenr} and \code{easy_tool}, and also
-#' \code{coef} methods for \code{lasso_screenr} and \code{logreg_screenr} objects.
+#' \code{logreg_screenr}, \code{gee_screenr}, \code{simple_screenr} and
+#' \code{easy_tool}, and also
+#' \code{coef} and \code{confint} methods for \code{lasso_screenr},
+#' \code{gee_screenr} and \code{logreg_screenr} objects.
 #' \code{screenr} also provides \code{get_what} methods to extract object
 #' components, and \code{ntpp} methods for computation of the average number of
 #' tests required to detect a single positive result and the residual
 #' positivity among those screened out of testing.
+#'
+#' @references
+#'
+#' Teferi W, Gutreuter S, Bekele A et al. Adapting strategies for effective and
+#' efficient pediatric HIV case finding: Risk screening tool for testing children
+#' presenting at high-risk entry points. BMC Infectious Diseases. 2022; 22:480.
+#' \url{http://doi.org/10.1186/s12879-022-07460-w}
 #'
 #' @note
 #' The canonical source repository for \code{screenr} is

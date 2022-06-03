@@ -19,14 +19,14 @@ the component.}
 
 \item{what}{the (character) name of the component to extract. Valid values are
 \verb{"Call"}, \verb{"QuestionWeights"}, \verb{"ROCci"}, \verb{"ROC"} and
-\verb{"Scores"}.}
+\verb{"Scores"}. See Details.}
 
 \item{...}{optional arguments to \code{get_what} methods.}
 
 \item{bootreps}{the number of bootstrap replications for estimation of
 confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.}
 
-\item{conf_level}{(optional) confidence level for \code{what =} \verb{ROCci}}
+\item{conf_level}{(optional) confidence level for \code{what =} \verb{ROCci}.}
 
 \item{se_min}{minimum value of sensitivity printed for
 \code{what =} \verb{ROCci}.  Default: 0.8.}

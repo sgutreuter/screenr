@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict-methods.R
 \name{predict.lasso_screenr}
 \alias{predict.lasso_screenr}
-\title{A Prediction Method for \code{lasso_screenr}-Class Objects}
+\title{An S3 Method to Compute Predicted Probabilities of Positive Test Results}
 \usage{
 \method{predict}{lasso_screenr}(object = NULL, ..., newdata = NULL)
 }

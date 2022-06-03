@@ -227,11 +227,10 @@ uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,
 Note that the variable `Q4` was excluded from the formula.
 Henceforth, this refitted final model will be used to validate screening.
 
-Again, the logit-scale maximum-likelihood estimates from the AIC-best model
+The logit-scale maximum-likelihood estimates and confidence limits from the AIC-best model
 which was selected using regularization are obtained using:
-
 ```{r, coef-uniobj2}
-coef(uniobj2)
+confint(uniobj2)
 ```
 
 One can also obtain the adjusted odds ratios and/or omit the
@@ -239,7 +238,7 @@ intercept.  For example, the adjusted odds ratios for the six
 predictors can be obtained using:
 
 ```{r, or-uniobj2}
-coef(uniobj2, or = TRUE, intercept = FALSE)
+confint(uniobj2, or = TRUE, intercept = FALSE)
 ```
 
 ## Selection of a screening threshold {-}

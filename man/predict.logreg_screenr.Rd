@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict-methods.R
 \name{predict.logreg_screenr}
 \alias{predict.logreg_screenr}
-\title{A Prediction Method for \code{logreg_screenr}-Class Objects}
+\title{An S3 Method to Compute Predicted Probabilities of Positive Test Results}
 \usage{
 \method{predict}{logreg_screenr}(object = NULL, ..., newdata = NULL)
 }

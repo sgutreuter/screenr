@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary-methods.R
 \name{summary.lasso_screenr}
 \alias{summary.lasso_screenr}
-\title{A Summary Method for \code{lasso_screenr}-Class Objects}
+\title{An S3 Summary Method for \code{screenr} Objects}
 \usage{
 \method{summary}{lasso_screenr}(object, ...)
 }

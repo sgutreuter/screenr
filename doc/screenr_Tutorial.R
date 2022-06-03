@@ -37,10 +37,10 @@ uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,
                          data = unicorns, Nfolds = 10, seed =  123)
 
 ## ---- coef-uniobj2------------------------------------------------------------
-coef(uniobj2)
+confint(uniobj2)
 
 ## ---- or-uniobj2--------------------------------------------------------------
-coef(uniobj2, or = TRUE, intercept = FALSE)
+confint(uniobj2, or = TRUE, intercept = FALSE)
 
 ## ---- lasso-plot, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE---------
 plot(uniobj2)

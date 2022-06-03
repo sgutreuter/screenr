@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-methods.R
 \name{plot.easy_tool}
 \alias{plot.easy_tool}
-\title{Plot ROC Curves from \code{easy_tool}-Class Objects}
+\title{An S3 Method to Plot ROC Curves}
 \usage{
 \method{plot}{easy_tool}(
   x,
@@ -55,7 +55,7 @@ lower and upper confidence limits for threshold values of Pr(response = 1).
 }
 \description{
 \code{plot.easy_tool} plots the \emph{k}-fold cross-validated
-receiver-operating characteristics, including confidence intervals on the
+receiver-operating characteristics (ROC), including confidence intervals on the
 combinations of the local maxima of sensitivity and specificity.
 }
 \details{

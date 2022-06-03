@@ -12,15 +12,13 @@
 
 ## Function print.easy_tool
 ##
-#' A Print Method for \code{easy_tool}-Class Objects
+#' An S3 Print Method for \code{screenr} Objects
 #'
 #' @description \code{print.easy_tool} is a print method.
 #'
 #' @param x an object of class \code{easy_tool}.
 #'
 #' @param ... optional arguments to \code{print} methods.
-#'
-#' @seealso \code{get_what.easy_tool(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @examples
 #' attach(uniobj1)
@@ -40,7 +38,7 @@ print.easy_tool <- function(x, ...){
 
 ## Function print.lasso_screenr
 ##
-#' A Print Method for \code{lasso_screenr}-Class Objects
+#' An S3 Print Method for \code{screenr} Objects
 #'
 #' @description \code{print.lasso_screenr} is a print method for
 #' \code{lasso_screenr}-class objects.
@@ -48,8 +46,6 @@ print.easy_tool <- function(x, ...){
 #' @param x an object of class \code{lasso_screenr}
 #'
 #' @param ... optional arguments to \code{print} methods.
-#'
-#' @seealso \code{get_what.lasso_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @examples
 #' attach(uniobj1)
@@ -68,7 +64,7 @@ print.lasso_screenr <- function(x, ...){
 
 ## Function print.logreg_screenr
 ##
-#' A Print Method for \code{logreg_screenr}-Class Objects
+#' An S3 Print Method for \code{screenr} Objects
 #'
 #' @description \code{print.logreg_screenr} is a print method for
 #' \code{logreg_screenr}-class objects.
@@ -82,8 +78,6 @@ print.lasso_screenr <- function(x, ...){
 #' @return
 #' Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
-#'
-#' @seealso \code{get_what.logreg_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @examples
 #' attach(uniobj2)
@@ -102,7 +96,7 @@ print.logreg_screenr <- function(x, ..., quote = FALSE){
 
 ## Function print.simple_screenr
 ##
-#' A Print Method for \code{simple_screenr}-Class Objects
+#' An S3 Print Method for \code{screenr} Objects
 #'
 #' @description \code{print.simple_screenr} is print method for
 #' \code{simple_screenr} objects.
@@ -113,8 +107,6 @@ print.logreg_screenr <- function(x, ..., quote = FALSE){
 #'
 #' @return Nothing. Thresholds, specificities and sensitivities are printed as a
 #' side effect.
-#'
-#' @seealso \code{get_what.simple_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 #'
 #' @examples
 #' data(unicorns)

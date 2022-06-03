@@ -24,8 +24,10 @@
 #'
 #' @return \code{get_what} returns the object specified by \code{what}.
 #'
-#' @seealso \code{\link{get_what.easy_tool}}, \code{\link{get_what.lasso_screenr}},
-#' \code{\link{get_what.logreg_screenr}} and \code{\link{get_what.simple_screenr}}.
+#' @seealso \code{\link[screenr]{get_what.easy_tool}},
+#' \code{\link[screenr]{get_what.lasso_screenr}},
+#' \code{\link[screenr]{get_what.logreg_screenr}} and
+#' \code{\link[screenr]{get_what.simple_screenr}}.
 #' @export
 get_what <- function(from, what, ...) {
     UseMethod("get_what")
@@ -45,9 +47,9 @@ get_what <- function(from, what, ...) {
 #'
 #' @param what the (character) name of the component to extract. Valid values are
 #' \verb{"Call"}, \verb{"QuestionWeights"}, \verb{"ROCci"}, \verb{"ROC"} and
-#' \verb{"Scores"}.
+#' \verb{"Scores"}. See Details.
 #'
-#' @param conf_level (optional) confidence level for \code{what =} \verb{ROCci}
+#' @param conf_level (optional) confidence level for \code{what =} \verb{ROCci}.
 #'
 #' @param bootreps the number of bootstrap replications for estimation of
 #' confidence intervals for \code{what =} \verb{"ROCci"}. Default: 4000.

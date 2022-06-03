@@ -11,11 +11,11 @@
 
 ## Function plot.easy_tool
 ##
-#' Plot ROC Curves from \code{easy_tool}-Class Objects
+#' An S3 Method to Plot ROC Curves
 #'
 #' @description
 #' \code{plot.easy_tool} plots the \emph{k}-fold cross-validated
-#' receiver-operating characteristics, including confidence intervals on the
+#' receiver-operating characteristics (ROC), including confidence intervals on the
 #' combinations of the local maxima of sensitivity and specificity.
 #'
 #' @param x an object of class \code{easy_tool}.
@@ -106,7 +106,7 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 
 ## Function plot.lasso_screenr
 ##
-#' Plot ROC Curves from \code{lasso_screenr}-Class Objects
+#' An S3 Method to Plot ROC Curves
 #'
 #' @description
 #' \code{plot.lasso_screenr} plots the \emph{k}-fold cross-validated
@@ -212,7 +212,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 
 ## Function plot.logreg_screenr
 ##
-#' Plot ROC Curves from \code{logreg_screenr}-Class Objects
+#' An S3 Method to Plot ROC Curves
 #'
 #' @description
 #' \code{plot.logreg_screenr} plots the \emph{k}-fold cross-validated
@@ -279,7 +279,7 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 partial_auc_focus = c("sensitivity", "specificity"),
                                 partial_auc_correct = TRUE,
                                 type =  "S"){
-    if(!class(x) == "logreg_screenr") stop("x is not a logreg_screenr object")
+    if(!("logreg_screenr" %in% class(x))) stop("x is not a logreg_screenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
     partial_auc_focus = match.arg(partial_auc_focus)
     if(is.logical(partial_auc)) {
@@ -313,7 +313,7 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 
 ## Function plot.simple_screenr
 ##
-#' Plot ROC Curves from \code{simple_screenr}-Class Objects
+#' An S3 Method to Plot ROC Curves
 #'
 #' @description
 #' \code{plot.simple_screenr} plots the \emph{k}-fold cross-validated

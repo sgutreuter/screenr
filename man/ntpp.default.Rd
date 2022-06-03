@@ -2,7 +2,7 @@
 % Please edit documentation in R/ntpp-methods.R
 \name{ntpp.default}
 \alias{ntpp.default}
-\title{Compute the Ratio of Total Tests to Positive Results from a Data Frame}
+\title{An S3 Method to Compute the Ratio of Total Tests to Positive Results}
 \usage{
 \method{ntpp}{default}(object = NULL, ..., se = NULL, sp = NULL, prev = NULL)
 }
@@ -30,7 +30,8 @@ following columns:
 }
 \description{
 \code{ntpp.data.frame} computes the ratio of the total number of
-tests performed per positive test result from data frames.
+tests performed per positive test result and the anticipated fraction of the
+untested (those screened out of testing) who would actually test positive.
 }
 \details{
 The anticipated number of tests required to detect a single positive

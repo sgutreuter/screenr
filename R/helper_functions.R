@@ -173,6 +173,7 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #' their sensititives, specificities and uncertainy intervals.
 #'
 #' @seealso \code{\link[pROC]{ci.thresholds}}
+#'
 #' @export
 roc_ci <- function(object, bootreps = 4000, conf_level = 0.95,
                    progress = "none", thresholds = "local maximas",
@@ -197,10 +198,10 @@ roc_ci <- function(object, bootreps = 4000, conf_level = 0.95,
 
 ## Function se_sp_max
 ##
-#' Return dataframe rows for which specificity is the maximum for each sensitivity
+#' Return a Simplified Dataframe of Sensitivity and Specificity
 #'
 #' @description Given a dataframe containing multiple values of specificity for
-#' each value of sensitivity, return only the rows containing the largest
+#' each value of sensitivity, return only the rows containing the largest value of
 #' specificity for each unique value of sensitivity.
 #'
 #' @param object a dataframe containing at least columns named \code{sensitivities}
@@ -227,7 +228,7 @@ se_sp_max <- function(object) {
 
 ## Function sens_spec_plus
 ##
-#' Compute Sensitivity, specificity and a few friends
+#' Compute Sensitivity, Specificity and a Few Friends
 #'
 #' @description \code{sens_spec_plus} computes sensitivity, specificity and a
 #' few friends from a gold standard and testing results. \code{sens_spec_plus}
@@ -266,6 +267,7 @@ se_sp_max <- function(object) {
 #' Test <- Gold; Test[c(3, 5, 9, 12, 16)] <- 1 - Test[c(3, 5, 9, 12, 16)]
 #' dat <- data.frame(Gold = Gold, Test = Test)
 #' sens_spec_plus(test = "Test", gold = "Gold", data = dat)
+#'
 #' @importFrom epiR epi.tests
 #' @export
 sens_spec_plus <- function(test = NULL, gold = NULL, data = NULL,

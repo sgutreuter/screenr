@@ -31,12 +31,7 @@
 #'
 #' @details
 #' \code{coef.lasso_screenr} extracts the estimated coefficients from
-#' \code{lasso_screenr} objects.  Regularization does not support estimation
-#' of confidence limits.
-#'
-#' @return \code{coef.lasso_screenr} returns a dataframe containing the
-#' estimated coefficients (or odds ratios) from the AIC- and BIC-best
-#' logistic regression models, where \emph{p} is the number of coefficients.
+#' \code{lasso_screenr} objects.
 #'
 #' @examples
 #' attach(uniobj1)
@@ -62,8 +57,7 @@ coef.lasso_screenr <- function(object, ..., intercept = TRUE, or = FALSE){
 #'
 #' @description
 #' \code{coef.logreg_screenr} returns the logistic model parameter estimates
-#' from and profile-likelihood confidence limits from \code{logreg_screenr}-class
-#' objects.
+#' from \code{logreg_screenr}-class objects.
 #'
 #' @param object an object of class \code{logreg_screenr}.
 #'
@@ -73,44 +67,31 @@ coef.lasso_screenr <- function(object, ..., intercept = TRUE, or = FALSE){
 #' @param or return odds ratios if \verb{TRUE}. Default: FALSE (returns
 #' logit-scale coefficients).
 #'
-#' @param conf_level confidence level for profile-likelihood confidence
-#' intervals. Default: 0.95.
-#'
 #' @param digits number of decimal places to be printed. Default: 4.
 #'
 #' @param ... optional arguments passed to \code{predict} methods.
 #'
-#' @details
-#' \code{coef.logreg_screenr} extracts the estimated coefficients from
-#' \code{logreg_screenr} objects.
+#' @seealso \code{\link[screenr]{confint.logreg_screenr}} and
+#' \code{\link[screenr]{confint.gee_screenr}}
 #'
 #' @return \code{coef.logreg_screenr} returns a dataframe containing the
-#' estimated coefficients (or odds ratios) and their profile-likelihood
-#' lower and upper confidence limits (lcl and ucl, respectively).
+#' estimated coefficients (or odds ratios).
 #'
 #' @examples
 #' attach(uniobj2)
 #' coef(uniobj2, or = TRUE)
 #'
-#' @importFrom stats coef confint
+#' @importFrom stats coef
 #' @export
 coef.logreg_screenr <- function(object, ..., intercept =  TRUE, or = FALSE,
-                                conf_level =  0.95, digits = 4){
-    stopifnot(class(object) == "logreg_screenr")
+                                digits = 4){
+    if(!("logreg_screenr" %in% class(object)))
+        stop("object not lasso_screenr class")
     coef_ <- object[["ModelFit"]][["coefficients"]]
-    plci_ <- confint(get_what(object, what = "ModelFit"), level = conf_level)
-    if(intercept == FALSE){
-        coef_ <- coef_[-1]
-        plci_ <- plci_[-1, ]
-        }
-    if(or == TRUE ){
-        coef_ <- exp(coef_)
-        plci_ <- exp(plci_)
-    }
-    coef_ <- data.frame(covariate = row.names(plci_),
-                        estimate = round(coef_, digits = digits),
-                        lcl = round(plci_[, 1], digits = digits),
-                        ucl = round(plci_[, 2], digits = digits))
+    if(intercept == FALSE) coef_ <- coef_[-1]
+    if(or == TRUE ) coef_ <- exp(coef_)
+    coef_ <- data.frame(covariate = names(coef_),
+                        estimate = round(coef_, digits = digits))
     row.names(coef_) <- NULL
     coef_
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/print-methods.R
 \name{print.logreg_screenr}
 \alias{print.logreg_screenr}
-\title{A Print Method for \code{logreg_screenr}-Class Objects}
+\title{An S3 Print Method for \code{screenr} Objects}
 \usage{
 \method{print}{logreg_screenr}(x, ..., quote = FALSE)
 }
@@ -25,7 +25,4 @@ side effect.
 attach(uniobj2)
 print(uniobj2)
 
-}
-\seealso{
-\code{get_what.logreg_screenr(from, what)} for \code{what =} \verb{"ROCci"}.
 }

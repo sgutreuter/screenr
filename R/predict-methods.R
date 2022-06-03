@@ -12,7 +12,7 @@
 
 ## Function predict.lasso_screenr
 ##
-#' A Prediction Method for \code{lasso_screenr}-Class Objects
+#' An S3 Method to Compute Predicted Probabilities of Positive Test Results
 #'
 #' @description \code{predict.lasso_screenr} computes predicted probabilities of
 #' positive test results from new data.
@@ -74,7 +74,7 @@ predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
 
 ## Function predict.logreg_screenr
 ##
-#' A Prediction Method for \code{logreg_screenr}-Class Objects
+#' An S3 Method to Compute Predicted Probabilities of Positive Test Results
 #'
 #' @description \code{predict.logreg_screenr} computes predicted probabilities
 #' of positive test results from new data.
@@ -121,7 +121,7 @@ predict.logreg_screenr <- function(object = NULL, ...,  newdata = NULL){
 
 ## Function predict.easy_tool
 ##
-#' A Prediction Method for \code{easy_tool}-Class Objects
+#' An S3 Method to Compute Simplified Screening Scores
 #'
 #' @description \code{predict.easy_tool} computes predicted simplified
 #' screening scores from new data.

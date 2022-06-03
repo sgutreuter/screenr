@@ -1,5 +1,5 @@
 #################################################################################
-##       R PROGRAM: logreg_screenr.R
+##       R PROGRAM: gee_screenr.R
 ##
 ##         PROJECT: R function for HIV screening based on ordinary logistic
 ##                  regression.
@@ -9,17 +9,19 @@
 ##
 #################################################################################
 
-## Function logreg_screenr
+## Function gee_screenr
 ##
-#' Fitting Screening Tools Using Ordinary Logistic Models
+#' Fitting Screening Tools Using GEE Estimation of Logistic Models
 #'
 #' @description
-#' \code{logreg_screenr} is a convenience function which integrates ordinary
-#' logistic modeling, \emph{k}-fold cross-validation and estimation of the
-#' receiver-operating characteristic.
+#' \code{gee_screenr} is a convenience function which integrates GEE estimation
+#' of logsitic models, \emph{k}-fold  cross-validation and estimation of the
+#' receiver-operating characteristic. GEE estimation accommodates cluster sampling.
 #'
 #' @param formula an object of class \code{stats::formula} defining the
 #' testing outcome and predictor covariates, which is passed to \code{stats::glm()}.
+#'
+#' @param id a vector identifying the sampling clusters.
 #'
 #' @param data a dataframe containing the variables defined in \verb{formula}. The
 #' testing outcome must be binary (0,1) indicating negative and positive test
@@ -30,6 +32,10 @@
 #' @param link the character-valued name of the link function for logistic
 #' regression.  Choices are \verb{"logit"}, \verb{"cloglog"} or
 #' \verb{"probit"}. Default: \verb{"logit"}.
+#'
+#' @param corstr a character string specifying the correlation structure. The
+#' following are permitted: \verb{"independence"}, \verb{"exchangeable"} and
+#' \verb{"unstructured"}.  Default: \verb{independence}
 #'
 #' @param Nfolds number of folds used for \emph{k}-fold cross
 #' validation (minimum = 2, maximum = 100).  Default: 10.
@@ -56,11 +62,11 @@
 #'
 #' @param seed random-number generator seed for cross-validation data splitting.
 #'
-#' @param ... additional arguments passsed to or from other \code{stats::glm}
+#' @param ... additional arguments passsed to or from other \code{geepack::geeglm}
 #' or \code{pROC::roc}.
 #'
-#' @return \code{logreg_screenr} returns an object of class logreg_screenr
-#' containing the elements:
+#' @return \code{gee_screenr} returns an object of class \code{gee_screenr},
+#' which inherits from class \code{logreg_screenr}, containing the elements:
 #' \describe{
 #' \item{\code{Call}}{The function call.}
 #' \item{\code{formula}}{The formula object.}
@@ -103,49 +109,63 @@
 #' For a gentle but python-centric introduction to \emph{k}-fold cross-validation,
 #' see \url{https://machinelearningmastery.com/k-fold-cross-validation/}.
 #'
-#' @seealso \code{\link[stats]{glm}}, \code{\link[pROC]{roc}} and
-#' \code{\link[pROC]{auc}}.
+#' @seealso \code{\link[geepack]{geeglm}}, \code{\link[pROC]{roc}} and
+#' \code{\link[pROC]{auc}}
 #'
 #' @references
+#'
+#' Liang K-Y, Zeger SL. Longitudinal data analysis using generalized linear
+#' models. Biometrika 1986;73(1):13-22.
+#' \url{http://doi.org/10.2307/2336267}
+#'
+#' Halekoh U, Hojsgaard S, Yan, J. The R package geepack for generalized
+#' estimating equations. Journal of Statistical Software 2006;15(2):1-11.
+#' \url{http://doi.org/10.18637/jss.v015.i02}
+#'
 #' Kim J-H. Estimating classification error rate: Repeated cross-validation, repeated
-#' hold-out and bootstrap. Computational Statistics and Data Analysis.
+#' hold-out and bootstrap. Computational Statistics and Data Analysis
 #' 2009:53(11):3735-3745. \url{http://doi.org/10.1016/j.csda.2009.04.009}
 #'
 #' Robin X, Turck N, Hainard A, Tiberti N, Lisacek F, Sanchez J-C,
 #' Muller M. \code{pROC}: An open-source package for \code{R} and S+ to
-#' analyze and compare ROC curves. BMC Bioinformatics. 2011;12(77):1-8.
+#' analyze and compare ROC curves. BMC Bioinformatics 2011;12(77):1-8.
 #' \url{http://doi.org/10.1186/1471-2105-12-77}
-#'
-#' Teferi W, Gutreuter S, Bekele A et al. Adapting strategies for effective and
-#' efficient pediatric HIV case finding: Risk screening tool for testing children
-#' presenting at high-risk entry points. BMC Infectious Diseases. 2022; 22:480.
-#' \url{http://doi.org/10.1186/s12879-022-07460-w}
 #'
 #' @examples
 #' \dontrun{
+#' library(dplyr)
 #' data(unicorns)
-#' uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,
-#'                            data = unicorns, link = "logit", Nfolds = 10)
-#' methods(class = class(uniobj2))
-#' summary(uniobj2)
-#'}
-#' @aliases{binomialScreenr}
+#' ## Add a contrived cluster identifier (25 clusters) for demonstration only:
+#' uniclus <- unicorns %>%
+#'    mutate(cluster = sample(1:25, size = dim(unicorns)[1], replace = TRUE))
+#' ## Use gee_screenr:
+#' uniobj3 <- gee_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7, id = cluster,
+#'                        data = uniclus, link = "logit", Nfolds = 10)
+#' class(uniobj3)
+#' methods(class = class(uniobj3)[1])
+#' methods(class = class(uniobj3)[2])
+#' summary(uniobj3)
+#' }
 #' @import pROC
-#' @importFrom stats model.frame complete.cases model.response glm binomial
+#' @import geepack
+#' @importFrom stats model.frame complete.cases model.response binomial
 #' @export
-logreg_screenr <- function(formula,
-                           data = NULL,
-                           link = c("logit", "cloglog", "probit"),
-                           Nfolds = 10,
-                           partial_auc = c(0.8, 1.0),
-                           partial_auc_focus = "sensitivity",
-                           partial_auc_correct = TRUE,
-                           boot_n = 4000, conf_level = 0.95,
-                           seed = Sys.time(),
-                           ...){
+gee_screenr <- function(formula,
+                        id = NULL,
+                        data = NULL,
+                        link = c("logit", "cloglog", "probit"),
+                        corstr = c("independence", "exchangeable", "unstructured"),
+                        Nfolds = 10,
+                        partial_auc = c(0.8, 1.0),
+                        partial_auc_focus = "sensitivity",
+                        partial_auc_correct = TRUE,
+                        boot_n = 4000, conf_level = 0.95,
+                        seed = Sys.time(),
+                        ...){
     if(!inherits(formula, "formula")) stop("Specify an model formula")
     if(!is.data.frame(data)) stop("Provide a data frame")
     link <- match.arg(link)
+    corstr <- match.arg(corstr)
     call <- match.call()
     m <- match(c("formula", "data"), names(call), 0L)
     mf <- call[c(1L, m)]
@@ -153,17 +173,23 @@ logreg_screenr <- function(formula,
     mfx <- stats::model.frame(formula, data)
     x <- as.matrix(mfx[, -1])
     dat <- eval(mf, parent.frame())
+    dat <- cbind(dat, data.frame(assign(as.character(substitute(id)),
+                                        data[[as.character(substitute(id))]])))
+    names(dat)[dim(dat)[2]] <- as.character(substitute(id))
     dat <- dat[stats::complete.cases(dat), ]
     if(Nfolds > 0.20*dim(dat)[1])
         stop("Nfolds must be < 20% of number of complete observations")
-    y <- stats::model.response(dat, "numeric")
+    y <- stats::model.response(mfx, type = "numeric")
     if(!all(y %in% c(0, 1))) stop("Response variable must be binary (0, 1)")
     prev <- mean(y, na.rm = TRUE)
-    lrfit <- stats::glm(formula, data = dat, family = binomial(link = link), ...)
-    parmEst <- lrfit$coeff[-1]
+    geecall <- substitute(geepack::geeglm(formula, id = id,
+                                          corstr = corstr, data = dat,
+                                          family = binomial(link = link), ...))
+    geefit <- eval(geecall)
+    parmEst <- coef(geefit)[-1]
     if(any(parmEst < 0))
         warning("Some coefficient(s) < 0; associations should be positive.")
-    is.roc <- pROC::roc(lrfit$y, lrfit$fitted.values,
+    is.roc <- pROC::roc(geefit$y, as.vector(geefit$fitted.values),
                         auc = TRUE, ci = TRUE, of = "auc",
                         conf.level = conf_level,
                         boot.n = boot_n,
@@ -178,19 +204,21 @@ logreg_screenr <- function(formula,
     set.seed(seed)
     for(i in 1:Nfolds){
         xhoj <- data.frame(fold = rep(i, length(holdouts[[i]])),
-                           x[holdouts[[i]],])
+                           dat[holdouts[[i]],])
         X_ho <- rbind(X_ho, xhoj)
-        res <- stats::glm(formula, data = dat[-holdouts[[i]], ],
-                          family = binomial(link = link), ...)
+        geecalli <- substitute(geepack::geeglm(formula, id =  id, corstr = corstr,
+                                               data = dat[-holdouts[[i]], ],
+                                               family = binomial(link = link), ...))
+        res = eval(geecalli)
         pred.prob <- inverse_link(stats::predict(res,
                                                 newdata = dat[holdouts[[i]], ]),
-                                 link = link)
-        y <- stats::model.response(dat[holdouts[[i]], ])
+                                  link = link)
+        y <- stats::model.response(mfx[holdouts[[i]], ], type = "numeric")
         cv.results <- rbind(cv.results,
                             data.frame(cbind(fold = rep(i, length(pred.prob)),
                                              y = y,
                                              cv.pred.prob = pred.prob)))
-        coef_ <- t(as.matrix(res$coefficients))
+        coef_ <- t(as.matrix(coef(res)))
         colnames(coef_)[1] <- "Intercept"
         coef_ <- data.frame(fold = i, coef_)
         cv.coef <- rbind(cv.coef, coef_)
@@ -207,13 +235,13 @@ logreg_screenr <- function(formula,
     result <- list(Call = call,
                    formula = formula,
                    Prevalence = prev,
-                   ModelFit = lrfit,
+                   ModelFit = geefit,
                    ISroc = is.roc,
                    Nfolds = Nfolds,
                    CVpreds = cv.results,
                    CVroc = cv.roc,
                    CVcoef = cv.coef,
                    X_ho = X_ho)
-    class(result) <- "logreg_screenr"
+    class(result) <- c("gee_screenr", "logreg_screenr")
     invisible(result)
 }

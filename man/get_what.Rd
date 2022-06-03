@@ -20,6 +20,8 @@ get_what(from, what, ...)
 \code{get_what} extracts components from objects.
 }
 \seealso{
-\code{\link{get_what.easy_tool}}, \code{\link{get_what.lasso_screenr}},
-\code{\link{get_what.logreg_screenr}} and \code{\link{get_what.simple_screenr}}.
+\code{\link[screenr]{get_what.easy_tool}},
+\code{\link[screenr]{get_what.lasso_screenr}},
+\code{\link[screenr]{get_what.logreg_screenr}} and
+\code{\link[screenr]{get_what.simple_screenr}}.
 }
