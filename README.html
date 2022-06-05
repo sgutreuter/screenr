@@ -603,21 +603,24 @@ body {
 <!-- README.md is generated from README.Rmd -->
 
 <h1 id="screenr">screenr</h1>
+<p><strong>An R package to enable screening in/out subjects who are likely to to test positive/negative, respectively.</strong></p>
 <h2 id="description">Description</h2>
-<p>An R package to enable screening in/out subjects who are likely to to test positive/negative, respectively.</p>
+<p>Package screenr enables easy development and validation of diagnostic test screening tools. It is designed to enable those with only a basic familiarity with R to develop, validate and screening tools for diagnostic tests.</p>
 <p>Consider the situation where a definitive test for some condition is expensive, and the condition is rare. In that case, universal testing would not be efficient in terms of the yield of postive results per test performed. Now suppose that responses to a set of simple diagnostic questions or observations may be predictive of the definitive test result. Package screenr enables the estimation of thresholds for making decisions about when to perform the definitive test on newly observed subjects based on Receiver Operating Characteristics (ROC) estimated from an initial sample. The choice of a particular screening threshold is left to the user, and should be based on careful consideration of application-specific tradeoffs between sensitivity (true positive fraction) and specificity (true negative fraction).</p>
 <h2 id="installation">Installation</h2>
 <h3 id="installing-from-github-in-an-r-session">Installing from GitHub in an R session</h3>
 <p>Open an R session and do:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages(&quot;devtools&quot;)</span></a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;sgutreuter/screenr&quot;</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb1-3" title="3">                         <span class="dt">build_manual =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Install devtools if not already installed:</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">## Install screenr:</span></a>
+<a class="sourceLine" id="cb1-4" title="4">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;sgutreuter/screenr&quot;</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb1-5" title="5">                         <span class="dt">build_manual =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><strong>or</strong></p>
 <h3 id="download-and-install-from-a-command-line">Download and install from a command line</h3>
 <ol>
 <li><p>Browse to <a href="https://github.com/sgutreuter/screenr">https://github.com/sgutreuter/screenr</a>.</p></li>
 <li><p>Click on the <strong>Code</strong> pull-button near the upper-right corner, select <strong>Download ZIP</strong> and save the zip archive in a location of your choice.</p></li>
-<li><p>Unzip the archive into a directory named screenr.</p></li>
+<li><p>Unzip the archive into an empty temporary directory.</p></li>
 <li><p>Open a shell/terminal in the directory containing the unzipped screenr directory.</p></li>
 <li><p>Execute ‘R CMD INSTALL ./screenr’</p></li>
 </ol>
