@@ -1,8 +1,5 @@
 ---
 title: "screenr Tutorial"
-author:
-- name: Steve Gutreuter
-  email: sgutreuter@gmail.com
 output:
   rmarkdown::html_vignette
 vignette: >
@@ -43,7 +40,7 @@ maximum-likelihood estimation.  Regularization enables robust model
 selection, but the parameter estimates are biased toward zero.
 Therefore one might choose to re-fit the model selected by
 regularization using maximum-likelihood estimation.  Model performance is
-evaluated using receiver-operating characteristics [4,5].
+evaluated using receiver-operating characteristics (ROC) [4,5].
 
 
 # An (Artificial) Example {-}
@@ -98,8 +95,8 @@ infection would require, on average, testing
 
 # Screening Tool Development {-}
 
-This demonstration of screening-tool development and thorough
-validation consists of four steps:
+This demonstration of screening-tool development and
+validation consists of five steps:
 
 1. Model selection
 2. Refitting the final model
@@ -113,16 +110,15 @@ resource limitations.
 ## Model selection {-}
 
 The first step is the selection of a parsimonious logistic screening
-model from the training data.  A method known as *L*1 regularization has desirable
+model.  A method known as *L*1 regularization has desirable
 properties for that task [2,3].  The function `lasso_screenr()`
 provides easy, integrated access to the *L*1 regularization algorithm
 of Park and Hastie [3], as implemented in the glmpath `R` package, using
 a convenient formula interface:
 
-```{r, lasso_screenr}
+```{r, lasso_screenr, results = "hide"}
 uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                          data = unicorns, Nfolds = 10, seed = 123)
-class(uniobj1)
 ```
 
 The formula `testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7` is an
@@ -138,70 +134,15 @@ run to run. Set the seed only if reproducible results are needed.
 
 The fitting algorithm computes logit-scale coefficients along the
 entire regularization path, and has the effect of selecting covariates
-based on penalization by
-*L*1-[norm](https://towardsdatascience.com/norms-penalties-and-multitask-learning-2f1db5f97c1f)of
-their coefficients, similar to the ordinary lasso [2].  Unlike the
-conventional lasso, the algorithm also imposes a very small penalty on
+based on penalization by the
+*L*1-[norm](https://towardsdatascience.com/norms-penalties-and-multitask-learning-2f1db5f97c1f)
+of their coefficients, similar to the ordinary lasso [2].
+Unlike the
+ordinary lasso, the algorithm also imposes a very small penalty on
 the *L*2-norm, which eliminates adverse effects of any strong
 correlations among the predictors and provides useful estimates even
 if the response variable is separable by the predictors (albeit
-unlikely in test-screening applications).  Two solutions along the
-regularization path which yield the smallest [AIC and
-BIC](https://docs.displayr.com/wiki/Information_Criteria) values,
-denoted `"minAIC"` and `"minBIC"`, respectively, are given special
-status.  Those are likely the most useful solutions in nearly all
-settings. However all solutions are accessible.
-
-The resulting `lasso_screenr`-class object (`uniobj1`) includes the
-results from regularization and performance measures from the fits to
-all of the data, and from *k*-fold cross validation. The resulting
-object, `uniobj1`, contains all of the information need to develop and
-(internally) validate a screening tool for diagnostic tests.
-
-For example, the logit-scale coefficients for the special solutions
-are obtained using:
-
-```{r, coef-1}
-coef(uniobj1)
-```
-
-Note that the coefficients for Q4 have been shrunk to zero in both the
-AIC- and BIC-best models, which happen to coincide in the unicorn data.
-In effect, Q4 has been eliminated from both of those models. Q4 was
-not an important predictor of the test result.
-
-One can also obtain the adjusted odds ratios and/or omit the
-intercept.  For example, the adjusted odds ratios for the seven
-predictors can be obtained using:
-
-```{r, coef-2}
-coef(uniobj1, or = TRUE, intercept = FALSE)
-```
-
-The adjusted odds ratios for Q4 are 1.0, again indicating that Q4 was
-not predictive of the test result.
-
-One can also examine the
-coefficients everywhere the active set changed along the regularization
-path for either of the special fits:
-
-```{r, pathplot, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
-pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
-plot(pathobj)
-```
-
-where the horizontal axis is the *L*1-norm of the coefficient vector
-(see [3] for details).
-
-The screenr package provides the following methods for
-`lasso-screenr`-class objects:
-
-```{r, class-lasso}
-methods(class = "lasso_screenr")
-```
-
-The methods should make it mostly unnecessary to access components of
-`lasso_screenr`-class objects directly using `R` code similar to `object$component`.
+unlikely in test-screening applications).
 
 **IMPORTANT:** The object returned by `lasso_screenr` (or any of the other
 "_screenr" functions) contains information critical to validation and
@@ -210,29 +151,90 @@ for future use**, for example:
 ```{r, save-rds, eval = FALSE}
 saveRDS(uniobj1, file = "uniobj1.rds")
 ```
+
+The resulting `lasso_screenr`-class object (`uniobj1`) includes the
+results from regularization and performance measures from the fits to
+all of the data using *k*-fold cross validation. The resulting
+object, `uniobj1`, contains all of the information need to develop and
+(internally) validate a screening tool for diagnostic tests. The
+screenr package provides the following methods for
+`lasso-screenr`-class objects:
+```{r, class-lasso}
+methods(class = "lasso_screenr")
+```
+The methods should make it mostly unnecessary to access components of
+`lasso_screenr`-class objects directly using `R` code similar to
+`object$component`.
+
+For example, the `summary` method method provides basic information
+about the results of regularization:
+```{r, summary}
+summary(uniobj1)
+```
+Regularization yielded logistic eight models. Two models along the
+regularization path which yield the smallest [AIC and
+BIC](https://docs.displayr.com/wiki/Information_Criteria) values,
+denoted `"minAIC"` and `"minBIC"`, respectively, are given special
+status.  Those are likely the most useful solutions in nearly all
+settings.  It may also be useful consider the model which yielded the
+largest partial area under the ROC curve (pAUC)[6] if that differs
+from the AIC- or BIC-best models. The default for pAUC is the area
+under the ROC curve for which sensitivity is at least 0.8, but see the
+results of `help(lasso_screenr)` for other options.  However all
+solutions are accessible from `lasso_screer`-class objects.
+
+The logit-scale coefficients for the two special models
+are obtained using:
+
+```{r, coef-1}
+coef(uniobj1)
+```
+Note that the coefficients for Q4 have been shrunk to zero in both the
+AIC- and BIC-best models, which happen to coincide in the unicorn data.
+In effect, Q4 has been eliminated from both of those models. Q4 was
+not an important predictor of the test result.  One can also obtain the adjusted odds ratios and/or omit the
+intercept.  For example, the adjusted odds ratios for the seven
+predictors can be obtained using:
+
+```{r, coef-2}
+coef(uniobj1, or = TRUE, intercept = FALSE)
+```
+The adjusted odds ratios for Q4 are 1.0, again indicating that Q4 was
+not predictive of the test result. One can also examine the
+coefficients everywhere the active set changed along the regularization
+path for either of the special fits by extracting and plotting the
+regularization path object:
+```{r, pathplot, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
+pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
+plot(pathobj)
+```
+where the horizontal axis is the *L*1-norm of the coefficient vector and the vertical
+axis shows values of the individual coefficients (see [3] for details).
+
+
 ## Refitting the final model {-}
 
 Although one can use the results from the call to `lasso_screenr`
 as contained in `uniobj1`, the logistic model parameter estimates
 produced by regularization are biased toward zero.  Therefore one
-might choose to re-fit the selected model using ordinary logistic
-modeling as implemented in `logreg_screenr`.  We can refit the
+might choose to re-fit the selected model[2] using ordinary logistic
+modeling[7] as implemented in `logreg_screenr`.  We can refit the
 AIC-best model using:
 
-```{r, logreg-fit}
+```{r, logreg-fit, results = "hide"}
 uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,
-                         data = unicorns, Nfolds = 10, seed =  123)
+                          data = unicorns, Nfolds = 10,
+                          seed =  123)
+saveRDS(uniobj2, file = "uniobj2.rds" )
 ```
-
 Note that the variable `Q4` was excluded from the formula.
 Henceforth, this refitted final model will be used to validate screening.
 
 The logit-scale maximum-likelihood estimates and confidence limits from the AIC-best model
-which was selected using regularization are obtained using:
+are obtained using:
 ```{r, coef-uniobj2}
 confint(uniobj2)
 ```
-
 One can also obtain the adjusted odds ratios and/or omit the
 intercept.  For example, the adjusted odds ratios for the six
 predictors can be obtained using:
@@ -250,7 +252,7 @@ expert judgment, neither of which are provided by the screenr
 package. However the screenr package does provide the results that are
 most relevant to that task.
 
-The receiver-operating characteristic (ROC) provides measures of the
+The receiver-operating characteristic (ROC) provides a measure of the
 accuracy of screening at multiple thresholds. The `screenr` package
 incorporates
 [_k_-fold
@@ -266,20 +268,21 @@ using the `R` code
 ```{r, lasso-plot, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
 plot(uniobj2)
 ```
-
 which plots the overly-optimistic in-sample ROC and the
 cross-validated out-of-sample ROC from the AIC-best model
-fit. Confidence intervals for sensitivity and specificity are plotted
+fit.  95% confidence intervals for sensitivity and specificity are plotted
 at the local maxima (largest distances perpendicular to the 1:1
-line). Those maxima are the complete set options for screening.
-
-The partial area under the curve (partial AUC) is good compared
-with random assignment, which would have an AUC of 0.5. However,
+line). Those maxima are the complete set options for screening
+thresholds.  A
+partial AUC of 0.5 would be produced from random assignment, and a
+value of 1.0 indicates perfect classification for that portion of the
+ROC curve for which sensitivity is at least 0.8. The partial area
+under the curve (partial AUC) is good compared
+with random assignment. However,
 sensitivity and specificity at the local maxima of the ROC curve are
 more relevant to test screening.  It is difficult to read
 sensitivities and specificities from the ROC curve. Instead, the
 numerical values can be obtained using:
-
 ```{r, roc-maximas-lasso}
 roc_maximas <- get_what(from = uniobj2, what = "ROCci", se_min = 0.9)
 print(roc_maximas)
@@ -291,10 +294,10 @@ and specificities along with their 0.95\% confidence limits at the
 local maxima along the cross-validated ROC curve. The argument `se_min
 = 0.9` limits the local maximas to those which produced a
 cross-validated sensitivity estimate of at least 0.90. Here there are
-ten options for screening.  For example, testing those unicorns for
-which the predicted probability of testing positive is 0.00686 (row 5) or
+ten threshold options for screening.  For example, testing those unicorns for
+which the predicted probability of testing positive is 0.00685 (row 5) or
 larger would have an out-of-sample sensitivity of 0.959 and
-specificity of 0.628.
+specificity of 0.627.
 
 For example, suppose we have screening results on two additional
 unicorns who have not been tested previously. We can compute their
@@ -327,7 +330,7 @@ sample. However, subjects from other geographic areas, demographic
 groups and other health facilities may differ from those in the
 training sample. In that case, cross-validated estimates of
 sensitivity and specificity might still be overly optimistic.
-**Therefore it is highly desirable to validate the
+**Therefore it is highly desirable to externally validate the
 screening tool prior to use in new populations of subjects.**
 
 External validation requires a repetition of the study for the new
@@ -349,12 +352,10 @@ val_data <- val_data[, -5]
 new_preds <- predict(uniobj2, newdata = val_data)
 head(new_preds)
 ```
-
 Note that we are predicting using the model fit from the initial study,
 as contained in `uniobj2`. The data frame `val_data` contains the new
-data from the follow-up study.
-
-The data frame `new_preds` contains the results of tests from the new
+data from the follow-up study. The data frame `new_preds` contains the
+results of tests from the new
 subjects and predicted probabilities of a positive outcome based on
 the AIC- and BIC-best models fitted to the training data. The
 questionnaire responses from the new subjects are also included. Those
@@ -372,12 +373,10 @@ class(new_roc)
 
 The `pROC` package provides a plot method for `roc`-class objects. Note that the syntax of the arguments to
 `roc`-class objects differs from usage in the `screenr` package:
-
 ```{r, plot-new-roc, fig.width = 4, fig.height = 4}
 plot(new_roc, print_auc = TRUE, partial_auc =  c(0.8, 1.0), type = "S",
      partial_auc_focus = "sensitivity", partial_auc_correct = TRUE)
 ```
-
 Note that the partial AUC is slightly smaller than the partial AUC from
 cross-validation of the training data. However the `roc_ci` function
 provided by the `screenr` package provides more informative
@@ -410,18 +409,14 @@ coefficients, including the intercept.
 The interviewer would enter the responses to the questions and the
 application would indicate whether the subject should be referred for
 testing based on the internally computed value of _P_. This is the
-ideal approach, and should be used wherever possible.
-
-**NOTE:** Screening questions for which estimated coefficients equal 0
-(and those zero-valued coefficients) can and should be eliminated from
-the screening application.
-
-However, an approach which does not require electronic technology may
-be needed in many health-care settings.
+ideal approach, and should be used wherever possible. However, an
+approach which does not require electronic technology may be needed in
+many health-care settings.
 
 ### Simplified implementation based on question weights {-}
 
-Alternatively, the non-zero coefficient estimates could be rounded to
+Alternatively, the non-zero coefficient estimates could be rescaled
+and rounded to
 whole numbers between 1 and *m*, where *m* is some number from, say, 3
 to 10. Those rounded values are used as weights for the question
 responses. The score for an individual is the sum of the question
@@ -444,9 +439,7 @@ Recall that `uniobj2` contains the results of maximum-likelihood estimation. The
 argument `max` represents *m*, in this case 3. The remaining arguments
 specify creation of question weights from the AIC-best model, with
 performance base on the cross-validated results in `uniobj2`.  The
-resulting object, `et_3`, is of class `easy_tool`.
-
-Methods for that class are found by executing:
+resulting object, `et_3`, is of class `easy_tool`. Methods for that class are found by executing:
 ```{r, easy-tool-methods}
 methods(class = "easy_tool")
 ```
@@ -473,20 +466,17 @@ the scores based on the sums of the question weights can be printed:
 qw_maximas <- get_what(from = et_3, what = "ROC")
 print(qw_maximas)
 ```
-
 Referral for testing all unicorns having a screening score (threshold)
 of 3 or more will have point estimates for sensitivity and specificity
 of 0.98 and 0.55, respectively.
 
-An example of a simple clinical screening form based on question
-weights is shown in the figure, below.
-
+An example of a simple clinical
+screening form based on question weights is shown in the figure,
+below. **NOTE:** Screening questions for which the question weights equal 0
+can and should be eliminated from the screening form.
 ```{r, show-simple-example, fig.width = 4, fig.height = 3}
 knitr::include_graphics("UniTool.png")
 ```
-
-**NOTE:** Screening questions for which the question weights equal 0
-can and should be eliminated from the screening form.
 
 # Effects of screening on testing results {-}
 

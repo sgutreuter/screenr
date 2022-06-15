@@ -11,10 +11,18 @@ data(val_data)
 ## The first six lines of the unicorn screening data:
 head(unicorns)
 
-## ---- lasso_screenr-----------------------------------------------------------
+## ---- lasso_screenr, results = "hide"-----------------------------------------
 uniobj1 <- lasso_screenr(testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7,
                          data = unicorns, Nfolds = 10, seed = 123)
-class(uniobj1)
+
+## ---- save-rds, eval = FALSE--------------------------------------------------
+#  saveRDS(uniobj1, file = "uniobj1.rds")
+
+## ---- class-lasso-------------------------------------------------------------
+methods(class = "lasso_screenr")
+
+## ---- summary-----------------------------------------------------------------
+summary(uniobj1)
 
 ## ---- coef-1------------------------------------------------------------------
 coef(uniobj1)
@@ -26,15 +34,11 @@ coef(uniobj1, or = TRUE, intercept = FALSE)
 pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
 plot(pathobj)
 
-## ---- class-lasso-------------------------------------------------------------
-methods(class = "lasso_screenr")
-
-## ---- save-rds, eval = FALSE--------------------------------------------------
-#  saveRDS(uniobj1, file = "uniobj1.rds")
-
-## ---- logreg-fit--------------------------------------------------------------
+## ---- logreg-fit, results = "hide"--------------------------------------------
 uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,
-                         data = unicorns, Nfolds = 10, seed =  123)
+                          data = unicorns, Nfolds = 10,
+                          seed =  123)
+saveRDS(uniobj2, file = "uniobj2.rds" )
 
 ## ---- coef-uniobj2------------------------------------------------------------
 confint(uniobj2)

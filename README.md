@@ -3,15 +3,10 @@
 
 # screenr
 
-**An R package to enable screening in/out subjects who are likely to to
-test positive/negative, respectively.**
-
 ## Description
 
-Package screenr enables easy development and validation of diagnostic
-test screening tools. It is designed to enable those with only a basic
-familiarity with R to develop, validate and screening tools for
-diagnostic tests.
+An R package to enable screening in/out subjects who are likely to to
+test positive/negative, respectively.
 
 Consider the situation where a definitive test for some condition is
 expensive, and the condition is rare. In that case, universal testing
@@ -33,9 +28,7 @@ fraction) and specificity (true negative fraction).
 Open an R session and do:
 
 ``` r
-## Install devtools if not already installed:
-install.packages("devtools")
-## Install screenr:
+# install.packages("devtools")
 devtools::install_github("sgutreuter/screenr", build_vignettes = TRUE,
                          build_manual = TRUE)
 ```
@@ -50,7 +43,7 @@ devtools::install_github("sgutreuter/screenr", build_vignettes = TRUE,
     select **Download ZIP** and save the zip archive in a location of
     your choice.
 
-3.  Unzip the archive into an empty temporary directory.
+3.  Unzip the archive into a directory named screenr.
 
 4.  Open a shell/terminal in the directory containing the unzipped
     screenr directory.
