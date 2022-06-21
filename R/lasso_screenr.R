@@ -211,7 +211,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     ii[length(ii)] <- TRUE
     st <- which(ii)
     pROC <- data.frame(NULL)
-    cat(paste0("\nEstimating in-sample (partial)AUC values along the regularization path...\n"))
+    message(paste0("\nEstimating in-sample (partial)AUC values along the regularization path...\n"))
     for(i in st) {
         phat <- as.vector(predict(res, newx = x, newy = y, s = i, type = "response"))
         rocx <- pROC::roc(y, phat,
@@ -263,7 +263,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     minAICcvCoef <- data.frame(NULL)
     minBICcvCoef <- data.frame(NULL)
     X_ho <- data.frame(NULL)
-    cat(paste0("\nPerforming ", Nfolds,"-fold cross-validation...\n"  ))
+    message(paste0("\nPerforming ", Nfolds,"-fold cross-validation...\n"  ))
     for(j in 1:Nfolds){
         yj <- y[-holdouts[[j]]]
         xhoj <- data.frame(fold = rep(j, length(holdouts[[j]])),
