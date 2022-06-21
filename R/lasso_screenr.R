@@ -205,13 +205,13 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
                             standardize = standardize,
                             family = "binomial",
                             lambda2 = lam2, ...)
-    message("\nRegularization completed.\n")
+    message("\nRegularization completed.")
     sumry <- summary(res)
     ii <- res$new.A
     ii[length(ii)] <- TRUE
     st <- which(ii)
     pROC <- data.frame(NULL)
-    message(paste0("\nEstimating in-sample (partial)AUC values along the regularization path...\n"))
+    message("Estimating in-sample (partial)AUC values along the regularization path...")
     for(i in st) {
         phat <- as.vector(predict(res, newx = x, newy = y, s = i, type = "response"))
         rocx <- pROC::roc(y, phat,
@@ -222,6 +222,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
                    partial.auc.correct = partial_auc_correct)
         pROC <- rbind(pROC, c(as.numeric(rocx$auc), as.numeric(rocx$ci)[c(1, 3)]))
     }
+    message("Done." )
     names(pROC) <- c("pAUC", "pAUClcl", "pAUCucl")
     sumry <- cbind(data.frame(Step = st), sumry, pROC )
     rownames(sumry) <-  NULL
