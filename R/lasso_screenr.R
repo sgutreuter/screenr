@@ -205,7 +205,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
                             standardize = standardize,
                             family = "binomial",
                             lambda2 = lam2, ...)
-    cat("\nRegularization completed.\n")
+    message("\nRegularization completed.\n")
     sumry <- summary(res)
     ii <- res$new.A
     ii[length(ii)] <- TRUE
