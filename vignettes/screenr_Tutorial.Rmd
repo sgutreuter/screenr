@@ -176,9 +176,7 @@ regularization path which yield the smallest [AIC and
 BIC](https://docs.displayr.com/wiki/Information_Criteria) values,
 denoted `"minAIC"` and `"minBIC"`, respectively, are given special
 status.  Those are likely the most useful solutions in nearly all
-settings.  It may also be useful consider the model which yielded the
-largest partial area under the ROC curve (pAUC)[6] if that differs
-from the AIC- or BIC-best models. The default for pAUC is the area
+settings.  The default for pAUC is the area
 under the ROC curve for which sensitivity is at least 0.8, but see the
 results of `help(lasso_screenr)` for other options.  However all
 solutions are accessible from `lasso_screer`-class objects.

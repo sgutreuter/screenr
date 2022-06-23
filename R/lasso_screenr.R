@@ -205,7 +205,6 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
                             standardize = standardize,
                             family = "binomial",
                             lambda2 = lam2, ...)
-    message("\nRegularization completed.")
     sumry <- summary(res)
     ii <- res$new.A
     ii[length(ii)] <- TRUE
@@ -226,8 +225,6 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     names(pROC) <- c("pAUC", "pAUClcl", "pAUCucl")
     sumry <- cbind(data.frame(Step = st), sumry, pROC )
     rownames(sumry) <-  NULL
-    AIC <- data.frame(NULL)
-    BIC <- data.frame(NULL)
     pAUC <- data.frame(NULL )
     minAIC <- NULL
     minBIC <- NULL
@@ -264,7 +261,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     minAICcvCoef <- data.frame(NULL)
     minBICcvCoef <- data.frame(NULL)
     X_ho <- data.frame(NULL)
-    message(paste0("\nPerforming ", Nfolds,"-fold cross-validation...\n"  ))
+    message("Performing ", Nfolds,"-fold cross-validation..."  )
     for(j in 1:Nfolds){
         yj <- y[-holdouts[[j]]]
         xhoj <- data.frame(fold = rep(j, length(holdouts[[j]])),
@@ -301,6 +298,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
         }
         X_ho <- rbind(X_ho, xhoj)
     }
+    message("Done.")
     attr(X_ho, "Description") <- "Hold-out predictors"
     attr(minAICcvPreds, "Description") <- "Out-of-sample predicted probabilities from the AIC-best model"
     attr(minBICcvPreds, "Description") <- "Out-of-sample predicted probabilities from the BIC-best model"
