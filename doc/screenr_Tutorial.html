@@ -358,30 +358,34 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>The first step is the selection of a parsimonious logistic screening model. A method known as <em>L</em>1 regularization has desirable properties for that task [2,3]. The function <code>lasso_screenr()</code> provides easy, integrated access to the <em>L</em>1 regularization algorithm of Park and Hastie [3], as implemented in the glmpath <code>R</code> package, using a convenient formula interface:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">uniobj1 &lt;-<span class="st"> </span><span class="kw">lasso_screenr</span>(testresult <span class="op">~</span><span class="st"> </span>Q1 <span class="op">+</span><span class="st"> </span>Q2 <span class="op">+</span><span class="st"> </span>Q3 <span class="op">+</span><span class="st"> </span>Q4 <span class="op">+</span><span class="st"> </span>Q5 <span class="op">+</span><span class="st"> </span>Q6 <span class="op">+</span><span class="st"> </span>Q7,</a>
 <a class="sourceLine" id="cb2-2" title="2">                         <span class="dt">data =</span> unicorns, <span class="dt">Nfolds =</span> <span class="dv">10</span>, <span class="dt">seed =</span> <span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-12" title="12"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-13" title="13"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-14" title="14"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-15" title="15"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-19" title="19"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-20" title="20"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; Estimating in-sample (partial)AUC values along the regularization path...</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-14" title="14"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-19" title="19"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-20" title="20"><span class="co">#&gt; Done.</span></a>
 <a class="sourceLine" id="cb2-21" title="21"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
 <a class="sourceLine" id="cb2-22" title="22"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
 <a class="sourceLine" id="cb2-23" title="23"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
 <a class="sourceLine" id="cb2-24" title="24"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
-<a class="sourceLine" id="cb2-25" title="25"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
-<a class="sourceLine" id="cb2-26" title="26"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-25" title="25"><span class="co">#&gt; Performing 10-fold cross-validation...</span></a>
+<a class="sourceLine" id="cb2-26" title="26"><span class="co">#&gt; Done.</span></a>
+<a class="sourceLine" id="cb2-27" title="27"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-28" title="28"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a>
+<a class="sourceLine" id="cb2-29" title="29"><span class="co">#&gt; Setting levels: control = 0, case = 1</span></a>
+<a class="sourceLine" id="cb2-30" title="30"><span class="co">#&gt; Setting direction: controls &lt; cases</span></a></code></pre></div>
 <p>The formula <code>testresult ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7</code> is an expression of the statement &quot;predict <code>testresult</code> from the seven covariates <code>Q1</code>, …, <code>Q7</code>. The argument <code>Nfolds = 10</code> specifies the desired number of partitions (folds) to be used for cross validation (discussed under ‘Selection of a screening threshold’, below). The optional <code>seed</code> argument specifies the starting value for the random-number generator used for cross-validation data-splitting. Here it is set to a fixed value to insure reproducibility. By default, the seed is set by the system clock, and therefore results will vary from run to run. Set the seed only if reproducible results are needed.</p>
 <p>The fitting algorithm computes logit-scale coefficients along the entire regularization path, and has the effect of selecting covariates based on penalization by the <em>L</em>1-<a href="https://towardsdatascience.com/norms-penalties-and-multitask-learning-2f1db5f97c1f">norm</a> of their coefficients, similar to the ordinary lasso [2]. Unlike the ordinary lasso, the algorithm also imposes a very small penalty on the <em>L</em>2-norm, which eliminates adverse effects of any strong correlations among the predictors and provides useful estimates even if the response variable is separable by the predictors (albeit unlikely in test-screening applications).</p>
 <p><strong>IMPORTANT:</strong> The object returned by <code>lasso_screenr</code> (or any of the other &quot;_screenr&quot; functions) contains information critical to validation and implementation of test screening. Therefore <strong>the object should be saved for future use</strong>, for example:</p>
@@ -395,14 +399,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">summary</span>(uniobj1)</a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="co">#&gt;   Step Df Deviance      AIC       BIC      pAUC   pAUClcl   pAUCucl</span></a>
 <a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt; 1    1  1 992.6352 994.6352 1001.3348 0.5000000 0.5000000 0.5000000</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; 2    2  2 909.4225 913.4225  926.8215 0.6414584 0.5859112 0.7222890</span></a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; 3    3  3 883.5544 889.5544  909.6529 0.8058975 0.7548951 0.8495151</span></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 4    5  4 738.4002 746.4002  773.1983 0.8102321 0.7556064 0.8596615</span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 5    7  5 717.1982 727.1982  760.6957 0.8308731 0.7804487 0.8775594</span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 6    8  6 687.0543 699.0543  739.2514 0.8385304 0.7901925 0.8844113</span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 7   11  7 680.9541 694.9541  741.8507 0.8407407 0.7919459 0.8836683</span></a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 8   12  8 680.9524 696.9524  750.5485 0.8484321 0.8032391 0.8888806</span></a></code></pre></div>
-<p>Regularization yielded logistic eight models. Two models along the regularization path which yield the smallest <a href="https://docs.displayr.com/wiki/Information_Criteria">AIC and BIC</a> values, denoted <code>&quot;minAIC&quot;</code> and <code>&quot;minBIC&quot;</code>, respectively, are given special status. Those are likely the most useful solutions in nearly all settings. It may also be useful consider the model which yielded the largest partial area under the ROC curve (pAUC)[6] if that differs from the AIC- or BIC-best models. The default for pAUC is the area under the ROC curve for which sensitivity is at least 0.8, but see the results of <code>help(lasso_screenr)</code> for other options. However all solutions are accessible from <code>lasso_screer</code>-class objects.</p>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; 2    2  2 909.4225 913.4225  926.8215 0.6414584 0.5866368 0.7289511</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; 3    3  3 883.5544 889.5544  909.6529 0.8058975 0.7553872 0.8495287</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 4    5  4 738.4002 746.4002  773.1983 0.8102321 0.7546077 0.8599725</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 5    7  5 717.1982 727.1982  760.6957 0.8308731 0.7800649 0.8773358</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 6    8  6 687.0543 699.0543  739.2514 0.8385304 0.7909505 0.8827763</span></a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 7   11  7 680.9541 694.9541  741.8507 0.8407407 0.7913868 0.8838666</span></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 8   12  8 680.9524 696.9524  750.5485 0.8484321 0.8050324 0.8877797</span></a></code></pre></div>
+<p>Regularization yielded logistic eight models. Two models along the regularization path which yield the smallest <a href="https://docs.displayr.com/wiki/Information_Criteria">AIC and BIC</a> values, denoted <code>&quot;minAIC&quot;</code> and <code>&quot;minBIC&quot;</code>, respectively, are given special status. Those are likely the most useful solutions in nearly all settings. The default for pAUC is the area under the ROC curve for which sensitivity is at least 0.8, but see the results of <code>help(lasso_screenr)</code> for other options. However all solutions are accessible from <code>lasso_screer</code>-class objects.</p>
 <p>The logit-scale coefficients for the two special models are obtained using:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">coef</span>(uniobj1)</a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="co">#&gt;           AIC.best.model BIC.best.model</span></a>

@@ -31,7 +31,7 @@ Description: Package screenr enables easy development and validation
 License: MIT + file LICENSE
 URL: https://github.com/sgutreuter/screenr/
 Encoding: UTF-8
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 BugReports: https://github.com/sgutreuter/screenr/issues
 LazyData: true
 Suggests:

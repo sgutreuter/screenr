@@ -289,12 +289,10 @@ sens_spec_plus <- function(test = NULL, gold = NULL, data = NULL,
     .res <- epiR::epi.tests(.tbl, method = cimethod, conf.level = conf_level)
     .table <- .res$tab
     colnames(.table) <- c("      True +", "      True -", "     Total")
-    .ests <- rbind(.res$detail$ap, .res$detail$tp, .res$detail$se,
-                  .res$detail$sp, .res$detail$pv.pos, .res$detail$pv.neg)
+    .ests <- .res$detail[c(1:4, 9:10), c(2:4)]
     rownames(.ests) <- c("Apparent_positivity", "True_positivity", "Sensitivity",
                         "Specificity", "PPV", "NPV")
     result <- list(table = .table, ests = .ests)
     result
 }
-
 ################################   END of FILE   ################################
