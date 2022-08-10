@@ -25,8 +25,6 @@
 #' print(uniobj1)
 #' @export
 print.easy_tool <- function(x, ...){
-    if(!("easy_tool" %in% class(x)))
-        stop("x not easy_tool class")
     cat("Function call:\n")
     print(x$Call)
     cat("\nType:\n")
@@ -52,8 +50,6 @@ print.easy_tool <- function(x, ...){
 #' print(uniobj1)
 #' @export
 print.lasso_screenr <- function(x, ...){
-    if(!("lasso_screenr" %in% class(x)))
-        stop("x not lasso_screenr class")
     cat("Function call:\n")
     print(x$Call)
     cat("\nglmpath x:\n")
@@ -85,7 +81,6 @@ print.lasso_screenr <- function(x, ...){
 #'
 #' @export
 print.logreg_screenr <- function(x, ..., quote = FALSE){
-    if(!("logreg_screenr" %in% class(x))) stop("x not logreg_screenr class")
     cat("Out-of-sample sensitivity and specificity at outcome thresholds:\n")
     df_ <- data.frame(threshold = x$CVroc$thresholds,
                       sensitivity = x$CVroc$sensitivities,
@@ -116,7 +111,6 @@ print.logreg_screenr <- function(x, ..., quote = FALSE){
 #'
 #' @export
 print.simple_screenr <- function(x, ...){
-    if(!("simple_screenr" %in% class(x))) stop("x not a simple_screenr object")
     cat("\nIn-sample (overly optimistic) sensitivity and specificity:\n")
     df_ <- pROC::coords(x$ISroc, transpose = FALSE)
     df_["threshold"] <- df_["threshold"] + 0.5

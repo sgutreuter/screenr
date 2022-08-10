@@ -46,8 +46,6 @@
 #' @export
 confint.logreg_screenr <- function(object, ..., intercept =  TRUE, or = FALSE,
                                 conf_level =  0.95, digits = 4){
-    if(!("logreg_screenr" %in% class(object)))
-        stop("object not logreg_screenr class")
     coef_ <- object[["ModelFit"]][["coefficients"]]
     plci_ <- confint(get_what(object, what = "ModelFit"), level = conf_level)
     if(intercept == FALSE){
@@ -134,8 +132,6 @@ confint.geeglm <- function(object, ..., conf_level = 0.95) {
 #' @export
 confint.gee_screenr <- function(object, ..., intercept =  TRUE, or = FALSE,
                                 conf_level =  0.95, digits = 4){
-    if(!("gee_screenr" %in% class(object)))
-        stop("object not gee_screenr class")
     x <- confint(get_what(object, what = "ModelFit"), conf_level = conf_level)
     if(intercept == FALSE){
         x <- x[-1, ]

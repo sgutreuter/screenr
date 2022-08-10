@@ -74,8 +74,6 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
                            partial_auc_focus = c("sensitivity", "specificity"),
                            partial_auc_correct = TRUE,
                            type =  "S"){
-    if(!("easy_tool" %in% class(x)))
-            stop("Object not easy_tool class")
     stopifnot(conf_level > 0 & conf_level < 1)
     partial_auc_focus = match.arg(partial_auc_focus)
     roc_  <- x$ROC
@@ -176,8 +174,6 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
                                partial_auc_focus = c("sensitivity", "specificity"),
                                partial_auc_correct = TRUE,
                                type =  "S"){
-    if(!("lasso_screenr" %in% class(x)))
-            stop("Object not lasso_screenr class")
     stopifnot(conf_level > 0 & conf_level < 1)
     model <- match.arg(model)
     partial_auc_focus = match.arg(partial_auc_focus)
@@ -279,7 +275,6 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 partial_auc_focus = c("sensitivity", "specificity"),
                                 partial_auc_correct = TRUE,
                                 type =  "S"){
-    if(!("logreg_screenr" %in% class(x))) stop("x is not a logreg_screenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
     partial_auc_focus = match.arg(partial_auc_focus)
     if(is.logical(partial_auc)) {
@@ -390,7 +385,6 @@ plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 partial_auc_focus = c("sensitivity", "specificity"),
                                 partial_auc_correct = TRUE,
                                 type =  "S"){
-    if(!class(x) == "simple_screenr") stop("x is not a simple_screenr object")
     stopifnot(conf_level > 0 & conf_level < 1)
     partial_auc_focus = match.arg(partial_auc_focus)
         if(is.logical(partial_auc)) {

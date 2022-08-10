@@ -93,8 +93,6 @@ get_what <- function(from, what, ...) {
 #' @export
 get_what.easy_tool <- function(from = NULL, what = NULL, ..., bootreps = 4000,
                              conf_level = 0.95, se_min = 0.8){
-    if(!"easy_tool" %in% class(from))
-        stop("Object not easy_tool class")
     if(!what %in% c("QuestionWeights", "Call", "ROC", "ROCci", "Scores"))
         stop("what must be one of 'QuestionWeights', 'Call', 'ROC', 'ROCci', 'Scores'")
     res <- from[[what]]
@@ -177,8 +175,6 @@ get_what.lasso_screenr <- function(from = NULL,
                                    se_min = 0.8){
     what  <- match.arg(what)
     model = match.arg(model)
-    if(!"lasso_screenr" %in% class(from))
-        stop("Object not lasso_screenr class")
     if(what == "glmpathObj") {
         res <- from[[what]]
     } else {
@@ -258,8 +254,6 @@ get_what.logreg_screenr <- function(from = NULL,
                                     ...,
                                     conf_level = 0.95,
                                     bootreps =  4000, se_min = 0.8) {
-    if(!"logreg_screenr" %in% class(from))
-        stop("from not a logreg_screenr object")
     what <- match.arg(what)
     if(what == "ModelFit") {
         res <- from[[what]]
@@ -334,8 +328,6 @@ get_what.logreg_screenr <- function(from = NULL,
 get_what.simple_screenr <- function(from = NULL, what = c("ROCci", "isROC"), ...,
                                     conf_level = 0.95, bootreps = 4000,
                                     se_min =  0.6) {
-    if(!"simple_screenr" %in% class(from))
-        stop("from not a simple_screenr object")
     what <- match.arg(what)
     if(what == "isROC") what <- "ISroc"
     if(what == "ISroc"){

@@ -89,8 +89,6 @@ ntpp <- function(object, ...) {
 #'
 #' @export
 ntpp.easy_tool <- function(object, ..., prev = NULL) {
-     if(!class(object) == "easy_tool")
-         stop("object not of class easy_tool")
      if(is.null(prev)) prev <- mean(object$Scores$response, na.rm = TRUE)
      ssp <- data.frame(sensitivities = object$ROC$sensitivities,
                        specificities = object$ROC$specificities)
@@ -150,8 +148,6 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 ntpp.lasso_screenr <- function(object, ..., model = c("minAIC", "minBIC"),
                                type = c("cvResults", "isResults"),
                                prev = NULL) {
-     if(!class(object) == "lasso_screenr")
-         stop("object not of class lasso_screenr")
      model <- match.arg(model)
      type <- match.arg(type )
      if(is.null(prev)) prev <- object$Prevalence
@@ -209,8 +205,6 @@ ntpp.lasso_screenr <- function(object, ..., model = c("minAIC", "minBIC"),
 #' @export
 ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
                                 prev = NULL) {
-     if(!("logreg_screenr" %in% class(object)))
-         stop("object not of class logreg_screenr")
      type <- match.arg(type)
      if(is.null(prev )) prev <- object$Prevalence
      if(type == "cvResults") {
@@ -365,8 +359,6 @@ ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
 #'
 #' @export
 ntpp.simple_screenr <- function(object, ..., prev = NULL) {
-     if(!class(object) == "simple_screenr")
-         stop("object not of class simple_screenr")
      if(is.null(prev)) prev <- object$Prevalence
      ssp <- data.frame(sensitivities = object[["ISroc"]][["sensitivities"]],
                        specificities = object[["ISroc"]][["specificities"]])

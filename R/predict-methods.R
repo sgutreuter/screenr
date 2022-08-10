@@ -49,8 +49,6 @@
 #' @export
 predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
-    if(!("lasso_screenr" %in% class(object)))
-        stop("object not a lasso_screenr object")
     form  <- object$formula
     rname <- as.character(form[[2]])
     nd <- newdata
@@ -107,8 +105,6 @@ predict.lasso_screenr <- function(object =  NULL, ..., newdata = NULL){
 #' @export
 predict.logreg_screenr <- function(object = NULL, ...,  newdata = NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
-    if(!("logreg_screenr" %in% class(object)))
-        stop("object not a logreg_screenr object")
     form <- object$formula
     rname <- as.character(form[[2]])
     nd <- newdata
@@ -150,8 +146,6 @@ predict.logreg_screenr <- function(object = NULL, ...,  newdata = NULL){
 #' @export
 predict.easy_tool <- function(object =  NULL, ..., newdata =  NULL){
     if(!is.data.frame(newdata)) stop("Specify a dataframe")
-    if(!("easy_tool" %in% class(object)))
-        stop("object not an easy_tool object")
     xvarn <- object$varnames[-1]
     x = as.matrix(newdata[, xvarn])
     pred = x %*% object$QuestionWeights

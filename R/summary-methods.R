@@ -29,8 +29,6 @@
 #' @import pROC
 #' @export
 summary.easy_tool <- function(object, ...){
-    if(!("easy_tool" %in% class(object)))
-        stop("object not easy_tool class")
     cat("\nCall:\n")
     print(object$Call)
     cat("\nRescaled question weights:\n")
@@ -62,8 +60,6 @@ summary.easy_tool <- function(object, ...){
 #' summary(uniobj1)
 #' @export
 summary.lasso_screenr <- function(object, ...){
-    if(!("lasso_screenr" %in% class(object)))
-        stop("object not lasso_screenr class")
     res <- object$Summary
     res
 }
@@ -90,7 +86,6 @@ summary.lasso_screenr <- function(object, ...){
 #' summary(uniobj2)
 #' @export
 summary.logreg_screenr <- function(object, ..., diagnostics = FALSE){
-    if(!("logreg_screenr" %in% class(object))) stop("object not logreg_screenr class")
     cat("Call:\n")
     print(object$Call)
     cat("\n\nLogistic regression model summary:\n")
@@ -129,7 +124,6 @@ summary.logreg_screenr <- function(object, ..., diagnostics = FALSE){
 #' summary(uniobj2)
 #' @export
 summary.gee_screenr <- function(object, ..., diagnostics = FALSE){
-    if(!("gee_screenr" %in% class(object))) stop("object not gee_screenr class")
     cat("Call:\n")
     print(object$Call)
     cat("\n\nLogistic regression model summary:\n")
@@ -168,8 +162,6 @@ summary.gee_screenr <- function(object, ..., diagnostics = FALSE){
 #' summary(toosimple)
 #' @export
 summary.simple_screenr <- function(object, ...){
-    if(!("simple_screenr" %in% class(object)))
-        stop("object not a simple_screenr object")
     cat("Call:\n")
     print(object$Call)
     cat("\nPrevalence (In-sample prevalence of condition):\n")
