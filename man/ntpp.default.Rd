@@ -29,7 +29,7 @@ following columns:
 }
 }
 \description{
-\code{ntpp.data.frame} computes the ratio of the total number of
+\code{ntpp.default} computes the ratio of the total number of
 tests performed per positive test result and the anticipated fraction of the
 untested (those screened out of testing) who would actually test positive.
 }

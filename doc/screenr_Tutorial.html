@@ -399,13 +399,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">summary</span>(uniobj1)</a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="co">#&gt;   Step Df Deviance      AIC       BIC      pAUC   pAUClcl   pAUCucl</span></a>
 <a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt; 1    1  1 992.6352 994.6352 1001.3348 0.5000000 0.5000000 0.5000000</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; 2    2  2 909.4225 913.4225  926.8215 0.6414584 0.5872656 0.7213816</span></a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; 3    3  3 883.5544 889.5544  909.6529 0.8058975 0.7543054 0.8496974</span></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 4    5  4 738.4002 746.4002  773.1983 0.8102321 0.7555604 0.8587396</span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 5    7  5 717.1982 727.1982  760.6957 0.8308731 0.7821897 0.8765509</span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 6    8  6 687.0543 699.0543  739.2514 0.8385304 0.7914522 0.8840182</span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 7   11  7 680.9541 694.9541  741.8507 0.8407407 0.7940401 0.8823688</span></a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 8   12  8 680.9524 696.9524  750.5485 0.8484321 0.8051348 0.8891939</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; 2    2  2 909.4225 913.4225  926.8215 0.6414584 0.5861968 0.7268160</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; 3    3  3 883.5544 889.5544  909.6529 0.8058975 0.7521028 0.8503994</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; 4    5  4 738.4002 746.4002  773.1983 0.8102321 0.7539765 0.8607365</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 5    7  5 717.1982 727.1982  760.6957 0.8308731 0.7794983 0.8760003</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; 6    8  6 687.0543 699.0543  739.2514 0.8385304 0.7898871 0.8827885</span></a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; 7   11  7 680.9541 694.9541  741.8507 0.8407407 0.7913836 0.8854995</span></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; 8   12  8 680.9524 696.9524  750.5485 0.8484321 0.8048228 0.8889499</span></a></code></pre></div>
 <p>Regularization yielded logistic eight models. Two models along the regularization path which yield the smallest <a href="https://docs.displayr.com/wiki/Information_Criteria">AIC and BIC</a> values, denoted <code>&quot;minAIC&quot;</code> and <code>&quot;minBIC&quot;</code>, respectively, are given special status. Those are likely the most useful solutions in nearly all settings. The default for pAUC is the area under the ROC curve for which sensitivity is at least 0.8, but see the results of <code>help(lasso_screenr)</code> for other options. However all solutions are accessible from <code>lasso_screer</code>-class objects.</p>
 <p>The logit-scale coefficients for the two special models are obtained using:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">coef</span>(uniobj1)</a>

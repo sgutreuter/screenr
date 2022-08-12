@@ -41,3 +41,10 @@ attach(uniobj2)
 ntpp(uniobj2)
 
 }
+\seealso{
+\code{\link[screenr]{ntpp.default}}, \code{\link[screenr]{ntpp.data.frame}},
+\code{\link[screenr]{ntpp.easy_tool}},
+\code{\link[screenr]{ntpp.lasso_screenr}},
+\code{\link[screenr]{ntpp.logreg_screenr}},
+\code{\link[screenr]{ntpp.simple_screenr}}
+}

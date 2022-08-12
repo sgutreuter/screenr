@@ -38,6 +38,13 @@
 #' condition among those who are screened out of testing.}
 #' }
 #'
+#' @seealso
+#' \code{\link[screenr]{ntpp.default}}, \code{\link[screenr]{ntpp.data.frame}},
+#' \code{\link[screenr]{ntpp.easy_tool}},
+#' \code{\link[screenr]{ntpp.lasso_screenr}},
+#' \code{\link[screenr]{ntpp.logreg_screenr}},
+#' \code{\link[screenr]{ntpp.simple_screenr}}
+#'
 #' @examples
 #' attach(uniobj2)
 #' ntpp(uniobj2)
@@ -276,7 +283,7 @@ ntpp.data.frame <- function(object, ...){
 ##
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
-#' @description \code{ntpp.data.frame} computes the ratio of the total number of
+#' @description \code{ntpp.default} computes the ratio of the total number of
 #' tests performed per positive test result and the anticipated fraction of the
 #' untested (those screened out of testing) who would actually test positive.
 #'
