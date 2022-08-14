@@ -201,10 +201,12 @@ gee_screenr <- function(formula,
     cv.results <- data.frame(NULL)
     cv.coef <- data.frame(NULL)
     X_ho <- data.frame(NULL)
+    idc <- as.character(substitute(id))
     set.seed(seed)
     for(i in 1:Nfolds){
         xhoj <- data.frame(fold = rep(i, length(holdouts[[i]])),
                            dat[holdouts[[i]],])
+        xhoj <- xhoj[ , -which(names(xhoj) %in% c(idc, as.character(formula[2])))]
         X_ho <- rbind(X_ho, xhoj)
         geecalli <- substitute(geepack::geeglm(formula, id =  id, corstr = corstr,
                                                data = dat[-holdouts[[i]], ],

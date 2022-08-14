@@ -115,7 +115,7 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
     }
     call <- match.call()
     if(inherits(object, "lasso_screenr")) {
-        coef <- coef.lasso_screenr(object, intercept = FALSE, ...)
+        coef <- coef(object, intercept = FALSE, ...)
         if(model == "minAIC") {
             coef <- data.frame(covariate = rownames(coef), estimate = coef[, 1])
         } else {
@@ -134,7 +134,7 @@ easy_tool <- function(object, max = 3, model = c("minAIC", "minBIC"),
             fold <- rep(NA, length(resp))
         }
     } else {
-        coef <- coef.logreg_screenr(object, intercept = FALSE, ...)
+        coef <- coef(object, intercept = FALSE, ...)
         if(crossval == TRUE ){
             Nfolds <- object$Nfolds
             X_ho <- object$X_ho
