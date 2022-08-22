@@ -267,9 +267,9 @@ ntpp.data.frame <- function(object, ...){
         stop("object does not include specificities")
     if(!"prev" %in% names(object))
         stop("object does not include prev")
-    rangecheck <- function(x, y, z, ll = 0.00001, ul = 0.9999){
-        tst <- c(dplyr::between(x, ll, ul), dplyr::between(y, ll, ul),
-                 dplyr::between(z, ll, ul))
+    rangecheck <- function(x, y, z, ll = 0, ul = 1){
+        tst <- c(dplyr::between(x, 0.00001, ul), dplyr::between(y, ll, ul),
+                 dplyr::between(z, 0.00001, ul))
         any(!tst)
     }
     if(rangecheck(object$sensitivities, object$specificities, object$prev))
