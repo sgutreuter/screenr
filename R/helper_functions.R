@@ -234,15 +234,13 @@ se_sp_max <- function(object) {
 #' few friends from a gold standard and testing results. \code{sens_spec_plus}
 #' is a convenience wrapper for \code{epiR::epi.tests}.
 #'
-#' @param test character-valued name of the variable containing testing results,
-#' coded as 0 for negative and 1 for positive.
+#' @param test numeric vector containing testing results, coded as 0 for
+#' negative and 1 for positive.
 #'
-#' @param gold character-valued name of the variable containing gold standard,
-#' coded as 0 for negative and 1 for positive.
+#' @param gold numeric vector containing the gold standard, coded as 0 for
+#' negative and 1 for positive.
 #'
-#' @param data data frame containing \code{test} and \code{gold}.
-#'
-#' @param method type of confidence interval
+#' @param method type of uncertainty interval
 #' (\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). Default:
 #' \verb{"exact"}.
 #'
@@ -254,10 +252,10 @@ se_sp_max <- function(object) {
 #' \describe{
 #' \item{\code{table}}{a 2 x 2 table which is the anti-transpose of the
 #' result produced by \code{base::table(gold, test)}.}
-#' \item{\code{ests}}{a dataframe containing the apparent and true positive
-#' proportions, sensitivity, specificity, positive predictive value (PPV),
-#' negative predictive value (NPV), and the lower and upper confidence limits for
-#' each.}
+#' \item{\code{ests}}{a dataframe containing the apparent (test-based) and true
+#' positive proportions, sensitivity, specificity, positive predictive value
+#' (PPV), negative predictive value (NPV), and the lower and upper uncertainty
+#' limits for each.}
 #' }
 #'
 #' @seealso \code{\link[epiR]{epi.tests}}
@@ -265,26 +263,22 @@ se_sp_max <- function(object) {
 #' @examples
 #' Gold <- rbinom(20, 1, 0.50)
 #' Test <- Gold; Test[c(3, 5, 9, 12, 16)] <- 1 - Test[c(3, 5, 9, 12, 16)]
-#' dat <- data.frame(Gold = Gold, Test = Test)
-#' sens_spec_plus(test = "Test", gold = "Gold", data = dat)
+#' sens_spec_plus(test = Test, gold = Gold, method = "jeffreys")
 #'
 #' @importFrom epiR epi.tests
 #' @export
-sens_spec_plus <- function(test = NULL, gold = NULL, data = NULL,
-                           method = c("exact", "wilson", "agresti",
-                                      "clopper-pearson", "jeffreys"),
+sens_spec_plus <- function(test = NULL, gold = NULL,
+                           method = c("exact", "jeffreys", "wilson", "agresti",
+                                      "clopper-pearson"),
                            conf_level =  0.95){
-    if(!is.data.frame(data)) stop("data must be a data.frame object")
-    if(!all((data[[test]] %in% c(0, 1)) | is.na(data[[test]])))
+    if(!all((test %in% c(0, 1)) | is.na(test)))
         stop("Values of test must be 0, 1 or NA")
-    if(!all((data[[gold]] %in% c(0, 1)) | is.na(data[[gold]])))
+    if(!all((gold %in% c(0, 1)) | is.na(gold)))
         stop("Values of gold must be 0, 1 or NA")
     if(!(conf_level > 0 & conf_level < 1 )) stop("conf.level not in (0,1)")
     cimethod <- match.arg(method)
-    .dat <- data.frame(data[, c(test, gold)])
-    .dat <- .dat[complete.cases(.dat), ]
-    .tst <- ordered(.dat[[test]], levels = c(1, 0), labels = c("Pos", "Neg"))
-    .gld <- ordered(.dat[[gold]], levels = c(1, 0), labels = c("Pos", "Neg"))
+    .tst <- ordered(test, levels = c(1, 0), labels = c("Pos", "Neg"))
+    .gld <- ordered(gold, levels = c(1, 0), labels = c("Pos", "Neg"))
     .tbl <- table(.tst, .gld)
     .res <- epiR::epi.tests(.tbl, method = cimethod, conf.level = conf_level)
     .table <- .res$tab
@@ -293,6 +287,8 @@ sens_spec_plus <- function(test = NULL, gold = NULL, data = NULL,
     rownames(.ests) <- c("Apparent_positivity", "True_positivity", "Sensitivity",
                         "Specificity", "PPV", "NPV")
     result <- list(table = .table, ests = .ests)
+    attr(result, "Interval_type") <- method
+    attr(result, "Confidence_level") <- conf_level
     result
 }
 ################################   END of FILE   ################################
