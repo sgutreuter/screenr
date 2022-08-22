@@ -7,21 +7,18 @@
 sens_spec_plus(
   test = NULL,
   gold = NULL,
-  data = NULL,
-  method = c("exact", "wilson", "agresti", "clopper-pearson", "jeffreys"),
+  method = c("exact", "jeffreys", "wilson", "agresti", "clopper-pearson"),
   conf_level = 0.95
 )
 }
 \arguments{
-\item{test}{character-valued name of the variable containing testing results,
-coded as 0 for negative and 1 for positive.}
+\item{test}{numeric vector containing testing results, coded as 0 for
+negative and 1 for positive.}
 
-\item{gold}{character-valued name of the variable containing gold standard,
-coded as 0 for negative and 1 for positive.}
+\item{gold}{numeric vector containing the gold standard, coded as 0 for
+negative and 1 for positive.}
 
-\item{data}{data frame containing \code{test} and \code{gold}.}
-
-\item{method}{type of confidence interval
+\item{method}{type of uncertainty interval
 (\verb{"exact", "wilson", "agresti", "clopper-pearson" or"jeffreys"}). Default:
 \verb{"exact"}.}
 
@@ -34,10 +31,10 @@ Default: 0.95.}
 \describe{
 \item{\code{table}}{a 2 x 2 table which is the anti-transpose of the
 result produced by \code{base::table(gold, test)}.}
-\item{\code{ests}}{a dataframe containing the apparent and true positive
-proportions, sensitivity, specificity, positive predictive value (PPV),
-negative predictive value (NPV), and the lower and upper confidence limits for
-each.}
+\item{\code{ests}}{a dataframe containing the apparent (test-based) and true
+positive proportions, sensitivity, specificity, positive predictive value
+(PPV), negative predictive value (NPV), and the lower and upper uncertainty
+limits for each.}
 }
 }
 \description{
@@ -48,8 +45,7 @@ is a convenience wrapper for \code{epiR::epi.tests}.
 \examples{
 Gold <- rbinom(20, 1, 0.50)
 Test <- Gold; Test[c(3, 5, 9, 12, 16)] <- 1 - Test[c(3, 5, 9, 12, 16)]
-dat <- data.frame(Gold = Gold, Test = Test)
-sens_spec_plus(test = "Test", gold = "Gold", data = dat)
+sens_spec_plus(test = Test, gold = Gold, method = "jeffreys")
 
 }
 \seealso{
