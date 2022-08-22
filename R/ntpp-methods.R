@@ -319,9 +319,9 @@ ntpp.data.frame <- function(object, ...){
 #' @export
 ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
     if(is.null(se) | is.null(sp) | is.null(prev)) stop("Specify se, sp and prev")
-    rangecheck <- function(x, y, z, ll = 0.00001, ul = 0.9999){
-        tst <- c(dplyr::between(x, ll, ul), dplyr::between(y, ll, ul),
-                 dplyr::between(z, ll, ul))
+    rangecheck <- function(x, y, z, ll = 0, ul = 1){
+        tst <- c(dplyr::between(x, 0.00001, ul), dplyr::between(y, ll, ul),
+                 dplyr::between(z, 0.00001, ul))
         any(!tst)
     }
     if(rangecheck(se, sp, prev)) stop("not all se, sp and prev are in (0,1)")
