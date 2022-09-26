@@ -12,7 +12,7 @@
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
 #' @description \code{ntpp} computes the ratio of the total number of tests
-#' performed per positive test result and the anticipated fraction of the
+#' performed per positive test result and the anticipated proportion of the
 #' untested (those screened out of testing) who would actually test positive.
 #'
 #' @param object an object from which to compute the number of tests
@@ -24,8 +24,8 @@
 #' The anticipated number of tests required to detect a single positive
 #' \emph{nntp} is given by
 #' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
-#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-#' specificity. The anticipated prevalence among those screened out is given by
+#' where \emph{Se} is sensitivity, \emph{P} is test positivity and \emph{Sp} is
+#' specificity. The anticipated true positivity among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @return \code{ntpp} returns a dataframe containing the following columns:
@@ -34,8 +34,8 @@
 #' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
 #' \item{\verb{ntpp}}{the number of tests required to discover
 #' a single positive test result.}
-#' \item{\verb{prev_untested}}{The prevalence proportion of the test
-#' condition among those who are screened out of testing.}
+#' \item{\verb{prev_untested}}{The antipated proportion who would test positive
+#' among those who are screened out of testing.}
 #' }
 #'
 #' @seealso
@@ -65,8 +65,8 @@ ntpp <- function(object, ...) {
 #'
 #' @param object an \code{easy_tool}-class object produced by \code{easy_tool}.
 #'
-#' @param prev an optional prevalence proportion for the test outcome; if missing
-#' the prevalence is obtained from \code{object}.
+#' @param prev an optional positive proportion for the test outcome; if missing
+#' the test positivity is obtained from \code{object}.
 #'
 #' @param ... optional arguments to \code{ntpp} methods.
 #'
@@ -77,8 +77,8 @@ ntpp <- function(object, ...) {
 #' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
 #' \item{\verb{ntpp}}{the number of tests required to discover
 #' a single positive test result.}
-#' \item{\verb{prev_untested}}{The prevalence proportion of the test
-#' condition among those who are screened out of testing.}
+#' \item{\verb{prev_untested}}{The antipated proportion who would positive
+#' among those who are screened out of testing.}
 #' }
 #'
 #' @details
@@ -86,7 +86,7 @@ ntpp <- function(object, ...) {
 #' \emph{nntp} is given by
 #' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
 #' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-#' specificity. The anticipated prevalence among those screened out is given by
+#' specificity. The anticipated positivity among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @examples
@@ -111,7 +111,7 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
 #' @description \code{ntpp.lasso_screenr} computes the ratio of the total number of
-#' tests performed per positive test result and the anticipated fraction of the
+#' tests performed per positive test result and the anticipated proportion of the
 #' untested (those screened out of testing) who would actually test positive.
 #'
 #' @param object a \code{lasso_screenr}-class object produced by \code{lasso_screenr}.
@@ -123,8 +123,8 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 #' \verb{"isResults"} to specify \emph{k}-fold cross-validated or in-sample
 #' receiver-operating characteristics, respectively.
 #'
-#' @param prev an optional prevalence proportion for the test outcome; if missing
-#' the prevalence is obtained from \code{object}.
+#' @param prev an optional positive proportion for the test outcome; if missing
+#' the test positivity is obtained from \code{object}.
 #'
 #' @param ... optional arguments to \code{ntpp} methods.
 #'
@@ -135,8 +135,8 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 #' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
 #' \item{\verb{ntpp}}{the number of tests required to discover
 #' a single positive test result.}
-#' \item{\verb{prev_untested}}{The prevalence proportion of the test
-#' condition among those who are screened out of testing.}
+#' \item{\verb{prev_untested}}{The antipated proportion who would positive
+#' among those who are screened out of testing.}
 #' }
 #'
 #' @details
@@ -144,7 +144,7 @@ ntpp.easy_tool <- function(object, ..., prev = NULL) {
 #' \emph{nntp} is given by
 #' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
 #' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-#' specificity. The anticipated prevalence among those screened out is given by
+#' specificity. The anticipated positivity among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @examples
@@ -172,7 +172,7 @@ ntpp.lasso_screenr <- function(object, ..., model = c("minAIC", "minBIC"),
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
 #' @description \code{ntpp.logreg_screenr} computes the ratio of the total number of
-#' tests performed per positive test result and the anticipated fraction of the
+#' tests performed per positive test result and the anticipated proportion of the
 #' untested (those screened out of testing) who would actually test positive.
 #'
 #' @param object a \code{logreg_screenr}-class object produced by \code{logreg_screenr}.
@@ -181,8 +181,8 @@ ntpp.lasso_screenr <- function(object, ..., model = c("minAIC", "minBIC"),
 #' \verb{"isResults"} to specify \emph{k}-fold cross-validated or in-sample
 #' receiver-operating characteristics, respectively.
 #'
-#' @param prev an optional prevalence proportion for the test outcome; if missing
-#' the prevalence is obtained from \code{object}.
+#' @param prev an optional positivity proportion for the test outcome; if missing
+#' the positivity is obtained from \code{object}.
 #'
 #' @param ... optional arguments to \code{ntpp} methods.
 #'
@@ -193,8 +193,8 @@ ntpp.lasso_screenr <- function(object, ..., model = c("minAIC", "minBIC"),
 #' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
 #' \item{\verb{ntpp}}{the number of tests required to discover
 #' a single positive test result.}
-#' \item{\verb{prev_untested}}{The prevalence proportion of the test
-#' condition among those who are screened out of testing.}
+#' \item{\verb{prev_untested}}{The antipated proportion who would positive
+#' among those who are screened out of testing.}
 #' }
 #'
 #' @details
@@ -202,7 +202,7 @@ ntpp.lasso_screenr <- function(object, ..., model = c("minAIC", "minBIC"),
 #' \emph{nntp} is given by
 #' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
 #' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-#' specificity. The anticipated prevalence among those screened out is given by
+#' specificity. The anticipated positivity among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @examples
@@ -232,7 +232,7 @@ ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
 #' @description \code{ntpp.data.frame} computes the ratio of the total number of
-#' tests performed per positive test result  and the anticipated fraction of the
+#' tests performed per positive test result  and the anticipated proportion of the
 #' untested (those screened out of testing) who would actually test positive.
 #'
 #' @param object a dataframe containing columns named \code{sensitivity},
@@ -245,17 +245,17 @@ ntpp.logreg_screenr <- function(object, ..., type = c("cvResults", "isResults"),
 #' \describe{
 #' \item{\code{sensitivity}}{the sensitivity (proportion)}
 #' \item{\code{specificity}}{the specificity (proportion)}
-#' \item{\code{prev}}{prevalence proportion of the test condition}
+#' \item{\code{prev}}{positive proportion of the test condition}
 #' \item{\code{ntpp}}{anticipated total tests required per positive result}
-#' \item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
+#' \item{\code{prev_untested}}{anticipated positive proportion among the untested}
 #'}
 #'
 #' @details
 #' The anticipated number of tests required to detect a single positive
 #' \emph{nntp} is given by
 #' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
-#' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-#' specificity. The anticipated prevalence among those screened out is given by
+#' where \emph{Se} is sensitivity, \emph{P} is positivity and \emph{Sp} is
+#' specificity. The anticipated positive proportion among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @export
@@ -284,7 +284,7 @@ ntpp.data.frame <- function(object, ...){
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
 #' @description \code{ntpp.default} computes the ratio of the total number of
-#' tests performed per positive test result and the anticipated fraction of the
+#' tests performed per positive test result and the anticipated proportion of the
 #' untested (those screened out of testing) who would actually test positive.
 #'
 #' @param object unused, specify \code{se}, \code{sp} and \code{prev}
@@ -293,7 +293,7 @@ ntpp.data.frame <- function(object, ...){
 #'
 #' @param sp a numeric vector of sensitivities in (0,1)
 #'
-#' @param prev a numeric vector of prevalences of the testing condition, in (0,1)
+#' @param prev a numeric vector of positive proportions of the testing condition, in (0,1)
 #'
 #' @param ... optional arguments to \code{ntpp} methods.
 #'
@@ -302,9 +302,9 @@ ntpp.data.frame <- function(object, ...){
 #' \describe{
 #' \item{\code{sensitivity}}{the sensitivity (proportion)}
 #' \item{\code{specificity}}{the specificity (proportion)}
-#' \item{\code{prev}}{prevalence proportion of the test condition}
+#' \item{\code{prev}}{positivity proportion of the test condition}
 #' \item{\code{ntpp}}{anticipated total tests required per positive result}
-#' \item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
+#' \item{\code{prev_untested}}{anticipated positive proportion among the untested}
 #'}
 #'
 #' @details
@@ -312,7 +312,7 @@ ntpp.data.frame <- function(object, ...){
 #' \emph{nntp} is given by
 #' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
 #' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-#' specificity. The anticipated prevalence among those screened out is given by
+#' specificity. The anticipated positive proportion among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @importFrom dplyr between
@@ -326,7 +326,10 @@ ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
     }
     if(rangecheck(se, sp, prev)) stop("not all se, sp and prev are in (0,1)")
     object <- data.frame(sensitivities = se, specificities = sp, prev = prev)
-    nnt_(object)
+    result <- nnt_(object)
+    if(result$sensitivities == 1 & specificities == 0)
+        warning("prev_untested is degenerate")
+    result
 }
 
 
@@ -335,12 +338,12 @@ ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
 #' An S3 Method to Compute the Ratio of Total Tests to Positive Results
 #'
 #' @description \code{ntpp.simple_screenr} computes the ratio of the total number of
-#' tests performed per positive test result and the anticipated fraction of the
+#' tests performed per positive test result and the anticipated proportion of the
 #' untested (those screened out of testing) who would actually test positive.
 #'
 #' @param object a \code{simple_screenr}-class object produced by \code{simple_screenr}.
 #'
-#' @param prev an optional prevalence proportion for the test outcome; if missing
+#' @param prev an optional positive proportion for the test outcome; if missing
 #' the prevalence is obtained from \code{object}.
 #'
 #' @param ... optional arguments to \code{ntpp} methods.
@@ -352,7 +355,7 @@ ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
 #' \item{\verb{specificity}}{The specificity (proportion) of the screener.}
 #' \item{\verb{ntpp}}{the number of tests required to discover
 #' a single positive test result.}
-#' \item{\verb{prev_untested}}{The prevalence proportion of the test
+#' \item{\verb{prev_untested}}{The positive proportion of the test
 #' condition among those who are screened out of testing.}
 #' }
 #'
@@ -361,7 +364,7 @@ ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
 #' \emph{nntp} is given by
 #' \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
 #' where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-#' specificity. The anticipated prevalence among those screened out is given by
+#' specificity. The anticipated positive proportion among those screened out is given by
 #' \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 #'
 #' @export
@@ -372,5 +375,7 @@ ntpp.simple_screenr <- function(object, ..., prev = NULL) {
      ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
      names(ssp) <- c("sensitivities", "specificities", "prev")
      result <- nnt_(ssp)
+     if(result$sensitivities == 1 & specificities == 0)
+        warning("prev_untested is degenerate")
      result
 }
