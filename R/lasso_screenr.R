@@ -210,7 +210,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     ii[length(ii)] <- TRUE
     st <- which(ii)
     pROC <- data.frame(NULL)
-    message("Estimating in-sample (partial)AUC values along the regularization path...")
+    message("\nEstimating in-sample (partial)AUC values along the regularization path...")
     for(i in st) {
         phat <- as.vector(predict(res, newx = x, newy = y, s = i, type = "response"))
         rocx <- pROC::roc(y, phat,
@@ -219,7 +219,16 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
                    partial.auc = partial_auc,
                    partial.auc.focus = partial_auc_focus,
                    partial.auc.correct = partial_auc_correct)
-        pROC <- rbind(pROC, c(as.numeric(rocx$auc), as.numeric(rocx$ci)[c(1, 3)]))
+        if(i == min(st)) {
+            j <- 1
+            allROCs <- list(list(element = j, step =  i, ROC = rocx))
+        } else {
+            j <- j + 1
+            allROCs <- append(allROCs,
+                              list(list(element = j, step =  i, ROC = rocx)))
+        }
+        pROC <- rbind(pROC,  c(as.numeric(rocx$auc),
+                               as.numeric(rocx$ci)[c(1, 3)]))
     }
     message("Done." )
     names(pROC) <- c("pAUC", "pAUClcl", "pAUCucl")
@@ -230,6 +239,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     minBIC <- NULL
     for(i in c("AIC", "BIC")){
         minIC <- min(sumry[[i]])
+        idx <- which(sumry[[i]] ==  minIC)
         step <- sumry[sumry[[i]] == minIC, ]$Step
         parmEst <- predict(res,
                            newx = x,
@@ -241,13 +251,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
         phat <- predict(res, x, y, s = step, type = "response")
         isPreds <- data.frame(y = y, pred_prob = as.vector(phat, mode = "numeric"))
         attr(isPreds, "Description") <- "In-sample predicted probabilities"
-        isROC <- pROC::roc(isPreds$y, isPreds$pred_prob, auc = TRUE,
-                           ci = TRUE, of = "auc",
-                           boot.n = boot_n,
-                           conf.level = conf_level,
-                           partial.auc = partial_auc,
-                           partial.auc.focus = partial_auc_focus,
-                           partial.auc.correct = partial_auc_correct)
+        isROC <- allROCs[[idx]]$ROC
         assign(paste0("min", i), list(Coefficients = parmEst,
                                       Preds = isPreds,
                                       ROC = isROC))
@@ -261,7 +265,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     minAICcvCoef <- data.frame(NULL)
     minBICcvCoef <- data.frame(NULL)
     X_ho <- data.frame(NULL)
-    message("Performing ", Nfolds,"-fold cross-validation..."  )
+    message("\nPerforming ", Nfolds,"-fold cross-validation...")
     for(j in 1:Nfolds){
         yj <- y[-holdouts[[j]]]
         xhoj <- data.frame(fold = rep(j, length(holdouts[[j]])),
@@ -304,6 +308,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     attr(minBICcvPreds, "Description") <- "Out-of-sample predicted probabilities from the BIC-best model"
     attr(minAICcvCoef, "Description") <- "Out-of-sample coefficients from the AIC-best model"
     attr(minBICcvCoef, "Description") <- "Out-of-sample coefficients from the BIC-best model"
+    message("\nComputing cross-validated ROCs..." )
     minAICcvROC <- pROC::roc(minAICcvPreds$y, minAICcvPreds$pred_prob,
                              auc = TRUE, ci = TRUE, of = "auc",
                              conf.level = conf_level,
@@ -318,6 +323,7 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
                              partial.auc = partial_auc,
                              partial.auc.focus = partial_auc_focus,
                              partial.auc.correct = partial_auc_correct)
+    message("Done." )
     result <- list(
         Call = call,
         Prevalence = prev,

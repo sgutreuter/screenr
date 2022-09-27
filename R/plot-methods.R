@@ -35,7 +35,8 @@
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
-#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
+#' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
+#' (stair-step). Default: \verb{"l"}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
 #'
@@ -73,8 +74,9 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
                            partial_auc = c(0.8, 1),
                            partial_auc_focus = c("sensitivity", "specificity"),
                            partial_auc_correct = TRUE,
-                           type =  "S"){
+                           type = c("l", "S")){
     stopifnot(conf_level > 0 & conf_level < 1)
+    type = match.arg(type)
     partial_auc_focus = match.arg(partial_auc_focus)
     roc_  <- x$ROC
     if(is.logical(partial_auc)){
@@ -133,7 +135,8 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
-#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
+#' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
+#' (stair-step). Default: \verb{"l"}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
 #' \code{pROC::lines.roc}.
 #'
@@ -167,14 +170,16 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @importFrom graphics legend plot lines abline
 #' @import pROC
 #' @export
-plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "minBIC"),
+plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE,
+                               model = c("minAIC", "minBIC"),
                                conf_level = 0.95, bootreps = 4000,
                                print_auc = TRUE,
                                partial_auc = c(0.8, 1),
                                partial_auc_focus = c("sensitivity", "specificity"),
                                partial_auc_correct = TRUE,
-                               type =  "S"){
+                               type = c("l", "S")) {
     stopifnot(conf_level > 0 & conf_level < 1)
+    type <- match.arg(type)
     model <- match.arg(model)
     partial_auc_focus = match.arg(partial_auc_focus)
     cvROC <- x$cvResults[[model]][["ROC"]]
@@ -236,7 +241,8 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE, model = c("minAIC", "min
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
-#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
+#' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
+#' (stair-step). Default: \verb{"l"}.
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
 #'
 #' @return This function produces a plot as a side effect.
@@ -274,8 +280,9 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 partial_auc = c(0.8, 1),
                                 partial_auc_focus = c("sensitivity", "specificity"),
                                 partial_auc_correct = TRUE,
-                                type =  "S"){
+                                type =  c("l", "S")) {
     stopifnot(conf_level > 0 & conf_level < 1)
+    type <- match.arg(type)
     partial_auc_focus = match.arg(partial_auc_focus)
     if(is.logical(partial_auc)) {
         pROC::plot.roc(x$CVroc, print.auc = print_auc, ci = plot_ci,
@@ -341,14 +348,15 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' Ignored if \code{print_auc = FALSE}. Default: \code{c(0.8, 1)}.
 #'
 #' @param partial_auc_focus one of \verb{"sensitivity"} or \verb{"specificity"},
-#' indicating the measure for which the out-of-sample partial AUC is to be computed.
-#' Default: \verb{"specificity"}.
+#' indicating the measure for which the out-of-sample partial AUC is to be
+#' computed. Default: \verb{"specificity"}.
 #'
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
 #'
-#' @param type type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.
+#' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
+#' (stair-step). Default: \verb{"l"}.
 #'
 #' @param ... additional arguments for \verb{\link{plot}} or passed to
 #' \verb{\link{plot.roc}} and friends.
@@ -384,8 +392,9 @@ plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 partial_auc = c(0.8, 1),
                                 partial_auc_focus = c("sensitivity", "specificity"),
                                 partial_auc_correct = TRUE,
-                                type =  "S"){
+                                type = c("l", "S")) {
     stopifnot(conf_level > 0 & conf_level < 1)
+    type <- match.arg(type)
     partial_auc_focus = match.arg(partial_auc_focus)
         if(is.logical(partial_auc)) {
             plt <- pROC::plot.roc(x$ISroc, print.auc = print_auc, type = type, ...)
