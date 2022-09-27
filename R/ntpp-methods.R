@@ -324,6 +324,7 @@ ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
                  dplyr::between(z, 0.00001, ul))
         any(!tst)
     }
+    sensitivities = specificities = NULL
     if(rangecheck(se, sp, prev)) stop("not all se, sp and prev are in (0,1)")
     object <- data.frame(sensitivities = se, specificities = sp, prev = prev)
     result <- nnt_(object)
@@ -369,13 +370,14 @@ ntpp.default <- function(object = NULL, ..., se = NULL, sp = NULL, prev = NULL){
 #'
 #' @export
 ntpp.simple_screenr <- function(object, ..., prev = NULL) {
-     if(is.null(prev)) prev <- object$Prevalence
-     ssp <- data.frame(sensitivities = object[["ISroc"]][["sensitivities"]],
-                       specificities = object[["ISroc"]][["specificities"]])
-     ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
-     names(ssp) <- c("sensitivities", "specificities", "prev")
-     result <- nnt_(ssp)
-     if(result$sensitivities == 1 & specificities == 0)
+    if(is.null(prev)) prev <- object$Prevalence
+    sensitivities <- specificities <- NULL
+    ssp <- data.frame(sensitivities = object[["ISroc"]][["sensitivities"]],
+                      specificities = object[["ISroc"]][["specificities"]])
+    ssp <- cbind(ssp, rep(prev, dim(ssp)[1]))
+    names(ssp) <- c("sensitivities", "specificities", "prev")
+    result <- nnt_(ssp)
+    if(result$sensitivities == 1 & specificities == 0)
         warning("prev_untested is degenerate")
-     result
+    result
 }

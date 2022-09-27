@@ -14,7 +14,7 @@
   partial_auc = c(0.8, 1),
   partial_auc_focus = c("sensitivity", "specificity"),
   partial_auc_correct = TRUE,
-  type = "S"
+  type = c("l", "S")
 )
 }
 \arguments{
@@ -43,14 +43,15 @@ of the interval over which to compute the out-of-sample partial AUC (pAUC).
 Ignored if \code{print_auc = FALSE}. Default: \code{c(0.8, 1)}.}
 
 \item{partial_auc_focus}{one of \verb{"sensitivity"} or \verb{"specificity"},
-indicating the measure for which the out-of-sample partial AUC is to be computed.
-Default: \verb{"specificity"}.}
+indicating the measure for which the out-of-sample partial AUC is to be
+computed. Default: \verb{"specificity"}.}
 
 \item{partial_auc_correct}{logical indictor for transformation of the pAUC
 to fall within the range from 0.5 (random guess) to 1.0 (perfect
 classification). Default: \verb{TRUE}.}
 
-\item{type}{type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.}
+\item{type}{type of plot; one of \verb{"l"} (line) or \verb{"S"}
+(stair-step). Default: \verb{"l"}.}
 }
 \value{
 This function produces a plot as a side effect, and (optionally)

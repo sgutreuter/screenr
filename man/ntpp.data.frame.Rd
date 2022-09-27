@@ -18,21 +18,21 @@ following columns:
 \describe{
 \item{\code{sensitivity}}{the sensitivity (proportion)}
 \item{\code{specificity}}{the specificity (proportion)}
-\item{\code{prev}}{prevalence proportion of the test condition}
+\item{\code{prev}}{positive proportion of the test condition}
 \item{\code{ntpp}}{anticipated total tests required per positive result}
-\item{\code{prev_untested}}{anticipated prevalence proportion among the untested}
+\item{\code{prev_untested}}{anticipated positive proportion among the untested}
 }
 }
 \description{
 \code{ntpp.data.frame} computes the ratio of the total number of
-tests performed per positive test result  and the anticipated fraction of the
+tests performed per positive test result  and the anticipated proportion of the
 untested (those screened out of testing) who would actually test positive.
 }
 \details{
 The anticipated number of tests required to detect a single positive
 \emph{nntp} is given by
 \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
-where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-specificity. The anticipated prevalence among those screened out is given by
+where \emph{Se} is sensitivity, \emph{P} is positivity and \emph{Sp} is
+specificity. The anticipated positive proportion among those screened out is given by
 \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 }

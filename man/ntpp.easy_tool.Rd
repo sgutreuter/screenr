@@ -11,8 +11,8 @@
 
 \item{...}{optional arguments to \code{ntpp} methods.}
 
-\item{prev}{an optional prevalence proportion for the test outcome; if missing
-the prevalence is obtained from \code{object}.}
+\item{prev}{an optional positive proportion for the test outcome; if missing
+the test positivity is obtained from \code{object}.}
 }
 \value{
 \code{ntpp.easy_tool} returns a dataframe containing the following
@@ -22,8 +22,8 @@ columns:
 \item{\verb{specificity}}{The specificity (proportion) of the screener.}
 \item{\verb{ntpp}}{the number of tests required to discover
 a single positive test result.}
-\item{\verb{prev_untested}}{The prevalence proportion of the test
-condition among those who are screened out of testing.}
+\item{\verb{prev_untested}}{The antipated proportion who would positive
+among those who are screened out of testing.}
 }
 }
 \description{
@@ -36,7 +36,7 @@ The anticipated number of tests required to detect a single positive
 \emph{nntp} is given by
 \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
 where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-specificity. The anticipated prevalence among those screened out is given by
+specificity. The anticipated positivity among those screened out is given by
 \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 }
 \examples{

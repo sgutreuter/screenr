@@ -19,21 +19,21 @@ per test positive test results.}
 \item{\verb{specificity}}{The specificity (proportion) of the screener.}
 \item{\verb{ntpp}}{the number of tests required to discover
 a single positive test result.}
-\item{\verb{prev_untested}}{The prevalence proportion of the test
-condition among those who are screened out of testing.}
+\item{\verb{prev_untested}}{The antipated proportion who would test positive
+among those who are screened out of testing.}
 }
 }
 \description{
 \code{ntpp} computes the ratio of the total number of tests
-performed per positive test result and the anticipated fraction of the
+performed per positive test result and the anticipated proportion of the
 untested (those screened out of testing) who would actually test positive.
 }
 \details{
 The anticipated number of tests required to detect a single positive
 \emph{nntp} is given by
 \deqn{nntp = (SeP + (1 - Sp)(1 - P)) / SeP}
-where \emph{Se} is sensitivity, \emph{P} is prevalence and \emph{Sp} is
-specificity. The anticipated prevalence among those screened out is given by
+where \emph{Se} is sensitivity, \emph{P} is test positivity and \emph{Sp} is
+specificity. The anticipated true positivity among those screened out is given by
 \deqn{Puntested = ((1 - Se)P) / ((1 - Se)P + Sp (1 - P))}
 }
 \examples{

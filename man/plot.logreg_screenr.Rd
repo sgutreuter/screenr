@@ -14,7 +14,7 @@
   partial_auc = c(0.8, 1),
   partial_auc_focus = c("sensitivity", "specificity"),
   partial_auc_correct = TRUE,
-  type = "S"
+  type = c("l", "S")
 )
 }
 \arguments{
@@ -48,7 +48,8 @@ Default: \verb{"specificity"}.}
 to fall within the range from 0.5 (random guess) to 1.0 (perfect
 classification). Default: \verb{TRUE}.}
 
-\item{type}{type of plot. See \code{\link[base]{plot}}. Default: \verb{"S"}.}
+\item{type}{type of plot; one of \verb{"l"} (line) or \verb{"S"}
+(stair-step). Default: \verb{"l"}.}
 }
 \value{
 This function produces a plot as a side effect.
