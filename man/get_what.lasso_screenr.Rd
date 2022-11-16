@@ -65,7 +65,7 @@ containing the in-sample (overly optimistic) receiver-operating characteristic.}
 attach(uniobj1)
 ## Plot the coefficient paths
 pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
-plot(pathobj)
+plot(pathobj, xvar = "lambda")
 ## Get and print cross-validated sensitivities and specificities at
 ##   thresholds for the local maxima of the ROC curve
 cvROCci <- get_what(from = uniobj1,  what = "ROCci", model = "minBIC")

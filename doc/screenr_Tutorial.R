@@ -32,7 +32,7 @@ coef(uniobj1, or = TRUE, intercept = FALSE)
 
 ## ---- pathplot, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE-----------
 pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
-plot(pathobj)
+plot(pathobj, xvar = "lambda", main = "")
 
 ## ---- logreg-fit, results = "hide"--------------------------------------------
 uniobj2 <- logreg_screenr(testresult ~ Q1 + Q2 + Q3 + Q5 + Q6 + Q7,

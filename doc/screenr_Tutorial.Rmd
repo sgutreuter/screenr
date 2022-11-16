@@ -204,10 +204,13 @@ path for either of the special fits by extracting and plotting the
 regularization path object:
 ```{r, pathplot, fig.width = 4, fig.height = 4, fig.fullwidth = TRUE}
 pathobj <- get_what(from = uniobj1, what = "glmpathObj", model = "minAIC")
-plot(pathobj)
+plot(pathobj, xvar = "lambda", main = "")
 ```
-where the horizontal axis is the *L*1-norm of the coefficient vector and the vertical
-axis shows values of the individual coefficients (see [3] for details).
+The bottom horizontal axis is the regularization parameter $\lambda$, and the vertical
+axis shows values of the individual coefficients. Vertical lines mark
+values of $\lambda$ where the active set changes, and are labeled with
+model degrees of freedom along the top horizontal axix. Increasing values
+of $\lambda$ force the coefficient estimates toward zero (see [3] for details).
 
 
 ## Refitting the final model {-}
