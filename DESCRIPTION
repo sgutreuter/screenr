@@ -1,8 +1,8 @@
 Package: screenr
 Type: Package
 Title: Construction of Binary Test-Screening Rules
-Version: 0.5.4
-Date: 2022-09-27
+Version: 0.5.5
+Date: 2022-11-16
 Authors@R:
 	person(given = "Steve",
 		family ="Gutreuter",
@@ -31,7 +31,7 @@ Description: Package screenr enables easy development and validation
 License: MIT + file LICENSE
 URL: https://github.com/sgutreuter/screenr/
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
 BugReports: https://github.com/sgutreuter/screenr/issues
 LazyData: true
 Suggests:
