@@ -69,7 +69,7 @@ new_preds <- predict(uniobj2, newdata = val_data)
 head(new_preds)
 
 ## ---- new-roc-----------------------------------------------------------------
-new_roc <- pROC::roc(testresult ~ phat, data = new_preds, auc = TRUE)
+new_roc <- pROC::roc(testresult ~ phat_minAIC, data = new_preds, auc = TRUE)
 class(new_roc)
 
 ## ---- plot-new-roc, fig.width = 4, fig.height = 4-----------------------------
@@ -103,4 +103,3 @@ knitr::include_graphics("UniTool.png")
 
 ## ---- ntpp-et3----------------------------------------------------------------
 ntpp(et_3)
-
