@@ -216,11 +216,12 @@ lasso_screenr <- function(formula, data = NULL, Nfolds = 10, L2 = TRUE,
     for(i in st) {
         phat <- as.vector(predict(res, newx = x, newy = y, s = i, type = "response"))
         rocx <- pROC::roc(y, phat,
-                   ci = TRUE, of = "auc", conf.level = conf_level,
-                   boot.n = boot_n,
-                   partial.auc = partial_auc,
-                   partial.auc.focus = partial_auc_focus,
-                   partial.auc.correct = partial_auc_correct)
+                          auc = TRUE, ci = TRUE, of = "auc",
+                          conf.level = conf_level,
+                          boot.n = boot_n,
+                          partial.auc = partial_auc,
+                          partial.auc.focus = partial_auc_focus,
+                          partial.auc.correct = partial_auc_correct)
         if(i == min(st)) {
             j <- 1
             allROCs <- list(list(element = j, step =  i, ROC = rocx))

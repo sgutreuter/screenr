@@ -6,7 +6,7 @@
 ^HOWTO_install_screenr$
 ^README\\.md$
 ^README\\.Rmd$
-^maintenance
+/maintenance/
 ^auto
 ^Tutorial_Example.html
 ^.github

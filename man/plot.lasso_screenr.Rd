@@ -15,6 +15,7 @@
   partial_auc = c(0.8, 1),
   partial_auc_focus = c("sensitivity", "specificity"),
   partial_auc_correct = TRUE,
+  reuse_auc = FALSE,
   type = c("l", "S")
 )
 }
@@ -51,6 +52,9 @@ indicating the measure for which the partial AUC is to be computed. Default:
 \item{partial_auc_correct}{logical indictor for transformation of the pAUC
 to fall within the range from 0.5 (random guess) to 1.0 (perfect
 classification). Default: \verb{TRUE}.}
+
+\item{reuse_auc}{if FALSE (default) do not re-use any AUC specifications that
+might be contained in the roc-class object.}
 
 \item{type}{type of plot; one of \verb{"l"} (line) or \verb{"S"}
 (stair-step). Default: \verb{"l"}.}

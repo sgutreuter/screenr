@@ -63,6 +63,5 @@
 #' \url{https://github.com/sgutreuter/screenr}
 #'
 #' @name screenr
-#' @docType package
 #' @author Steve Gutreuter: \email{sgutreuter@gmail.com}
 NULL

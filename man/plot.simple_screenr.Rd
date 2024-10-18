@@ -14,7 +14,9 @@
   partial_auc = c(0.8, 1),
   partial_auc_focus = c("sensitivity", "specificity"),
   partial_auc_correct = TRUE,
-  type = c("l", "S")
+  reuse_auc = FALSE,
+  type = c("l", "S"),
+  lty = 1
 )
 }
 \arguments{
@@ -50,8 +52,14 @@ computed. Default: \verb{"specificity"}.}
 to fall within the range from 0.5 (random guess) to 1.0 (perfect
 classification). Default: \verb{TRUE}.}
 
+\item{reuse_auc}{if FALSE (default) do not re-use any AUC specifications that
+might be contained in the roc-class object.}
+
 \item{type}{type of plot; one of \verb{"l"} (line) or \verb{"S"}
 (stair-step). Default: \verb{"l"}.}
+
+\item{lty}{line type of plot; see base plot.
+Default: \verb{"1"}.}
 }
 \value{
 This function produces a plot as a side effect, and (optionally)

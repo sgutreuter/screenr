@@ -6,7 +6,7 @@
 ^README\\.md$
 ^README\\.Rmd$
 README.html
-^maintenance
+/maintenance/
 ^auto
 ^Tutorial_Example.html
 ^.github

@@ -35,6 +35,8 @@
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
+#' @param reuse_auc if FALSE (default) do not re-use any AUC specifications that
+#' might be contained in the roc-class object.
 #' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
 #' (stair-step). Default: \verb{"l"}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
@@ -74,6 +76,7 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
                            partial_auc = c(0.8, 1),
                            partial_auc_focus = c("sensitivity", "specificity"),
                            partial_auc_correct = TRUE,
+                           reuse_auc = FALSE,
                            type = c("l", "S")){
     stopifnot(conf_level > 0 & conf_level < 1)
     type = match.arg(type)
@@ -82,11 +85,12 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
     if(is.logical(partial_auc)){
         pROC::plot.roc(roc_, print.auc = print_auc, ci = plot_ci, type = type, ...)
         } else {
-        pROC::plot.roc(roc_, print.auc = print_auc, reuse.auc = FALSE,
+        pROC::plot.roc(roc_, print.auc = print_auc,
                        partial.auc = partial_auc,
                        partial.auc.focus = partial_auc_focus,
                        partial.auc.correct = partial_auc_correct,
-                       type =  type)
+                       reuse.auc = reuse_auc,
+                       type =  type, ...)
         if(partial_auc_focus == "sensitivity") {
             abline(h = partial_auc[1], lty = 2)
             abline(h = partial_auc[2], lty = 2)
@@ -135,6 +139,8 @@ plot.easy_tool <- function(x, ..., plot_ci = TRUE,
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
+#' @param reuse_auc if FALSE (default) do not re-use any AUC specifications that
+#' might be contained in the roc-class object.
 #' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
 #' (stair-step). Default: \verb{"l"}.
 #' @param ... any additional arguments passed to \code{pROC::plot.roc} or
@@ -177,6 +183,7 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE,
                                partial_auc = c(0.8, 1),
                                partial_auc_focus = c("sensitivity", "specificity"),
                                partial_auc_correct = TRUE,
+                               reuse_auc = FALSE,
                                type = c("l", "S")) {
     stopifnot(conf_level > 0 & conf_level < 1)
     type <- match.arg(type)
@@ -185,9 +192,10 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE,
     cvROC <- x$cvResults[[model]][["ROC"]]
     isROC <- x$isResults[[model]][["ROC"]]
     if(is.logical(partial_auc)) {
-        pROC::plot.roc(cvROC, print.auc = print_auc, ci = plot_ci, type = type, ...)
+        pROC::plot.roc(cvROC, print.auc = print_auc, ci = plot_ci, reuse.auc = reuse_auc,
+                       type = type, ...)
     } else {
-        pROC::plot.roc(cvROC, print.auc = print_auc, reuse.auc = FALSE,
+        pROC::plot.roc(cvROC, print.auc = print_auc, reuse.auc = reuse_auc,
                        partial.auc = partial_auc,
                        partial.auc.focus = partial_auc_focus,
                        partial.auc.correct = partial_auc_correct, type = type, ...)
@@ -241,6 +249,8 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE,
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
+#' @param reuse_auc if FALSE (default) do not re-use any AUC specifications that
+#' might be contained in the roc-class object.
 #' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
 #' (stair-step). Default: \verb{"l"}.
 #' @param ... additional arguments passed to \code{\link[pROC]{plot.roc}} and friends.
@@ -274,25 +284,28 @@ plot.lasso_screenr <- function(x, ...,  plot_ci = TRUE,
 #'}
 #' @importFrom graphics legend plot
 #' @export
-plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
+plot.logreg_screenr <- function(x, ..., plot_ci = TRUE,
+                                conf_level = 0.95,
                                 bootreps = 4000,
                                 print_auc = TRUE,
                                 partial_auc = c(0.8, 1),
                                 partial_auc_focus = c("sensitivity", "specificity"),
                                 partial_auc_correct = TRUE,
+                                reuse_auc = FALSE,
                                 type =  c("l", "S")) {
     stopifnot(conf_level > 0 & conf_level < 1)
     type <- match.arg(type)
     partial_auc_focus = match.arg(partial_auc_focus)
     if(is.logical(partial_auc)) {
         pROC::plot.roc(x$CVroc, print.auc = print_auc, ci = plot_ci,
+                       reuse.auc = reuse_auc,
                        type = type, ...)
     } else {
-        pROC::plot.roc(x$CVroc, print.auc = print_auc, reuse.auc = FALSE,
+        pROC::plot.roc(x$CVroc, print.auc = print_auc, reuse.auc = reuse_auc,
                        partial.auc = partial_auc,
                        partial.auc.focus = partial_auc_focus,
                        partial.auc.correct = partial_auc_correct,
-                       type = type)
+                       type = type, ...)
         if(partial_auc_focus == "sensitivity") {
             abline(h = partial_auc[1], lty = 2)
             abline(h = partial_auc[2], lty = 2)
@@ -354,9 +367,14 @@ plot.logreg_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
 #' @param partial_auc_correct logical indictor for transformation of the pAUC
 #' to fall within the range from 0.5 (random guess) to 1.0 (perfect
 #' classification). Default: \verb{TRUE}.
+#' @param reuse_auc if FALSE (default) do not re-use any AUC specifications that
+#' might be contained in the roc-class object.
 #'
 #' @param type type of plot; one of \verb{"l"} (line) or \verb{"S"}
 #' (stair-step). Default: \verb{"l"}.
+#'
+#' @param lty line type of plot; see base plot.
+#' Default: \verb{"1"}.
 #'
 #' @param ... additional arguments for \verb{\link{plot}} or passed to
 #' \verb{\link{plot.roc}} and friends.
@@ -392,18 +410,21 @@ plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
                                 partial_auc = c(0.8, 1),
                                 partial_auc_focus = c("sensitivity", "specificity"),
                                 partial_auc_correct = TRUE,
-                                type = c("l", "S")) {
+                                reuse_auc = FALSE,
+                                type = c("l", "S"),
+                                lty = 1) {
     stopifnot(conf_level > 0 & conf_level < 1)
     type <- match.arg(type)
     partial_auc_focus = match.arg(partial_auc_focus)
         if(is.logical(partial_auc)) {
-            plt <- pROC::plot.roc(x$ISroc, print.auc = print_auc, type = type, ...)
+            plt <- pROC::plot.roc(x$ISroc, print.auc = print_auc, reuse.auc = reuse_auc,
+                                  type = type, ...)
         } else {
-            pROC::plot.roc(x$ISroc, print.auc = print_auc, reuse.auc = FALSE,
+            pROC::plot.roc(x$ISroc, print.auc = print_auc, reuse.auc = reuse_auc,
                        partial.auc = partial_auc,
                        partial.auc.focus = partial_auc_focus,
                        partial.auc.correct = partial_auc_correct,
-                       type = type)
+                       type = type, lty = lty, ...)
         if(partial_auc_focus == "sensitivity") {
             abline(h = partial_auc[1], lty = 2)
             abline(h = partial_auc[2], lty = 2)
@@ -415,7 +436,7 @@ plot.simple_screenr <- function(x, ..., plot_ci = TRUE, conf_level = 0.95,
     if(plot_ci){
         ciplt <- pROC::ci.thresholds(x$ISroc, boot.n = bootreps,
                                      progress = "none",
-                                     conf.level = conf_level)
+                                     conf.level = conf_level, ...)
         plot(ciplt)
         }
 }

@@ -372,9 +372,8 @@ new_roc <- pROC::roc(testresult ~ phat, data = new_preds, auc = TRUE)
 class(new_roc)
 ```
 
-The `pROC` package provides a plot method for `roc`-class
-objects. Note that the syntax of the arguments to `roc`-class objects
-differs from usage in the `screenr` package:
+The `pROC` package provides a plot method for `roc`-class objects. Note that the syntax of the arguments to
+`roc`-class objects differs from usage in the `screenr` package:
 ```{r, plot-new-roc, fig.width = 4, fig.height = 4}
 plot(new_roc, print_auc = TRUE, partial_auc =  c(0.8, 1.0), type = "S",
      partial_auc_focus = "sensitivity", partial_auc_correct = TRUE)
