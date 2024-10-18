@@ -33,6 +33,5 @@ coef(uniobj2, or = TRUE)
 
 }
 \seealso{
-\code{\link[screenr]{confint.logreg_screenr}} and
-\code{\link[screenr]{confint.gee_screenr}}
+\code{\link[screenr]{confint.logreg_screenr}}
 }

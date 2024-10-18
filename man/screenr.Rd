@@ -34,12 +34,14 @@ The high-level functions in the \code{screenr} package are:
 path regularization}
 \item{\code{\link{logreg_screenr}}}{Test-screening based maximum-likelhood
 estimation of logistic models}
-\item{\code{\link{gee_screenr}}}{Test-screening based GEE estimation
-of logistic models accounting for cluster sampling}
 \item{\code{\link{easy_tool}}}{Easy implementation of test-screening tools}
-\item{\code{\link{simple_screenr}}}{(Too) simple un-optimized test-screening}
-\item{\code{\link{rescale_to_int}}}{Rescale a strictly positive vector of
+\item{\code{\link{inverse_link}}}{Compute the inverses of logit, cloglog and
+probit link functions}
+\item{\code{\link{simple_screenr}}}{(Too) Simple un-optimized test-screening}
+\item{\code{\link{rescale_to_int}}}{Rescale a strictly positive vector or matrix of
 real numbers to integers}
+\item{\code{link{roc_ci}}}{Compute bootstrap confidence intervals from a
+\code{roc}-class object. See package \code{pROC}}
 \item{\code{\link{sens_spec_plus}}}{Sensitivity, specificity and friends}
 }
 
@@ -48,7 +50,6 @@ real numbers to integers}
 \code{logreg_screenr}, \code{gee_screenr}, \code{simple_screenr} and
 \code{easy_tool}, and also
 \code{coef} and \code{confint} methods for \code{lasso_screenr},
-\code{gee_screenr} and \code{logreg_screenr} objects.
 \code{screenr} also provides \code{get_what} methods to extract object
 components, and \code{ntpp} methods for computation of the average number of
 tests required to detect a single positive result and the residual

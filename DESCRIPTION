@@ -10,7 +10,7 @@ Authors@R:
 		role = c("aut", "cre"),
 		comment = c(ORCID = "0000-0002-0733-2900"))
 Depends: R(>= 3.5.0)
-Imports: glmpath, geepack, pROC, dplyr, scales, stringr, epiR, magrittr
+Imports: glmpath, pROC, dplyr, scales, stringr, epiR, magrittr
 Description: Package screenr enables easy development and validation
     of diagnostic test screening tools. It is designed to enable those
     with only a basic familiarity with R to develop, validate and

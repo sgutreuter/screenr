@@ -6,6 +6,7 @@
 \usage{
 roc_ci(
   object,
+  ...,
   bootreps = 4000,
   conf_level = 0.95,
   progress = "none",
@@ -15,6 +16,8 @@ roc_ci(
 }
 \arguments{
 \item{object}{an object of class \code{roc}.}
+
+\item{...}{additional arguments passed to \code{pROC::ci.thresholds}}
 
 \item{bootreps}{number of bootstrap replicates.  Default: 4000.}
 

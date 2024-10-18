@@ -71,8 +71,7 @@ coef.lasso_screenr <- function(object, ..., intercept = TRUE, or = FALSE){
 #'
 #' @param ... optional arguments passed to \code{predict} methods.
 #'
-#' @seealso \code{\link[screenr]{confint.logreg_screenr}} and
-#' \code{\link[screenr]{confint.gee_screenr}}
+#' @seealso \code{\link[screenr]{confint.logreg_screenr}}
 #'
 #' @return \code{coef.logreg_screenr} returns a dataframe containing the
 #' estimated coefficients (or odds ratios).

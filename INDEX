@@ -2,17 +2,11 @@ coef.lasso_screenr      An S3 Method to Extract Coefficients from
                         'lasso_screenr' Objects
 coef.logreg_screenr     An S3 Method to Extract Coefficients from
                         'logreg_screenr' Objects
-confint.gee_screenr     An S3 Method to Compute Confidence Limits from
-                        'gee_screenr' Objects
-confint.geeglm          An S3 Method to Compute Confidence Limits from
-                        'geepack::geeglm' Objects.
 confint.logreg_screenr
                         An S3 Method to Compute Confidence Limits from
                         'logreg_screenr' Objects
 easy_tool               Simplifying Screening from 'lasso_screenr',
                         'logreg_screenr' and 'gee_screenr' Objects
-gee_screenr             Fitting Screening Tools Using GEE Estimation of
-                        Logistic Models
 get_what                S3 Methods for Extraction of Object Components
 get_what.easy_tool      An S3 Method for Extraction of Components from
                         'easy_tool' Objects

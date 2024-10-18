@@ -129,8 +129,8 @@ nnt_ <- function(dframe) {
 #' @importFrom scales rescale
 #' @export
 rescale_to_int <- function(x, max, colwise = TRUE){
-    if(any(x < 0) | max <= 0) stop("Elements of x must be non-negative")
     if(!(is.vector(x) | is.matrix(x))) stop("x must be a vector or matrix")
+    if(any(x < 0) | max <= 0) stop("Elements of x must be non-negative")
     if(is.matrix(x)) {
         x_ <- x
     } else {
@@ -169,13 +169,15 @@ rescale_to_int <- function(x, max, colwise = TRUE){
 #'
 #' @param se_min minimum value of sensitivity returned. Default: 0.8.
 #'
+#' @param ... additional arguments passed to \code{pROC::ci.thresholds}
+#'
 #' @return \code{roc_ci} returns a dataframe containing thresholds with
 #' their sensititives, specificities and uncertainy intervals.
 #'
 #' @seealso \code{\link[pROC]{ci.thresholds}}
 #'
 #' @export
-roc_ci <- function(object, bootreps = 4000, conf_level = 0.95,
+roc_ci <- function(object, ..., bootreps = 4000, conf_level = 0.95,
                    progress = "none", thresholds = "local maximas",
                    se_min = 0.8) {
     if(!inherits(object, "roc")) stop("class(object) must be 'roc'" )

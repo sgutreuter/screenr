@@ -13,7 +13,7 @@ library(devtools)
 library(dplyr)
 #################################################################################
 ## Set paths and working directory
-basepath <- file.path(Sys.getenv("DRVEL"), "screenr")
+basepath <- file.path(Sys.getenv("DEVEL"), "screenr")
 codepath <- file.path(basepath, "R")
 workpath <- file.path(basepath, "maintenance")
 datapath <- file.path(basepath, "data")
@@ -45,11 +45,11 @@ rescale_to_int(x, max = 5)
 #################################################################################
 ## roc_ci     NOTE: roc_ci is called from get_what( , what = "ROCci")
 #################################################################################
-get_what(from = uniobj2, what = "ROCci",  model = "minAIC" )
-
+(rocci <- get_what(from = uniobj2, what = "ROCci",  model = "minAIC" ))
 debugonce(get_what.lasso_screenr)
 debugonce(roc_ci )
-(aroc <- get_what(from = uniobj1, what = "ROCci",  model = "minAIC" ))
+aroc <- get_what(from = uniobj2, what = "cvROC",  model = "minAIC" )
+(rocci <- roc_ci(aroc))
 #################################################################################
 ## se_sp_max
 #################################################################################
